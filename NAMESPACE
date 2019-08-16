@@ -1,0 +1,16 @@
+import("stats")
+export(binomCI,
+       cvCI,
+       hsu.t.test,
+       imputeSD,
+       madCI,
+       medianCI,
+       mi.t.test,
+       normCI,
+       normDiffCI,
+       quantileCI)
+
+S3method(hsu.t.test, default)
+S3method(hsu.t.test, formula)
+S3method(mi.t.test, default)
+S3method(print, confint)

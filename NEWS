@@ -1,0 +1,11 @@
+###############################################################################
+## NEWS to package MKinfer
+###############################################################################
+
+###########################################################
+## Version 0.1
+###########################################################
+- Start of development
+- Copied functions binomCI, cvCI, hsu.t.test, imputeSD,
+  madCI, medianCI, mi.t.test, normCI, normDiffCI, 
+  quantileCI from package MKmisc
