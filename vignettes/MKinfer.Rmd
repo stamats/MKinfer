@@ -1,0 +1,230 @@
+---
+title: "Package MKinfer"
+author: "Matthias Kohl"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{MKinfer}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{utf8}
+---
+
+
+## Introduction  
+Package MKinfer includes a collection of functions that I find useful for inferential statistics.
+
+We first load the package.
+```{r}
+library(MKinfer)
+```
+
+
+## Confidence Intervals
+### Binomial Proportion
+There are several functions for computing confidence intervals. We can compute
+10 different confidence intervals for binomial proportions; e.g.
+```{r}
+## default: "wilson"
+binomCI(x = 12, n = 50)
+## Clopper-Pearson interval
+binomCI(x = 12, n = 50, method = "clopper-pearson")
+## identical to 
+binom.test(x = 12, n = 50)$conf.int
+```
+
+For all intervals implemented see the help page of function binomCI.
+
+
+### Mean and SD
+We can compute confidence intervals for mean and SD of a normal distribution.
+```{r}
+x <- rnorm(50, mean = 2, sd = 3)
+## mean and SD unknown
+normCI(x)
+## SD known
+normCI(x, sd = 3)
+## mean known
+normCI(x, mean = 2)
+```
+
+
+### Difference in Means
+We can compute confidence interval for the difference of means assuming 
+normal distributions.
+```{r}
+x <- rnorm(20)
+y <- rnorm(20, sd = 2)
+## paired
+normDiffCI(x, y, paired = TRUE)
+## compare
+normCI(x-y)
+
+## unpaired
+y <- rnorm(10, mean = 1, sd = 2)
+## classical
+normDiffCI(x, y, method = "classical")
+## Welch (default as in case of function t.test)
+normDiffCI(x, y, method = "welch")
+## Hsu
+normDiffCI(x, y, method = "hsu")
+```
+
+In case of unequal variances and unequal sample sizes per group the classical
+confidence interval may have a bad coverage (too long or too short), as is 
+indicated by the small Monte-Carlo simulation study below.
+```{r}
+M <- 100
+CIhsu <- CIwelch <- CIclass <- matrix(NA, nrow = M, ncol = 2)
+for(i in 1:M){
+  x <- rnorm(10)
+  y <- rnorm(30, sd = 0.1)
+  CIclass[i,] <- normDiffCI(x, y, method = "classical")$conf.int
+  CIwelch[i,] <- normDiffCI(x, y, method = "welch")$conf.int
+  CIhsu[i,] <- normDiffCI(x, y, method = "hsu")$conf.int
+}
+## coverage probabilies
+## classical
+sum(CIclass[,1] < 0 & 0 < CIclass[,2])/M
+## Welch
+sum(CIwelch[,1] < 0 & 0 < CIwelch[,2])/M
+## Hsu
+sum(CIhsu[,1] < 0 & 0 < CIhsu[,2])/M
+```
+
+
+### Coefficient of Variation
+We provide 11 different confidence intervals for the (classical) coefficient 
+of variation; e.g.
+```{r}
+x <- rnorm(100, mean = 10, sd = 2) # CV = 0.2
+## default: "miller"
+cvCI(x)
+## Gulhar et al. (2012)
+cvCI(x, method = "gulhar")
+```
+
+For all intervals implemented see the help page of function cvCI.
+
+
+### Quantiles, Median and MAD
+We start with the computation of confidence intervals for quantiles.
+```{r}
+x <- rexp(100, rate = 0.5)
+## exact
+quantileCI(x = x, prob = 0.95)
+## asymptotic
+quantileCI(x = x, prob = 0.95, method = "asymptotic")
+```
+
+Next, we consider the median.
+```{r}
+## exact
+medianCI(x = x)
+## asymptotic
+medianCI(x = x, method = "asymptotic")
+```
+
+It often happens that quantile confidence intervals are not unique. Here the
+minimum length interval might be of interest.
+```{r}
+medianCI(x = x, minLength = TRUE)
+```
+
+Finally, we take a look at MAD (median absolute deviation) where by default 
+the standardized MAD is used (see function mad).
+```{r}
+## exact
+madCI(x = x)
+## aysymptotic
+madCI(x = x, method = "asymptotic")
+## unstandardized
+madCI(x = x, constant = 1)
+```
+
+
+
+## Hsu Two-Sample t-Test
+The Hsu two-sample t-test is an alternative to the Welch two-sample t-test using
+a different formula for computing the degrees of freedom of the respective 
+t-distribution. The following code is taken and adapted from the help page of
+the t.test function.
+```{r}
+t.test(1:10, y = c(7:20))      # P = .00001855
+t.test(1:10, y = c(7:20, 200)) # P = .1245    -- NOT significant anymore
+hsu.t.test(1:10, y = c(7:20))
+hsu.t.test(1:10, y = c(7:20, 200))
+
+## Traditional interface
+with(sleep, t.test(extra[group == 1], extra[group == 2]))
+with(sleep, hsu.t.test(extra[group == 1], extra[group == 2]))
+## Formula interface
+t.test(extra ~ group, data = sleep)
+hsu.t.test(extra ~ group, data = sleep)
+```
+
+
+## Multiple Imputation t-Test
+Function mi.t.test can be used to compute a multiple imputation t-test by applying
+the approch of Rubin (1987) in combination with the adjustment of 
+Barnard and Rubin (1999).
+```{r}
+## Generate some data
+set.seed(123)
+x <- rnorm(25, mean = 1)
+x[sample(1:25, 5)] <- NA
+y <- rnorm(20, mean = -1)
+y[sample(1:20, 4)] <- NA
+pair <- c(rnorm(25, mean = 1), rnorm(20, mean = -1))
+g <- factor(c(rep("yes", 25), rep("no", 20)))
+D <- data.frame(ID = 1:45, variable = c(x, y), pair = pair, group = g)
+
+## Use Amelia to impute missing values
+library(Amelia)
+res <- amelia(D, m = 10, p2s = 0, idvars = "ID", noms = "group")
+
+## Per protocol analysis (Welch two-sample t-test)
+t.test(variable ~ group, data = D)
+## Intention to treat analysis (Multiple Imputation Welch two-sample t-test)
+mi.t.test(res$imputations, x = "variable", y = "group")
+
+## Per protocol analysis (Two-sample t-test)
+t.test(variable ~ group, data = D, var.equal = TRUE)
+## Intention to treat analysis (Multiple Imputation two-sample t-test)
+mi.t.test(res$imputations, x = "variable", y = "group", var.equal = TRUE)
+
+## Specifying alternatives
+mi.t.test(res$imputations, x = "variable", y = "group", alternative = "less")
+mi.t.test(res$imputations, x = "variable", y = "group", alternative = "greater")
+
+## One sample test
+t.test(D$variable[D$group == "yes"])
+mi.t.test(res$imputations, x = "variable", subset = D$group == "yes")
+mi.t.test(res$imputations, x = "variable", mu = -1, subset = D$group == "yes",
+          alternative = "less")
+mi.t.test(res$imputations, x = "variable", mu = -1, subset = D$group == "yes",
+          alternative = "greater")
+
+## paired test
+t.test(D$variable, D$pair, paired = TRUE)
+mi.t.test(res$imputations, x = "variable", y = "pair", paired = TRUE)
+```
+
+
+## Imputation of Standard Deviations for Changes from Baseline
+The function imputeSD can be used to impute standard deviations for changes
+from baseline adopting the approach of Section 16.1.3.2 of the Cochrane
+handbook (2011).
+```{r}
+SD1 <- c(0.149, 0.022, 0.036, 0.085, 0.125, NA, 0.139, 0.124, 0.038)
+SD2 <- c(NA, 0.039, 0.038, 0.087, 0.125, NA, 0.135, 0.126, 0.038)
+SDchange <- c(NA, NA, NA, 0.026, 0.058, NA, NA, NA, NA)
+imputeSD(SD1, SD2, SDchange)
+```
+
+
+## sessionInfo
+```{r}
+sessionInfo()
+```
