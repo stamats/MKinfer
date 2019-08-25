@@ -9,7 +9,7 @@ The package contains several functions for inferential statistics.
 ```{r, eval = FALSE}
 ## Development version from GitHub
 # install.packages("remotes")
-remotes::install_github("stamats/MKinferr")
+remotes::install_github("stamats/MKinfer")
 ```
 
 ## Getting started
