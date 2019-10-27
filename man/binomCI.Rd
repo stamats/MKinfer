@@ -16,7 +16,8 @@ binomCI(x, n, conf.level = 0.95, method = "wilson", rand = 123)
 }
 \details{
   The Wald interval is obtained by inverting the acceptance region of the Wald
-  large-sample normal test.
+  large-sample normal test. There is also a Wald interval with continuity 
+  correction (\code{"wald-cc"}).
 
   The Wilson interval, which is the default, was introduced by Wilson (1927) and is
   the inversion of the CLT approximation to the family of equal tail tests of p = p0.
@@ -73,6 +74,7 @@ A first version of this function appeared in R package SLmisc.
 \seealso{\code{\link[stats]{binom.test}}, \code{\link[Hmisc]{binconf}}}
 \examples{
 binomCI(x = 42, n = 43, method = "wald")
+binomCI(x = 42, n = 43, method = "wald-cc")
 binomCI(x = 42, n = 43, method = "wilson")
 binomCI(x = 42, n = 43, method = "agresti-coull")
 binomCI(x = 42, n = 43, method = "jeffreys")

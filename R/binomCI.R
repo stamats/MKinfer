@@ -3,7 +3,8 @@ binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123){
     if (!is.na(pmatch(method, "wilson")))
         method <- "wilson"
     METHODS <- c("wald", "wilson", "agresti-coull", "jeffreys", "modified wilson",
-                 "modified jeffreys", "clopper-pearson", "arcsine", "logit", "witting")
+                 "modified jeffreys", "clopper-pearson", "arcsine", "logit", 
+                 "witting", "wald-cc")
     method <- pmatch(method, METHODS)
 
     if (is.na(method))
@@ -142,7 +143,16 @@ binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123){
         CI.lower <- qbinom.abscont(1-alpha, size = n, x = x.tilde)
         CI.upper <- qbinom.abscont(alpha, size = n, x = x.tilde)
     }
-
+    if(method == 11){ # wald-CC
+        est <- p.hat
+        term2 <- kappa*sqrt(p.hat*q.hat)/sqrt(n)
+        CC <- 0.5/n
+        CI.lower <- max(0, p.hat - term2 + CC)
+        CI.upper <- min(1, p.hat + term2 - CC)
+        Infos <- term2/kappa
+        names(Infos) <- "standard error of prob"
+    }
+    
     CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
     rownames(CI) <- "prob"
     colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
