@@ -77,7 +77,7 @@ normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95, na.rm = TRUE){
                    class = "confint"))
 }
 
-print.confint <- function (x, digits = getOption("digits"), prefix = "\t", ...) {
+print.confint <- function(x, digits = getOption("digits"), prefix = "\t", ...){
   cat("\n")
   cat(strwrap(x$method, prefix = prefix), sep = "\n")
   cat("\n")
@@ -100,7 +100,7 @@ print.confint <- function (x, digits = getOption("digits"), prefix = "\t", ...) 
   if (!is.null(x$Infos)) {
     cat("\n")
     cat("additional information:\n")
-    if(length(x$Infos) > 1){
+    if(is.list(x$Infos) & length(x$Infos) > 1){
       for(i in seq_len(length(x$Infos))){
         if(i > 1) cat("\n")
         print(x$Infos[[i]], digits = digits, ...)
