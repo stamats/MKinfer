@@ -37,6 +37,20 @@ binom.test(x = 12, n = 50)$conf.int
 For all intervals implemented see the help page of function binomCI.
 
 
+### Difference of Two Binomial Proportions
+There are several functions for computing confidence intervals. We can compute
+different confidence intervals for the difference of two binomial proportions
+(independent and paired case); e.g.
+```{r}
+## default: wilson 
+binomDiffCI(a = 5, b = 0, c = 51, d = 29)
+## default: wilson with continuity correction
+binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE)
+```
+
+For all intervals implemented see the help page of function binomDiffCI.
+
+
 ### Mean and SD
 We can compute confidence intervals for mean and SD of a normal distribution.
 ```{r}

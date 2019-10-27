@@ -1,6 +1,7 @@
 import("stats")
 importFrom("MKmisc", "CV")
 export(binomCI,
+       binomDiffCI,
        cvCI,
        hsu.t.test,
        imputeSD,
