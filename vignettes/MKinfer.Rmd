@@ -238,6 +238,19 @@ imputeSD(SD1, SD2, SDchange)
 ```
 
 
+## Pairwise Comparisons
+Function pairwise.fun enables the application of arbitrary functions
+for pairwise comparisons.
+```{r}
+pairwise.wilcox.test(airquality$Ozone, airquality$Month, 
+                     p.adjust.method = "none")
+## To avoid the warnings
+library(exactRankTests)
+pairwise.fun(airquality$Ozone, airquality$Month, 
+             fun = function(x, y) wilcox.exact(x, y)$p.value)
+```
+
+
 ## sessionInfo
 ```{r}
 sessionInfo()

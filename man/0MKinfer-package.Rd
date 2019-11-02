@@ -13,9 +13,9 @@ Contains several functions for inferential statistics.
 Package: \tab MKinfer\cr
 Type: \tab Package\cr
 Version: \tab 0.2\cr
-Date: \tab 2019-10-27\cr
+Date: \tab 2019-11-02\cr
 Depends: \tab R(>= 3.5.0)\cr
-Imports: \tab stats, MKmisc\cr
+Imports: \tab stats, MKdescr\cr
 Suggests: \tab Amelia, knitr, rmarkdown\cr
 License: \tab LGPL-3\cr
 URL: \tab http://www.stamats.de/\cr

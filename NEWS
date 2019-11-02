@@ -7,6 +7,8 @@
 ###########################################################
 - Added new function binomDiffCI for computing confidence intervals for
   the difference of two binomial proportions.
+- Changed import form MKmisc to MKdescr
+- Moved function pairwise.fun from MKmisc/MKdescr to MKinfer
 
 ###########################################################
 ## Version 0.1

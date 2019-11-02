@@ -1,5 +1,5 @@
 import("stats")
-importFrom("MKmisc", "CV")
+importFrom("MKdescr", "CV")
 export(binomCI,
        binomDiffCI,
        cvCI,
@@ -10,7 +10,8 @@ export(binomCI,
        mi.t.test,
        normCI,
        normDiffCI,
-       quantileCI)
+       quantileCI,
+       pairwise.fun)
 
 S3method(hsu.t.test, default)
 S3method(hsu.t.test, formula)
