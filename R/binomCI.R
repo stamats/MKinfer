@@ -21,6 +21,8 @@ binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123,
         stop("'conf.level' has to be of length 1 (confidence level)")
     if(conf.level < 0.5 | conf.level > 1)
         stop("'conf.level' has to be in [0.5, 1]")
+    stopifnot(R >= 1)
+    R <- trunc(R)
 
     x <- as.integer(x)
     n <- as.integer(n)
@@ -154,6 +156,9 @@ binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123,
         names(Infos) <- "standard error of prob"
     }
     if(method == 12){ # boot
+        if(x == 0 | x == n)
+            warning("All observations are identical.\n", 
+                    "Choose a different method for computing the confidence interval!")
         est <- p.hat
         DATA <- numeric(n)
         DATA[1:x] <- 1
