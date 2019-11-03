@@ -1,10 +1,11 @@
 ## Confidence Intervals for Binomial Proportions
-binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123){
+binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123, 
+                    R = 1000){
     if (!is.na(pmatch(method, "wilson")))
         method <- "wilson"
     METHODS <- c("wald", "wilson", "agresti-coull", "jeffreys", "modified wilson",
                  "modified jeffreys", "clopper-pearson", "arcsine", "logit", 
-                 "witting", "wald-cc")
+                 "witting", "wald-cc", "boot")
     method <- pmatch(method, METHODS)
 
     if (is.na(method))
@@ -152,13 +153,23 @@ binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123){
         Infos <- term2/kappa
         names(Infos) <- "standard error of prob"
     }
+    if(method == 12){ # boot
+        est <- p.hat
+        DATA <- numeric(n)
+        DATA[1:x] <- 1
+        boot.rf <- function(x, i){ mean(x[i]) } 
+        boot.out <- boot(DATA, statistic = boot.rf, R = R)
+        CI <- boot.ci(boot.out, type = "perc")
+    }
     
-    CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
-    rownames(CI) <- "prob"
-    colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
-    attr(CI, "conf.level") <- conf.level
+    if(method != 12){
+        CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
+        rownames(CI) <- "prob"
+        colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
+        attr(CI, "conf.level") <- conf.level
+    }
     names(est) <- "prob"
-
+    
     return(structure(list("estimate" = est, "conf.int" = CI, "Infos" = Infos,
                           "method" = paste(METHODS[method], "confidence interval")),
                      class = "confint"))
