@@ -8,7 +8,7 @@
 }
 \usage{
 binomDiffCI(a, b, c, d, conf.level = 0.95, paired = FALSE, 
-            method = ifelse(paired, "wilson-cc", "wilson"))
+            method = ifelse(paired, "wilson-cc", "wilson"), R = 1000)
 }
 \arguments{
   \item{a}{ independent: number of successes of group 1; 
@@ -22,6 +22,7 @@ binomDiffCI(a, b, c, d, conf.level = 0.95, paired = FALSE,
   \item{conf.level}{ confidence level }
   \item{paired}{ a logical value indicating whether the two groups are paired. }
   \item{method}{ character string specifing which method to use; see details. }
+  \item{R}{ number of bootstrap replicates; see details. }
 }
 \details{
   The Wald intervals (independent and paired) are obtained by applying the normal 
@@ -31,6 +32,8 @@ binomDiffCI(a, b, c, d, conf.level = 0.95, paired = FALSE,
   Chapter 6 of Altman et al. (2000). In the paired case, the continuity corrected
   version of the interval is recommended. The intervals are proposed in 
   Newcombe (1998a) and Newcombe (1998b).
+  
+  The bootstrap intervals are calculated by the bootstrap percentile method.
 }
 \value{
   A list with class \code{"confint"} containing the following components:
@@ -61,6 +64,8 @@ binomDiffCI(a = 63, b = 38, c = 30, d = 54, method = "wald")
 binomDiffCI(a = 63, b = 38, c = 30, d = 54, method = "wald-cc")
 ## wilson
 binomDiffCI(a = 63, b = 38, c = 30, d = 54)
+## bootstrap percentile method
+binomDiffCI(a = 63, b = 38, c = 30, d = 54, method = "boot")
 
 ## Example 2: Altman et al. (2000, p. 50)
 ## the confidence interval computed by prop.test
@@ -71,6 +76,9 @@ binomDiffCI(a = 5, b = 0, c = 51, d = 29, method = "wald")
 binomDiffCI(a = 5, b = 0, c = 51, d = 29, method = "wald-cc")
 ## wilson
 binomDiffCI(a = 5, b = 0, c = 51, d = 29)
+## bootstrap percentile method
+binomDiffCI(a = 5, b = 0, c = 51, d = 29, method = "boot")
+
 
 ## Example 3: Altman et al. (2000, p. 51)
 ## wald / simple asymptotic interval
@@ -81,6 +89,8 @@ binomDiffCI(a = 14, b = 5, c = 0, d = 22, paired = TRUE, method = "wald-cc")
 binomDiffCI(a = 14, b = 5, c = 0, d = 22, paired = TRUE, method = "wilson")
 ## wilson with continuity correction
 binomDiffCI(a = 14, b = 5, c = 0, d = 22, paired = TRUE)
+## bootstrap percentile method
+binomDiffCI(a = 14, b = 5, c = 0, d = 22, paired = TRUE, method = "boot")
 
 ## Example 4: Altman et al. (2000, p. 51)
 ## wald / simple asymptotic interval
@@ -91,5 +101,7 @@ binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE, method = "wald-cc
 binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE, method = "wilson")
 ## wilson with continuity correction
 binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE)
+## bootstrap percentile method
+binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE, method = "boot")
 }
 \keyword{univar}

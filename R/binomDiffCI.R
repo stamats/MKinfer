@@ -13,7 +13,8 @@
 ## method
 binomDiffCI <- function(a, b, c, d, conf.level = 0.95, 
                         paired = FALSE, 
-                        method = ifelse(paired, "wilson-cc", "wilson")){
+                        method = ifelse(paired, "wilson-cc", "wilson"),
+                        R = 1000){
   stopifnot(is.numeric(a), is.numeric(b), is.numeric(c), is.numeric(d),
             is.numeric(conf.level))
   stopifnot(length(a) == 1, length(b) == 1, length(c) == 1, 
@@ -21,6 +22,8 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
   stopifnot(a >= 0, b >= 0, c >= 0, d >= 0)
   if(!(0 < conf.level & conf.level < 1)) 
     stop("'conf.level' must be in (0,1)")
+  stopifnot(R >= 1)
+  R <- trunc(R)
   
   a <- trunc(a)
   b <- trunc(b)
@@ -29,11 +32,11 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
   alpha <- 1 - conf.level
   
   if(paired){
-    METHODS <- c("wald", "wald-cc", "wilson", "wilson-cc")
+    METHODS <- c("wald", "wald-cc", "wilson", "wilson-cc", "boot")
     method <- pmatch(method, METHODS)
   }else{
     stopifnot(a+c > 0, b+d > 0)
-    METHODS <- c("wald", "wald-cc", "wilson")
+    METHODS <- c("wald", "wald-cc", "wilson", "boot")
     method <- pmatch(method, METHODS)
   }
   if (is.na(method))
@@ -115,6 +118,30 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
       Infos <- c(p1, p2)
       names(Infos) <- c("proportion of group 1", "proportion of group 2")
     }
+    if(method == 5){ # boot
+      n <- a + b + c + d
+      p1 <- (a+b)/n
+      p2 <- (a+c)/n
+      DATA <- matrix(0, nrow = n, ncol = 2)
+      DATA[1:a,] <- 1
+      DATA[(a+1):(a+b), 1] <- 1
+      DATA[(a+1):(a+b), 2] <- 0
+      DATA[(a+b+1):(a+b+c), 1] <- 0
+      DATA[(a+b+1):(a+b+c), 2] <- 1
+      DATA[(a+b+c+1):n,] <- 0
+      
+      boot.diff <- function(x, i){  
+        n <- length(i)
+        -diff(colSums(x[i,])/n)
+      } 
+      boot.out <- boot(DATA, statistic = boot.diff, R = R)
+      temp <- boot:::perc.ci(boot.out$t, conf = conf.level)
+      CI.lower <- temp[,4]
+      CI.upper <- temp[,5]
+      
+      Infos <- c(p1, p2)
+      names(Infos) <- c("proportion of group 1", "proportion of group 2")
+    }
     nameCI <- "difference of proportions (paired data)"
     nameMethod <- paste(METHODS[method], 
                         "confidence interval (paired data)")
@@ -162,6 +189,21 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
       u2 <- CI2[2]
       CI.lower <- D - sqrt((p1-l1)^2 + (u2-p2)^2)
       CI.upper <- D + sqrt((p2-l2)^2 + (u1-p1)^2)
+      Infos <- c(p1, p2)
+      names(Infos) <- c("proportion of group 1", "proportion of group 2")
+    }
+    if(method == 4){ ## boot
+      x <- numeric(m)
+      y <- numeric(n)
+      x[1:a] <- 1
+      y[1:b] <- 1
+      boot.rf <- function(x, i){ mean(x[i]) } 
+      boot.x <- boot(x, statistic = boot.rf, R = R)
+      boot.y <- boot(y, statistic = boot.rf, R = R)
+      temp <- boot:::perc.ci(boot.x$t-boot.y$t, conf = conf.level)
+      CI.lower <- temp[,4]
+      CI.upper <- temp[,5]
+      
       Infos <- c(p1, p2)
       names(Infos) <- c("proportion of group 1", "proportion of group 2")
     }
