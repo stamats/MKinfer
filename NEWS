@@ -9,6 +9,7 @@
   the difference of two binomial proportions.
 - Changed import form MKmisc to MKdescr
 - Moved function pairwise.fun from MKmisc/MKdescr to MKinfer
+- Added percentile bootstrap interval to function binomCI
 
 ###########################################################
 ## Version 0.1

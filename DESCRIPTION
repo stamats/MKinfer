@@ -1,6 +1,6 @@
 Package: MKinfer
 Version: 0.2
-Date: 2019-11-02
+Date: 2019-11-03
 Title: Functions for Inferential Statistics
 Authors@R: person("Matthias", "Kohl", role = c("aut", "cre"),
                   email = "Matthias.Kohl@stamats.de", 
@@ -8,7 +8,7 @@ Authors@R: person("Matthias", "Kohl", role = c("aut", "cre"),
 Author: Matthias Kohl [aut, cre] (0000-0001-9514-8910)
 Maintainer: Matthias Kohl <Matthias.Kohl@stamats.de>
 Depends: R(>= 3.5.0)
-Imports: stats, MKdescr
+Imports: stats, MKdescr, boot
 Suggests: knitr, rmarkdown, Amelia, exactRankTests
 VignetteBuilder: knitr
 Description: Contains several functions for inferential statistics.

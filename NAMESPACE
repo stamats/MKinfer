@@ -1,5 +1,6 @@
 import("stats")
 importFrom("MKdescr", "CV")
+importFrom("boot", "boot", "boot.ci")
 export(binomCI,
        binomDiffCI,
        cvCI,
