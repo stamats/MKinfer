@@ -6,13 +6,17 @@
   standard deviation of a normal distribution.
 }
 \usage{
-normCI(x, mean = NULL, sd = NULL, conf.level = 0.95, na.rm = TRUE)
+normCI(x, mean = NULL, sd = NULL, conf.level = 0.95, 
+       boot = FALSE, R = 1000, type = "all", na.rm = TRUE)
 }
 \arguments{
   \item{x}{ vector of observations. }
   \item{mean}{ mean if known otherwise \code{NULL}. }
   \item{sd}{ standard deviation if known otherwise \code{NULL}. }
   \item{conf.level}{ confidence level. }
+  \item{boot}{ a logical value indicating whether bootstrapped confidence intervals shall be computed. }
+  \item{R}{ number of bootstrap replicates; see details. }
+  \item{type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
   \item{na.rm}{ a logical value indicating whether NA values should be stripped before the computation proceeds. }
 }
 \details{
@@ -36,9 +40,17 @@ normCI(x, mean = NULL, sd = NULL, conf.level = 0.95, na.rm = TRUE)
 x <- rnorm(50)
 ## mean and sd unknown
 normCI(x)
+## bootstrap interval
+normCI(x, boot = TRUE)
+
 ## sd known
 normCI(x, sd = 1)
+## bootstrap interval only for mean (sd is ignored)
+normCI(x, sd = 1, boot = TRUE)
+
 ## mean known
 normCI(x, mean = 0)
+## bootstrap interval only for sd (mean is ignored)
+normCI(x, mean = 0, boot = TRUE)
 }
 \keyword{univar}

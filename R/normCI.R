@@ -1,5 +1,6 @@
 ## Confidence Intervals for normal mean and standard deviation
-normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95, na.rm = TRUE){
+normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95, 
+                   boot = FALSE, R = 1000, type = "all", na.rm = TRUE){
   if(!is.numeric(x))
     stop("'x' must be a numeric vector")
   if(!is.null(mean))
@@ -24,7 +25,6 @@ normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95, na.rm = TRUE){
   }else{
     s <- sd
   }
-  if(na.rm) n <- length(x[!is.na(x)]) else n <- length(x)
   if(is.null(mean) & is.null(sd)){
     est <- c(m, s)
     names(est) <- c("mean", "sd")
@@ -37,43 +37,77 @@ normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95, na.rm = TRUE){
       names(est) <- "sd"
     }
   }
-  alpha <- 1 - conf.level
-  if(is.null(sd)){
-    k <- qt(1-alpha/2, df = n-1)
+  if(boot){
+    if(na.rm) x <- x[!is.na(x)]
+    boot.mean <- function(x, i){
+      AM <- mean(x[i]) 
+      n <- length(i)
+      VAR <- (n-1)*var(x[i])/n^2
+      c(AM, VAR)
+    } 
+    boot.sd <- function(x, i){
+      SD <- sd(x[i]) 
+      n <- length(i)
+      VAR <- SD^2*((n-1)/2*gamma((n-1)/2)/gamma(n/2) - 1)
+      c(SD, VAR)
+    } 
+    if(is.null(mean) & !is.null(sd)){
+      boot.out <- boot(x, statistic = boot.mean, R = R)
+      CI <- boot.ci(boot.out, type = type)
+    }    
+    if(is.null(sd) & !is.null(mean)){
+      boot.out <- boot(x, statistic = boot.sd, R = R)
+      CI <- boot.ci(boot.out, type = type)
+    }    
+    if(is.null(mean) & is.null(sd)){
+      boot.out.mean <- boot(x, statistic = boot.mean, R = R)
+      boot.out.sd <- boot(x, statistic = boot.sd, R = R)
+      CI.AM <- boot.ci(boot.out.mean, type = type)
+      CI.SD <- boot.ci(boot.out.sd, type = type)
+      CI <- list("mean" = CI.AM, "standard deviation" = CI.SD)
+    }
+    METHOD <- "Bootstrap confidence interval(s)"
   }else{
-    k <- qnorm(1-alpha/2)
-  }
-  if(is.null(mean)){
-    sem <- s/sqrt(n)
-    names(sem) <- "SE of mean"
-    CI.lower.mean <- m - k*sem
-    CI.upper.mean <- m + k*sem
-    Infos <- sem
-  }
-  if(is.null(sd)){
-    CI.lower.sd <- sqrt(n-1)*s/sqrt(qchisq(1-alpha/2, df = n-1))
-    CI.upper.sd <- sqrt(n-1)*s/sqrt(qchisq(alpha/2, df = n-1))
-  }
-  if(is.null(mean) & is.null(sd)){
-    CI <- rbind(c(CI.lower.mean, CI.upper.mean),
-                c(CI.lower.sd, CI.upper.sd))
-    rownames(CI) <- c("mean", "sd")
-    colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
-  }else{
+    if(na.rm) n <- length(x[!is.na(x)]) else n <- length(x)
+    alpha <- 1 - conf.level
+    if(is.null(sd)){
+      k <- qt(1-alpha/2, df = n-1)
+    }else{
+      k <- qnorm(1-alpha/2)
+    }
     if(is.null(mean)){
-      CI <- matrix(c(CI.lower.mean, CI.upper.mean), nrow = 1)
-      rownames(CI) <- "mean"
+      sem <- s/sqrt(n)
+      names(sem) <- "SE of mean"
+      CI.lower.mean <- m - k*sem
+      CI.upper.mean <- m + k*sem
+      Infos <- sem
+    }
+    if(is.null(sd)){
+      CI.lower.sd <- sqrt(n-1)*s/sqrt(qchisq(1-alpha/2, df = n-1))
+      CI.upper.sd <- sqrt(n-1)*s/sqrt(qchisq(alpha/2, df = n-1))
+    }
+    if(is.null(mean) & is.null(sd)){
+      CI <- rbind(c(CI.lower.mean, CI.upper.mean),
+                  c(CI.lower.sd, CI.upper.sd))
+      rownames(CI) <- c("mean", "sd")
       colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
     }else{
-      CI <- matrix(c(CI.lower.sd, CI.upper.sd), nrow = 1)
-      rownames(CI) <- "sd"
-      colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
+      if(is.null(mean)){
+        CI <- matrix(c(CI.lower.mean, CI.upper.mean), nrow = 1)
+        rownames(CI) <- "mean"
+        colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
+      }else{
+        CI <- matrix(c(CI.lower.sd, CI.upper.sd), nrow = 1)
+        rownames(CI) <- "sd"
+        colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
+      }
     }
+    attr(CI, "conf.level") <- conf.level
+    METHOD <- "Exact confidence interval(s)"
   }
-  attr(CI, "conf.level") <- conf.level
 
   return(structure(list("estimate" = est, "conf.int" = CI, "Infos" = Infos,
-                        method = "Exact confidence interval(s)"),
+                        method = METHOD),
                    class = "confint"))
 }
 
@@ -83,14 +117,18 @@ print.confint <- function(x, digits = getOption("digits"), prefix = "\t", ...){
   cat("\n")
   out <- x$conf.int
   attr(out, "conf.level") <- NULL
-  if (nrow(x$conf.int) > 1) {
-    cat(format(100 * attr(x$conf.int, "conf.level")),
-        " percent confidence intervals:\n", sep = "")
+  if(is.list(out) | inherits(out, "bootci")){
+    print(out, digits = digits, ...)
   }else{
-    cat(format(100 * attr(x$conf.int, "conf.level")),
-        " percent confidence interval:\n", sep = "")
+    if (nrow(x$conf.int) > 1) {
+      cat(format(100 * attr(x$conf.int, "conf.level")),
+          " percent confidence intervals:\n", sep = "")
+    }else{
+      cat(format(100 * attr(x$conf.int, "conf.level")),
+          " percent confidence interval:\n", sep = "")
+    }
+    print(out, digits = digits, ...)
   }
-  print(out, digits = digits, ...)
   if (!is.null(x$estimate)) {
     cat("\n")
     if(length(x$estimate) == 1) cat("sample estimate:\n")
