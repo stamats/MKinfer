@@ -8,7 +8,8 @@
 }
 \usage{
 binomDiffCI(a, b, c, d, conf.level = 0.95, paired = FALSE, 
-            method = ifelse(paired, "wilson-cc", "wilson"), R = 1000)
+            method = ifelse(paired, "wilson-cc", "wilson"), 
+            R = 1000, type = "all")
 }
 \arguments{
   \item{a}{ independent: number of successes of group 1; 
@@ -23,6 +24,8 @@ binomDiffCI(a, b, c, d, conf.level = 0.95, paired = FALSE,
   \item{paired}{ a logical value indicating whether the two groups are paired. }
   \item{method}{ character string specifing which method to use; see details. }
   \item{R}{ number of bootstrap replicates; see details. }
+  \item{type}{ type of quantile used for bootstrap percentile interval; see 
+  \code{\link[stats]{quantile}}. }
 }
 \details{
   The Wald intervals (independent and paired) are obtained by applying the normal 
@@ -53,7 +56,7 @@ binomDiffCI(a, b, c, d, conf.level = 0.95, paired = FALSE,
 }
 \author{ Matthias Kohl \email{Matthias.Kohl@stamats.de}}
 %\note{}
-\seealso{\code{\link[stats]{prop.test}}}
+\seealso{\code{\link[stats]{prop.test}}, \code{\link[boot]{boot.ci}}}
 \examples{
 ## Example 1: Altman et al. (2000, p. 49)
 ## the confidence interval computed by prop.test
@@ -102,6 +105,7 @@ binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE, method = "wilson"
 ## wilson with continuity correction
 binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE)
 ## bootstrap percentile method
-binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE, method = "boot")
+binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE, method = "boot",
+            type = c("norm", "basic", "stud", "perc")) ## type = "bca" gives error
 }
 \keyword{univar}

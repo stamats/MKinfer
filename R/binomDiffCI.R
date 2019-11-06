@@ -14,7 +14,7 @@
 binomDiffCI <- function(a, b, c, d, conf.level = 0.95, 
                         paired = FALSE, 
                         method = ifelse(paired, "wilson-cc", "wilson"),
-                        R = 1000){
+                        R = 1000, type = "all"){
   stopifnot(is.numeric(a), is.numeric(b), is.numeric(c), is.numeric(d),
             is.numeric(conf.level))
   stopifnot(length(a) == 1, length(b) == 1, length(c) == 1, 
@@ -132,13 +132,15 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
       
       boot.diff <- function(x, i){  
         n <- length(i)
-        -diff(colSums(x[i,])/n)
+        xi <- x[i,]
+        D <- -diff(colMeans(xi))
+        b <- sum(xi[,1] == 1 & xi[,2] == 0)
+        c <- sum(xi[,1] == 0 & xi[,2] == 1)
+        SED <- sqrt((b+c) - (b-c)^2/n)/n
+        c(D, SED)
       } 
       boot.out <- boot(DATA, statistic = boot.diff, R = R)
-      temp <- boot:::perc.ci(boot.out$t, conf = conf.level)
-      CI.lower <- temp[,4]
-      CI.upper <- temp[,5]
-      
+      CI <- boot.ci(boot.out, type = type)
       Infos <- c(p1, p2)
       names(Infos) <- c("proportion of group 1", "proportion of group 2")
     }
@@ -197,13 +199,21 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
       y <- numeric(n)
       x[1:a] <- 1
       y[1:b] <- 1
-      boot.rf <- function(x, i){ mean(x[i]) } 
-      boot.x <- boot(x, statistic = boot.rf, R = R)
-      boot.y <- boot(y, statistic = boot.rf, R = R)
-      temp <- boot:::perc.ci(boot.x$t-boot.y$t, conf = conf.level)
-      CI.lower <- temp[,4]
-      CI.upper <- temp[,5]
-      
+      DATA <- data.frame(vals = c(x, y), 
+                         group = factor(rep(c(1,2), c(m, n))))
+      boot.rf <- function(x, i){ 
+        xi <- x[i,]
+        RF <- tapply(xi$vals, xi$group, mean)
+        D <- -diff(RF)
+        mn <- table(xi$group)
+        ab <- tapply(xi$vals, xi$group, sum)
+        cd <- mn-ab
+        SED <- sqrt(ab[1]*cd[1]/mn[1]^3 + ab[2]*cd[2]/mn[2]^3)
+        c(D, SED)
+      } 
+      boot.out <- boot(DATA, statistic = boot.rf, strata=DATA$group, R = R)
+      CI <- boot.ci(boot.out, type = type)
+
       Infos <- c(p1, p2)
       names(Infos) <- c("proportion of group 1", "proportion of group 2")
     }
@@ -212,11 +222,13 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
                         "confidence interval (independent proportions)")
   }
 
-  CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
-  rownames(CI) <- nameCI
-  colnames(CI) <- c(paste(alpha/2*100, "%"),
-                    paste((1-alpha/2)*100, "%"))
-  attr(CI, "conf.level") <- conf.level
+  if(METHODS[method] != "boot"){
+    CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
+    rownames(CI) <- nameCI
+    colnames(CI) <- c(paste(alpha/2*100, "%"),
+                      paste((1-alpha/2)*100, "%"))
+    attr(CI, "conf.level") <- conf.level
+  }
   
   return(structure(list("estimate" = D, "conf.int" = CI, "Infos" = Infos,
                         method = nameMethod),
