@@ -1,6 +1,6 @@
 ## Confidence Intervals for Binomial Proportions
 binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123, 
-                    R = 1000){
+                    R = 1000, type = "all"){
     if (!is.na(pmatch(method, "wilson")))
         method <- "wilson"
     METHODS <- c("wald", "wilson", "agresti-coull", "jeffreys", "modified wilson",
@@ -162,9 +162,16 @@ binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123,
         est <- p.hat
         DATA <- numeric(n)
         DATA[1:x] <- 1
-        boot.rf <- function(x, i){ mean(x[i]) } 
+        boot.rf <- function(x, i){ 
+            p <- mean(x[i]) 
+            n <- length(i)
+            c(p, p*(1-p)/n)
+        } 
         boot.out <- boot(DATA, statistic = boot.rf, R = R)
-        CI <- boot.ci(boot.out, type = "perc")
+        CI <- boot.ci(boot.out, type = type)
+        Infos <- c(sqrt(p.hat*q.hat)/sqrt(n), sqrt(var(boot.out$t[,1])))
+        names(Infos) <- c("standard error of prob", 
+                          "bootstrap standard error of prob")
     }
     
     if(method != 12){

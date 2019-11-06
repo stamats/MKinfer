@@ -5,7 +5,8 @@
   This function can be used to compute confidence intervals for binomial proportions.
 }
 \usage{
-binomCI(x, n, conf.level = 0.95, method = "wilson", rand = 123, R = 1000)
+binomCI(x, n, conf.level = 0.95, method = "wilson", rand = 123, 
+        R = 1000, type = "all")
 }
 \arguments{
   \item{x}{ number of successes }
@@ -14,6 +15,7 @@ binomCI(x, n, conf.level = 0.95, method = "wilson", rand = 123, R = 1000)
   \item{method}{ character string specifing which method to use; see details. }
   \item{rand}{ seed for random number generator; see details. }
   \item{R}{ number of bootstrap replicates; see details. }
+  \item{type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
 }
 \details{
   The Wald interval is obtained by inverting the acceptance region of the Wald
@@ -51,7 +53,7 @@ binomCI(x, n, conf.level = 0.95, method = "wilson", rand = 123, R = 1000)
   obtain uniformly optimal lower and upper confidence bounds (cf. Satz 2.105 in
   Witting (1985)) for binomial proportions.
   
-  The bootstrap interval is calculated by the bootstrap percentile method.
+  The bootstrap interval is calculated by using function \code{\link[boot]{boot.ci}}.
 
   For more details we refer to Brown et al (2001) as well as Witting (1985).
 }
