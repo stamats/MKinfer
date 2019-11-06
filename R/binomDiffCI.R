@@ -136,8 +136,8 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
         D <- -diff(colMeans(xi))
         b <- sum(xi[,1] == 1 & xi[,2] == 0)
         c <- sum(xi[,1] == 0 & xi[,2] == 1)
-        SED <- sqrt((b+c) - (b-c)^2/n)/n
-        c(D, SED)
+        VAR <- ((b+c) - (b-c)^2/n)/n^2
+        c(D, VAR)
       } 
       boot.out <- boot(DATA, statistic = boot.diff, R = R)
       CI <- boot.ci(boot.out, type = type)
@@ -208,8 +208,8 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
         mn <- table(xi$group)
         ab <- tapply(xi$vals, xi$group, sum)
         cd <- mn-ab
-        SED <- sqrt(ab[1]*cd[1]/mn[1]^3 + ab[2]*cd[2]/mn[2]^3)
-        c(D, SED)
+        VAR <- ab[1]*cd[1]/mn[1]^3 + ab[2]*cd[2]/mn[2]^3
+        c(D, VAR)
       } 
       boot.out <- boot(DATA, statistic = boot.rf, strata=DATA$group, R = R)
       CI <- boot.ci(boot.out, type = type)
