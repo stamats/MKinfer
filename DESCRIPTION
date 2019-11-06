@@ -1,7 +1,7 @@
 Package: MKinfer
 Version: 0.2
-Date: 2019-11-03
-Title: Functions for Inferential Statistics
+Date: 2019-11-06
+Title: Inferential Statistics
 Authors@R: person("Matthias", "Kohl", role = c("aut", "cre"),
                   email = "Matthias.Kohl@stamats.de", 
                   comment = c(ORCID = "0000-0001-9514-8910"))
@@ -11,7 +11,7 @@ Depends: R(>= 3.5.0)
 Imports: stats, MKdescr, boot
 Suggests: knitr, rmarkdown, Amelia, exactRankTests
 VignetteBuilder: knitr
-Description: Contains several functions for inferential statistics.
+Description: Contains several functions for inferential statistics not available in standard R packages such as computation of various confidence intervals (including bootstrapped versions), HSU t-test, multiple imputation t-test.
 License: LGPL-3
 URL: http://www.stamats.de/
 

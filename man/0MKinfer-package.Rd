@@ -3,20 +3,22 @@
 \alias{MKinfer}
 \docType{package}
 \title{
-Functions for Inferential Statistics.
+Inferential Statistics.
 }
 \description{
-Contains several functions for inferential statistics.
+Contains several functions for inferential statistics not available in standard
+R packages such as computation of various confidence intervals (including 
+bootstrapped versions), HSU t-test, multiple imputation t-test.
 }
 \details{
 \tabular{ll}{
 Package: \tab MKinfer\cr
 Type: \tab Package\cr
 Version: \tab 0.2\cr
-Date: \tab 2019-11-02\cr
+Date: \tab 2019-11-06\cr
 Depends: \tab R(>= 3.5.0)\cr
-Imports: \tab stats, MKdescr\cr
-Suggests: \tab Amelia, knitr, rmarkdown\cr
+Imports: \tab stats, MKdescr, boot\cr
+Suggests: \tab Amelia, knitr, rmarkdown, exactRankTests\cr
 License: \tab LGPL-3\cr
 URL: \tab http://www.stamats.de/\cr
 }
