@@ -110,6 +110,28 @@ normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95,
                         method = METHOD),
                    class = "confint"))
 }
+meanCI <- function(x, conf.level = 0.95, boot = FALSE, R = 1000, 
+                   type = "all", na.rm = TRUE){
+  res <- normCI(x = x, conf.level = conf.level, boot = boot, R = R,
+                type = type, na.rm = na.rm)
+  if(boot){
+    res$conf.int <- res$conf.int[[1]]
+  }else{
+    res$conf.int <- res$conf.int[1,,drop = FALSE]
+  }
+  res
+}
+sdCI <- function(x, conf.level = 0.95, boot = FALSE, R = 1000, 
+                   type = "all", na.rm = TRUE){
+  res <- normCI(x = x, conf.level = conf.level, boot = boot, R = R,
+                type = type, na.rm = na.rm)
+  if(boot){
+    res$conf.int <- res$conf.int[[2]]
+  }else{
+    res$conf.int <- res$conf.int[2,,drop = FALSE]
+  }
+  res
+}
 
 print.confint <- function(x, digits = getOption("digits"), prefix = "\t", ...){
   cat("\n")

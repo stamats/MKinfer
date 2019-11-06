@@ -11,6 +11,7 @@
 - Moved function pairwise.fun from MKmisc/MKdescr to MKinfer
 - Added bootstrap intervals to functions binomCI and binomDiffCI
 - Added bootstrap intervals to function normCI
+- Added functions meanCI and sdCI
 
 ###########################################################
 ## Version 0.1

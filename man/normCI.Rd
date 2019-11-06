@@ -1,5 +1,7 @@
 \name{normCI}
 \alias{normCI}
+\alias{meanCI}
+\alias{sdCI}
 \title{ Confidence Intervals for Mean and Standard Deviation }
 \description{
   This function can be used to compute confidence intervals for mean and
@@ -8,6 +10,8 @@
 \usage{
 normCI(x, mean = NULL, sd = NULL, conf.level = 0.95, 
        boot = FALSE, R = 1000, type = "all", na.rm = TRUE)
+meanCI(x, conf.level = 0.95, boot = FALSE, R = 1000, type = "all", na.rm = TRUE)
+sdCI(x, conf.level = 0.95, boot = FALSE, R = 1000, type = "all", na.rm = TRUE)
 }
 \arguments{
   \item{x}{ vector of observations. }
@@ -22,6 +26,9 @@ normCI(x, mean = NULL, sd = NULL, conf.level = 0.95,
 \details{
   The standard confidence intervals for mean and standard deviation are
   computed that can be found in many textbooks, e.g. Chapter 4 in Altman et al. (2000).
+  
+  In addition, bootstrap confidence intervals for mean and/or SD can be computed,
+  where function \code{\link[boot]{boot.ci}} is applied.
 }
 \value{
   A list with class \code{"confint"} containing the following components:
@@ -40,17 +47,21 @@ normCI(x, mean = NULL, sd = NULL, conf.level = 0.95,
 x <- rnorm(50)
 ## mean and sd unknown
 normCI(x)
-## bootstrap interval
+meanCI(x)
+sdCI(x)
+## bootstrap intervals
 normCI(x, boot = TRUE)
+meanCI(x, boot = TRUE)
+sdCI(x, boot = TRUE)
 
 ## sd known
 normCI(x, sd = 1)
-## bootstrap interval only for mean (sd is ignored)
+## bootstrap intervals only for mean (sd is ignored)
 normCI(x, sd = 1, boot = TRUE)
 
 ## mean known
 normCI(x, mean = 0)
-## bootstrap interval only for sd (mean is ignored)
+## bootstrap intervals only for sd (mean is ignored)
 normCI(x, mean = 0, boot = TRUE)
 }
 \keyword{univar}

@@ -10,6 +10,8 @@ export(binomCI,
        medianCI,
        mi.t.test,
        normCI,
+       meanCI,
+       sdCI,
        normDiffCI,
        quantileCI,
        pairwise.fun)
