@@ -11,7 +11,7 @@ Depends: R(>= 3.5.0)
 Imports: stats, MKdescr, boot
 Suggests: knitr, rmarkdown, Amelia, exactRankTests
 VignetteBuilder: knitr
-Description: Contains several functions for inferential statistics not available in standard R packages such as computation of various confidence intervals (including bootstrapped versions), HSU t-test, multiple imputation t-test.
+Description: Contains several functions for inferential statistics not available in standard R packages such as computation of various confidence intervals (including bootstrapped versions), HSU t-test and multiple imputation t-test.
 License: LGPL-3
 URL: http://www.stamats.de/
 

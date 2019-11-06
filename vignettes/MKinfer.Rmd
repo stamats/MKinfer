@@ -13,7 +13,10 @@ vignette: >
 
 
 ## Introduction  
-Package MKinfer includes a collection of functions that I find useful for inferential statistics.
+Package MKinfer includes a collection of functions for inferential statistics 
+not available in standard R packages such as computation of various confidence 
+intervals (including bootstrapped versions), HSU t-test and multiple imputation 
+t-test.
 
 We first load the package.
 ```{r}
