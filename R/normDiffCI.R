@@ -1,6 +1,7 @@
 ## confidence interval for difference of means
 normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
-                       method = "welch", na.rm = TRUE){
+                       method = "welch",  boot = FALSE, R = 1000, 
+                       type = "all", na.rm = TRUE){
   if(!is.na(pmatch(method, "welch"))) method <- "welch"
 
   METHODS <- c("classical", "welch", "hsu")
@@ -23,14 +24,21 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
   Infos <- NULL
   alpha <- 1 - conf.level
   if(paired){
-    CIres <- normCI(x = x-y, conf.level = conf.level, na.rm = na.rm)
-    d <- CIres$estimate[1]
-    CI.lower <- CIres$conf.int[1,1]
-    CI.upper <- CIres$conf.int[1,2]
-    Infos <- CIres$Infos
-    names(Infos) <- "SE of mean of differences"
-    names(d) <- "mean of differences"
-    method <- "Confidence interval (paired)"
+    CIres <- normCI(x = x-y, conf.level = conf.level, boot = boot, R = R, 
+                    type = type, na.rm = na.rm)
+    d <- CIres$estimate
+    names(d) <- c("mean of differences", "sd of differences")
+    if(boot){
+      CI <- CIres$conf.int$mean
+      Infos <- NULL
+      method <- "Bootstrap confidence interval (paired)"
+    }else{
+      CI.lower <- CIres$conf.int[1,1]
+      CI.upper <- CIres$conf.int[1,2]
+      Infos <- CIres$Infos
+      names(Infos) <- "SE of mean of differences"
+      method <- "Confidence interval (paired)"
+    }
   }else{
     mx <- mean(x, na.rm = na.rm)
     my <- mean(y, na.rm = na.rm)
@@ -43,7 +51,32 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
       df <- nx + ny - 2
       s <- sqrt(((nx-1)*vx + (ny-1)*vy)/df)
       se <- s*sqrt(1/nx + 1/ny)
-      method <- "Classical confidence interval (unpaired)"
+      if(boot){
+        if(na.rm){
+          DATA <- data.frame(vals = c(x[!is.na(x)], y[!is.na(y)]), 
+                             group = factor(rep(c(1,2), c(nx, ny))))
+        }else{
+          DATA <- data.frame(vals = c(x, y), 
+                             group = factor(rep(c(1,2), c(nx, ny))))
+        }
+        boot.diff.class <- function(x, i){
+          xi <- x[i,]
+          AMs <- tapply(xi$vals, xi$group, mean)
+          d <- -diff(AMs)
+          Vs <- tapply(xi$vals, xi$group, mean)
+          Ns <- table(xi$group)
+          df <- Ns[1] + Ns[2] - 2
+          v <- ((Ns[1]-1)*Vs[1] + (Ns[2]-1)*Vs[2])/df
+          VAR <- v*(1/Ns[1] + 1/Ns[2])
+          c(d, VAR)
+        } 
+        boot.out <- boot(DATA, statistic = boot.diff.class, 
+                         strata=DATA$group, R = R)
+        CI <- boot.ci(boot.out, type = type)
+        method <- "Bootstrap confidence interval (equal variances, unpaired)"
+      }else{
+        method <- "Classical confidence interval (unpaired)"
+      }
     }
     if(method == 2){
       sex <- sqrt(vx/nx)
@@ -51,7 +84,30 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
       s <- sqrt(vx + vy)
       se <- sqrt(vx/nx + vy/ny)
       df <- se^4/(sex^4/(nx - 1) + sey^4/(ny - 1))
-      method <- "Welch confidence interval (unpaired)"
+      if(boot){
+        if(na.rm){
+          DATA <- data.frame(vals = c(x[!is.na(x)], y[!is.na(y)]), 
+                             group = factor(rep(c(1,2), c(nx, ny))))
+        }else{
+          DATA <- data.frame(vals = c(x, y), 
+                             group = factor(rep(c(1,2), c(nx, ny))))
+        }
+        boot.diff.welch <- function(x, i){
+          xi <- x[i,]
+          AMs <- tapply(xi$vals, xi$group, mean)
+          d <- -diff(AMs)
+          Vs <- tapply(xi$vals, xi$group, mean)
+          Ns <- table(xi$group)
+          VAR <- Vs[1]/Ns[1] + Vs[2]/Ns[2]
+          c(d, VAR)
+        } 
+        boot.out <- boot(DATA, statistic = boot.diff.welch, 
+                         strata=DATA$group, R = R)
+        CI <- boot.ci(boot.out, type = type)
+        method <- "Bootstrap confidence interval (unequal variances, unpaired)"
+      }else{
+        method <- "Welch confidence interval (unpaired)"
+      }
     }
     if(method == 3){
       if(nx < 6 || ny < 6)
@@ -59,29 +115,63 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
       s <- sqrt(vx + vy)
       se <- sqrt(vx/nx + vy/ny)
       df <- min(nx, ny) - 1
-      method <- "Hsu confidence interval (unpaired)"
+      if(boot){
+        if(na.rm){
+          DATA <- data.frame(vals = c(x[!is.na(x)], y[!is.na(y)]), 
+                             group = factor(rep(c(1,2), c(nx, ny))))
+        }else{
+          DATA <- data.frame(vals = c(x, y), 
+                             group = factor(rep(c(1,2), c(nx, ny))))
+        }
+        boot.diff.welch <- function(x, i){
+          xi <- x[i,]
+          AMs <- tapply(xi$vals, xi$group, mean)
+          d <- -diff(AMs)
+          Vs <- tapply(xi$vals, xi$group, mean)
+          Ns <- table(xi$group)
+          VAR <- Vs[1]/Ns[1] + Vs[2]/Ns[2]
+          c(d, VAR)
+        } 
+        boot.out <- boot(DATA, statistic = boot.diff.welch, 
+                         strata=DATA$group, R = R)
+        CI <- boot.ci(boot.out, type = type)
+        method <- "Bootstrap confidence interval (unequal variances, unpaired)"
+      }else{
+        method <- "Hsu confidence interval (unpaired)"
+      }
     }
-    t.alpha <- qt(1-alpha/2, df = df)
-    ## confidence bounds
-    CI.lower <- d - t.alpha*se
-    CI.upper <- d + t.alpha*se
+    if(!boot){
+      t.alpha <- qt(1-alpha/2, df = df)
+      ## confidence bounds
+      CI.lower <- d - t.alpha*se
+      CI.upper <- d + t.alpha*se
+    }
     names(d) <- "difference in means"
     Infos <- list(c(se, d/s), c(mx, sqrt(vx), my, sqrt(vy)))
     names(Infos[[1]]) <- c("SE of difference in means", "Cohen's d (SMD)")
     names(Infos[[2]]) <- c("mean of x", "SD of x", "mean of y", "SD of y")
   }
 
-  CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
-  if(paired){
-    rownames(CI) <- "mean of differences"
-  }else{
-    rownames(CI) <- "difference in means"
+  if(!boot){
+    CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
+    if(paired){
+      rownames(CI) <- "mean of differences"
+    }else{
+      rownames(CI) <- "difference in means"
+    }
+    colnames(CI) <- c(paste(alpha/2*100, "%"),
+                      paste((1-alpha/2)*100, "%"))
+    attr(CI, "conf.level") <- conf.level
   }
-  colnames(CI) <- c(paste(alpha/2*100, "%"),
-                    paste((1-alpha/2)*100, "%"))
-  attr(CI, "conf.level") <- conf.level
 
   return(structure(list("estimate" = d, "conf.int" = CI, "Infos" = Infos,
                         method = method),
                    class = "confint"))
+}
+meanDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
+                       method = "welch",  boot = FALSE, R = 1000, 
+                       type = "all", na.rm = TRUE){
+  normDiffCI(x = x, y = y, conf.level = conf.level, paired = paired, 
+             method = method, boot = boot, R = R, type = type, 
+             na.rm = na.rm)
 }

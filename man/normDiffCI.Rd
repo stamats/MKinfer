@@ -1,12 +1,16 @@
 \name{normDiffCI}
 \alias{normDiffCI}
+\alias{meanDiffCI}
 \title{ Confidence Intervals for Difference of Means }
 \description{
   This function can be used to compute confidence intervals for difference
   of means assuming normal distributions.
 }
 \usage{
-normDiffCI(x, y, conf.level = 0.95, paired = FALSE, method = "welch", na.rm = TRUE)
+normDiffCI(x, y, conf.level = 0.95, paired = FALSE, method = "welch", 
+           boot = FALSE, R = 1000, type = "all", na.rm = TRUE)
+meanDiffCI(x, y, conf.level = 0.95, paired = FALSE, method = "welch", 
+           boot = FALSE, R = 1000, type = "all", na.rm = TRUE)
 }
 \arguments{
   \item{x}{ numeric vector of data values of group 1. }
@@ -14,6 +18,9 @@ normDiffCI(x, y, conf.level = 0.95, paired = FALSE, method = "welch", na.rm = TR
   \item{conf.level}{ confidence level. }
   \item{paired}{ a logical value indicating whether the two groups are paired. }
   \item{method}{ a character string specifing which method to use in the unpaired case; see details. }
+  \item{boot}{ a logical value indicating whether bootstrapped confidence intervals shall be computed. }
+  \item{R}{ number of bootstrap replicates; see details. }
+  \item{type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
   \item{na.rm}{ a logical value indicating whether \code{NA} values should be stripped before the computation proceeds. }
 }
 \details{
@@ -45,32 +52,40 @@ normDiffCI(x, y, conf.level = 0.95, paired = FALSE, method = "welch", na.rm = TR
 %\note{}
 %\seealso{}
 \examples{
-x <- rnorm(20)
-y <- rnorm(20, sd = 2)
+x <- rnorm(100)
+y <- rnorm(100, sd = 2)
 ## paired
 normDiffCI(x, y, paired = TRUE)
+normDiffCI(x, y, paired = TRUE, boot = TRUE)
 ## compare
 normCI(x-y)
+normCI(x-y, boot = TRUE)
 
 ## unpaired
-y <- rnorm(10, mean = 1, sd = 2)
+y <- rnorm(90, mean = 1, sd = 2)
 ## classical
 normDiffCI(x, y, method = "classical")
+normDiffCI(x, y, method = "classical", boot = TRUE)
 ## Welch (default is in case of function t.test)
 normDiffCI(x, y, method = "welch")
+normDiffCI(x, y, method = "welch", boot = TRUE)
 ## Hsu
 normDiffCI(x, y, method = "hsu")
+## In case of bootstrap there is no difference between welch and hsu
+normDiffCI(x, y, method = "hsu", boot = TRUE)
 
 \donttest{
 ## Monte-Carlo simulation: coverage probability
-M <- 10000
-CIhsu <- CIwelch <- CIclass <- matrix(NA, nrow = M, ncol = 2)
+M <- 100
+CIbootbca <- CIhsu <- CIwelch <- CIclass <- matrix(NA, nrow = M, ncol = 2)
 for(i in 1:M){
   x <- rnorm(10)
   y <- rnorm(30, sd = 0.1)
   CIclass[i,] <- normDiffCI(x, y, method = "classical")$conf.int
   CIwelch[i,] <- normDiffCI(x, y, method = "welch")$conf.int
   CIhsu[i,] <- normDiffCI(x, y, method = "hsu")$conf.int
+  CIbootbca[i,] <- normDiffCI(x, y, method = "welch", boot = TRUE, R = 1000, 
+                              type = "bca")$conf.int$bca[c(4,5)]
 }
 ## coverage probabilies
 ## classical
@@ -79,6 +94,8 @@ sum(CIclass[,1] < 0 & 0 < CIclass[,2])/M
 sum(CIwelch[,1] < 0 & 0 < CIwelch[,2])/M
 ## Hsu
 sum(CIhsu[,1] < 0 & 0 < CIhsu[,2])/M
+## Bootstrap bca
+sum(CIbootbca[,1] < 0 & 0 < CIbootbca[,2])/M
 }
 }
 \keyword{univar}
