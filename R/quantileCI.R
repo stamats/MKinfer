@@ -1,10 +1,11 @@
 ## Confidence Intervals for quantiles
 quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
+                       R = 1000, type = c("norm", "basic", "perc", "bca"), 
                        minLength = FALSE, na.rm = FALSE){
     if(!is.na(pmatch(method, "exact")))
         method <- "exact"
 
-    METHODS <- c("exact", "asymptotic")
+    METHODS <- c("exact", "asymptotic", "boot")
     method <- pmatch(method, METHODS)
 
     if(is.na(method))
@@ -13,8 +14,13 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
     if(method == -1)
         stop("ambiguous method")
 
+    stopifnot(is.numeric(x), is.numeric(prob), is.numeric(conf.level))
     if(length(x) <= 1)
         stop("'x' has to be of at least length 2")
+    if(length(prob) != 1)
+      stop("'prob' has to be of length 1 (quantile)")
+    if(prob <= 0 | prob >= 1)
+      stop("'prob' has to be in (0, 1)")
     if(length(conf.level) != 1)
         stop("'conf.level' has to be of length 1 (confidence level)")
     if(conf.level < 0.5 | conf.level > 1)
@@ -58,6 +64,11 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
           rownames(CI) <- rep(paste(100*prob, "% quantile"), nrow(CI))
           colnames(CI) <- c("lower", "upper")
         }
+        if(minLength){
+          meth <- paste("minimum length", METHODS[method], "confidence interval")
+        }else{
+          meth <- paste(METHODS[method], "confidence interval")
+        }
     }
     if(method == 2){ # approx
         prob.sd <- sqrt(n*prob*(1-prob))
@@ -67,36 +78,47 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
         attr(CI, "conf.level") <- conf.level
         rownames(CI) <- rep(paste(100*prob, "% quantile"), nrow(CI))
         colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
+        meth <- "asymptotic confidence interval"
+    }
+    if(method == 3){ # boot
+      boot.quant <- function(x, i){ 
+        quantile(x[i], probs = prob) 
+      } 
+      boot.out <- boot(x, statistic = boot.quant, R = R)
+      CI <- boot.ci(boot.out, type = type)
+      meth <- "bootstrap confidence interval"
     }
 
     names(est) <- paste(100*prob, "% quantile")
 
-    if(minLength){
-      meth <- paste("minimum length", METHODS[method], "confidence interval")
-    }else{
-      meth <- paste(METHODS[method], "confidence interval")
-    }
 
     return(structure(list("estimate" = est, "conf.int" = CI,
                           "method" = meth),
                      class = "confint"))
 }
 
-medianCI <- function(x, conf.level = 0.95, method = "exact", minLength = FALSE,
-                     na.rm = FALSE){
+medianCI <- function(x, conf.level = 0.95, method = "exact", 
+                     R = 1000, type = c("norm", "basic", "perc", "bca"), 
+                     minLength = FALSE, na.rm = FALSE){
     res <- quantileCI(x, prob = 0.5, conf.level = conf.level, method = method,
-                      minLength = minLength, na.rm = na.rm)
-    rownames(res$conf.int) <- rep("median", nrow(res$conf.int))
+                      R = R, type = type, minLength = minLength, na.rm = na.rm)
+    if(method != "boot"){
+      rownames(res$conf.int) <- rep("median", nrow(res$conf.int))
+    }
     names(res$estimate) <- "median"
     res
 }
 
 madCI <- function(x, conf.level = 0.95, method = "exact", minLength = FALSE,
+                  R = 1000, type = c("norm", "basic", "perc", "bca"),
                   na.rm = FALSE, constant = 1.4826){
   M <- median(x, na.rm = na.rm)
   res <- medianCI(constant*abs(x-M), conf.level = conf.level,
-                  method = method, minLength = minLength, na.rm = na.rm)
-  rownames(res$conf.int) <- rep("MAD", nrow(res$conf.int))
+                  method = method, R = R, type = type, 
+                  minLength = minLength, na.rm = na.rm)
+  if(method != "boot"){
+    rownames(res$conf.int) <- rep("MAD", nrow(res$conf.int))
+  }
   names(res$estimate) <- "MAD"
   res
 }

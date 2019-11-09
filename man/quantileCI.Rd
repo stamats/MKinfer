@@ -9,10 +9,13 @@
 }
 \usage{
 quantileCI(x, prob = 0.5, conf.level = 0.95, method = "exact",
+           R = 1000, type = c("norm", "basic", "perc", "bca"), 
            minLength = FALSE, na.rm = FALSE)
 medianCI(x, conf.level = 0.95, method = "exact",
+         R = 1000, type = c("norm", "basic", "perc", "bca"), 
          minLength = FALSE, na.rm = FALSE)
 madCI(x, conf.level = 0.95, method = "exact", minLength = FALSE,
+      R = 1000, type = c("norm", "basic", "perc", "bca"), 
       na.rm = FALSE, constant = 1.4826)
 }
 \arguments{
@@ -21,6 +24,8 @@ madCI(x, conf.level = 0.95, method = "exact", minLength = FALSE,
   \item{conf.level}{ confidence level }
   \item{method}{ character string specifing which method to use; see details. }
   \item{minLength}{ logical, see details}
+  \item{R}{ number of bootstrap replicates; see details. }
+  \item{type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
   \item{na.rm}{ logical, remove \code{NA} values. }
   \item{constant}{ scale factor (see \code{\link[stats]{mad}}). }
 }
@@ -34,6 +39,9 @@ madCI(x, conf.level = 0.95, method = "exact", minLength = FALSE,
 
   The asymptotic confidence interval (\code{method = "asymptotic"}) is based on the
   normal approximation of the binomial distribution; see Section 6.8.1 in Sachs and Hedderich (2009).
+  
+  In case of discrete data, there are alternative bootstrap approaches that might 
+  give better results; see Jentsch and Leucht (2016).
 }
 \value{
   A list with components
@@ -41,7 +49,10 @@ madCI(x, conf.level = 0.95, method = "exact", minLength = FALSE,
   \item{CI}{ a confidence interval for the sample quantile. }
 }
 \references{
-  L. Sachs and J. Hedderich (2009). Angewandte Statistik. Springer.
+  L. Sachs and J. Hedderich (2009). \emph{Angewandte Statistik}. Springer.
+  
+  C. Jentsch and A. Leucht (2016). Bootstrapping sample quantiles of discrete data.
+  \emph{Ann Inst Stat Math}, \bold{68}: 491-539.
 }
 \author{ Matthias Kohl \email{Matthias.Kohl@stamats.de}}
 \seealso{\code{\link[stats]{binom.test}}, \code{\link[Hmisc]{binconf}}}
@@ -62,8 +73,21 @@ madCI(x, minLength = TRUE)
 medianCI(x, method = "asymptotic")
 madCI(x, method = "asymptotic")
 
+## bootstrap confidence interval
+x <- rnorm(50)
+medianCI(x)
+medianCI(x, method = "asymptotic")
+medianCI(x, method = "boot")
+
+madCI(x)
+madCI(x, method = "asymptotic")
+madCI(x, method = "boot")
+
 ## confidence interval for quantiles
-quantileCI(x, prob = 0.4)
-quantileCI(x, prob = 0.6)
+quantileCI(x, prob = 0.25)
+quantileCI(x, prob = 0.25, method = "asymptotic")
+
+quantileCI(x, prob = 0.75)
+quantileCI(x, prob = 0.75, method = "boot")
 }
 \keyword{univar}
