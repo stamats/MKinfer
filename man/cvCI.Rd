@@ -6,12 +6,15 @@
   coefficient of variation.
 }
 \usage{
-cvCI(x, conf.level = 0.95, method = "miller", na.rm = FALSE)
+cvCI(x, conf.level = 0.95, method = "miller", R = 1000, 
+     type = c("norm", "basic", "perc", "bca"), na.rm = FALSE)
 }
 \arguments{
   \item{x}{ numeric vector. }
   \item{conf.level}{ confidence level }
   \item{method}{ character string specifing which method to use; see details. }
+  \item{R}{ number of bootstrap replicates; see details. }
+  \item{type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
   \item{na.rm}{logical. Should missing values be removed?}
 }
 \details{
@@ -47,5 +50,6 @@ cvCI(x, method = "medmckay")
 cvCI(x, method = "medvangel")
 cvCI(x, method = "medcurto")
 cvCI(x, method = "gulhar")
+cvCI(x, method = "boot")
 }
 \keyword{univar}

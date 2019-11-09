@@ -14,6 +14,9 @@
 - Added functions meanCI and sdCI
 - Added bootstrap intervals to function normDiffCI
 - Added function meanDiffCI
+- Added bootstrap intervals to quantileCI, medianCI and madCI
+- Added bootstrap interval to cvCI
+
 
 ###########################################################
 ## Version 0.1

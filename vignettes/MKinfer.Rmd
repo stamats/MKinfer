@@ -95,9 +95,9 @@ normDiffCI(x, y, method = "welch")
 ## Hsu
 normDiffCI(x, y, method = "hsu")
 ## bootstrap: assuming equal variances
-normDiffCI(x, y, method = "classical", boot = TRUE)
+normDiffCI(x, y, method = "classical", boot = TRUE, type = "bca")
 ## bootstrap: assuming unequal variances
-normDiffCI(x, y, method = "welch", boot = TRUE)
+normDiffCI(x, y, method = "welch", boot = TRUE, type = "bca")
 ```
 
 
@@ -133,6 +133,8 @@ x <- rnorm(100, mean = 10, sd = 2) # CV = 0.2
 cvCI(x)
 ## Gulhar et al. (2012)
 cvCI(x, method = "gulhar")
+## bootstrap
+cvCI(x, method = "boot")
 ```
 
 For all intervals implemented see the help page of function cvCI.

@@ -1,10 +1,12 @@
-cvCI <- function(x, conf.level = 0.95, method = "miller", na.rm = FALSE){
+cvCI <- function(x, conf.level = 0.95, method = "miller", 
+                 R = 1000, type = c("norm", "basic", "perc", "bca"), 
+                 na.rm = FALSE){
     stopifnot(is.numeric(x))
     if (!is.na(pmatch(method, "miller")))
         method <- "miller"
     METHODS <- c("miller", "sharma", "curto", "mckay", "vangel",
                  "panichkitkosolkul", "medmiller", "medmckay", "medvangel",
-                 "medcurto", "gulhar")
+                 "medcurto", "gulhar", "boot")
     method <- pmatch(method, METHODS)
 
     if (is.na(method))
@@ -110,11 +112,22 @@ cvCI <- function(x, conf.level = 0.95, method = "miller", na.rm = FALSE){
       CI.upper <- cv*sqrt(n-1)/sqrt(q2)
       METH <- "Gulhar et al (2012) confidence interval"
     }
+    if(method == 12){ # boot
+      boot.cv <- 
+        boot.quant <- function(x, i){ 
+          CV(x[i]) 
+        } 
+      boot.out <- boot(x, statistic = boot.cv, R = R)
+      CI <- boot.ci(boot.out, type = type)
+      METH <- "Bootstrap confidence interval"
+    }
 
-    CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
-    rownames(CI) <- "CV"
-    colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
-    attr(CI, "conf.level") <- conf.level
+    if(method != 12){
+      CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
+      rownames(CI) <- "CV"
+      colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
+      attr(CI, "conf.level") <- conf.level
+    }
     names(cv) <- "CV"
 
     return(structure(list("estimate" = cv, "conf.int" = CI, "Infos" = Infos,
