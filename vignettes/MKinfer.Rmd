@@ -68,9 +68,9 @@ sdCI(x)
 normCI(x, sd = 3)
 ## mean known
 normCI(x, mean = 2)
+## bootstrap
+meanCI(x, boot = TRUE)
 ```
-
-One can also compute bootstrap intervals.
 
 
 ### Difference in Means
@@ -83,6 +83,8 @@ y <- rnorm(20, sd = 2)
 normDiffCI(x, y, paired = TRUE)
 ## compare
 normCI(x-y)
+## bootstrap
+normDiffCI(x, y, paired = TRUE, boot = TRUE)
 
 ## unpaired
 y <- rnorm(10, mean = 1, sd = 2)
@@ -92,7 +94,12 @@ normDiffCI(x, y, method = "classical")
 normDiffCI(x, y, method = "welch")
 ## Hsu
 normDiffCI(x, y, method = "hsu")
+## bootstrap: assuming equal variances
+normDiffCI(x, y, method = "classical", boot = TRUE)
+## bootstrap: assuming unequal variances
+normDiffCI(x, y, method = "welch", boot = TRUE)
 ```
+
 
 In case of unequal variances and unequal sample sizes per group the classical
 confidence interval may have a bad coverage (too long or too short), as is 
@@ -139,6 +146,8 @@ x <- rexp(100, rate = 0.5)
 quantileCI(x = x, prob = 0.95)
 ## asymptotic
 quantileCI(x = x, prob = 0.95, method = "asymptotic")
+## boot
+quantileCI(x = x, prob = 0.95, method = "boot")
 ```
 
 Next, we consider the median.
@@ -147,6 +156,8 @@ Next, we consider the median.
 medianCI(x = x)
 ## asymptotic
 medianCI(x = x, method = "asymptotic")
+## boot
+medianCI(x = x, method = "boot")
 ```
 
 It often happens that quantile confidence intervals are not unique. Here the
@@ -162,10 +173,11 @@ the standardized MAD is used (see function mad).
 madCI(x = x)
 ## aysymptotic
 madCI(x = x, method = "asymptotic")
+## boot
+madCI(x = x, method = "boot")
 ## unstandardized
 madCI(x = x, constant = 1)
 ```
-
 
 
 ## Hsu Two-Sample t-Test

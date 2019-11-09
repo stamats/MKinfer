@@ -12,6 +12,8 @@
 - Added bootstrap intervals to functions binomCI and binomDiffCI
 - Added bootstrap intervals to function normCI
 - Added functions meanCI and sdCI
+- Added bootstrap intervals to function normDiffCI
+- Added function meanDiffCI
 
 ###########################################################
 ## Version 0.1

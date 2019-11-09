@@ -13,6 +13,7 @@ export(binomCI,
        meanCI,
        sdCI,
        normDiffCI,
+       meanDiffCI,
        quantileCI,
        pairwise.fun)
 
