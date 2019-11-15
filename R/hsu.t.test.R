@@ -62,8 +62,7 @@ hsu.t.test.default <- function (x, y, alternative = c("two.sided", "less", "grea
   rval
 }
 
-hsu.t.test.formula <- function (formula, data, subset, na.action, ...)
-{
+hsu.t.test.formula <- function (formula, data, subset, na.action, ...){
   if (missing(formula) || (length(formula) != 3L) || (length(attr(terms(formula[-2L]),
                                                                   "term.labels")) != 1L))
     stop("'formula' missing or incorrect")
