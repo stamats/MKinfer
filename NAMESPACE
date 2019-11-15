@@ -3,6 +3,7 @@ importFrom("MKdescr", "CV")
 importFrom("boot", "boot", "boot.ci")
 export(binomCI,
        binomDiffCI,
+       boot.t.test,
        cvCI,
        hsu.t.test,
        imputeSD,
@@ -19,5 +20,8 @@ export(binomCI,
 
 S3method(hsu.t.test, default)
 S3method(hsu.t.test, formula)
+S3method(boot.t.test, default)
+S3method(boot.t.test, formula)
 S3method(mi.t.test, default)
 S3method(print, confint)
+S3method(print, boot.htest)

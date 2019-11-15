@@ -13,7 +13,7 @@ Functions for inferential statistics not available in standard R packages such a
 Package: \tab MKinfer\cr
 Type: \tab Package\cr
 Version: \tab 0.2\cr
-Date: \tab 2019-11-09\cr
+Date: \tab 2019-11-15\cr
 Depends: \tab R(>= 3.5.0)\cr
 Imports: \tab stats, MKdescr, boot\cr
 Suggests: \tab Amelia, knitr, rmarkdown, exactRankTests\cr

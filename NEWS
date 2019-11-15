@@ -16,6 +16,7 @@
 - Added function meanDiffCI
 - Added bootstrap intervals to quantileCI, medianCI and madCI
 - Added bootstrap interval to cvCI
+- Added bootstrap t-test
 
 
 ###########################################################
