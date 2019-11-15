@@ -24,7 +24,7 @@ madCI(x, conf.level = 0.95, method = "exact", minLength = FALSE,
   \item{conf.level}{ confidence level }
   \item{method}{ character string specifing which method to use; see details. }
   \item{minLength}{ logical, see details}
-  \item{R}{ number of bootstrap replicates; see details. }
+  \item{R}{ number of bootstrap replicates. }
   \item{type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
   \item{na.rm}{ logical, remove \code{NA} values. }
   \item{constant}{ scale factor (see \code{\link[stats]{mad}}). }

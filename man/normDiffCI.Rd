@@ -19,7 +19,7 @@ meanDiffCI(x, y, conf.level = 0.95, paired = FALSE, method = "welch",
   \item{paired}{ a logical value indicating whether the two groups are paired. }
   \item{method}{ a character string specifing which method to use in the unpaired case; see details. }
   \item{boot}{ a logical value indicating whether bootstrapped confidence intervals shall be computed. }
-  \item{R}{ number of bootstrap replicates; see details. }
+  \item{R}{ number of bootstrap replicates. }
   \item{type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
   \item{na.rm}{ a logical value indicating whether \code{NA} values should be stripped before the computation proceeds. }
 }

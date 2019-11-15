@@ -23,7 +23,7 @@ binomDiffCI(a, b, c, d, conf.level = 0.95, paired = FALSE,
   \item{conf.level}{ confidence level }
   \item{paired}{ a logical value indicating whether the two groups are paired. }
   \item{method}{ character string specifing which method to use; see details. }
-  \item{R}{ number of bootstrap replicates; see details. }
+  \item{R}{ number of bootstrap replicates. }
   \item{type}{ type of quantile used for bootstrap percentile interval; see 
   \code{\link[stats]{quantile}}. }
 }

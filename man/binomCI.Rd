@@ -14,7 +14,7 @@ binomCI(x, n, conf.level = 0.95, method = "wilson", rand = 123,
   \item{conf.level}{ confidence level }
   \item{method}{ character string specifing which method to use; see details. }
   \item{rand}{ seed for random number generator; see details. }
-  \item{R}{ number of bootstrap replicates; see details. }
+  \item{R}{ number of bootstrap replicates. }
   \item{type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
 }
 \details{

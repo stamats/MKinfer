@@ -19,7 +19,7 @@ sdCI(x, conf.level = 0.95, boot = FALSE, R = 1000, type = "all", na.rm = TRUE)
   \item{sd}{ standard deviation if known otherwise \code{NULL}. }
   \item{conf.level}{ confidence level. }
   \item{boot}{ a logical value indicating whether bootstrapped confidence intervals shall be computed. }
-  \item{R}{ number of bootstrap replicates; see details. }
+  \item{R}{ number of bootstrap replicates. }
   \item{type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
   \item{na.rm}{ a logical value indicating whether NA values should be stripped before the computation proceeds. }
 }
