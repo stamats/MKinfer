@@ -12,7 +12,7 @@ boot.t.test(x, \dots)
 \method{boot.t.test}{default}(x, y = NULL,
        alternative = c("two.sided", "less", "greater"),
        mu = 0, paired = FALSE, var.equal = FALSE,
-       conf.level = 0.95, R = 10000, symmetric = FALSE, \dots)
+       conf.level = 0.95, R = 9999, symmetric = FALSE, \dots)
 
 \method{boot.t.test}{formula}(formula, data, subset, na.action, \dots)
 }

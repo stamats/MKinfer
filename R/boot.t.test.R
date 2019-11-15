@@ -3,7 +3,7 @@ boot.t.test <- function (x, ...){
 }
 boot.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less", "greater"), 
                         mu = 0, paired = FALSE, var.equal = FALSE, 
-                        conf.level = 0.95, R = 10000, symmetric = FALSE, ...){
+                        conf.level = 0.95, R = 9999, symmetric = FALSE, ...){
   alternative <- match.arg(alternative)
   if(!missing(mu) && (length(mu) != 1 || is.na(mu))) 
     stop("'mu' must be a single number")
