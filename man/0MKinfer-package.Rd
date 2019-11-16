@@ -6,7 +6,7 @@
 Inferential Statistics.
 }
 \description{
-Functions for inferential statistics not available in standard R packages such as computation of various confidence intervals (including bootstrapped versions), HSU t-test and multiple imputation t-test.
+Functions for inferential statistics not available in standard R packages such as computation of various confidence intervals (including bootstrapped versions), HSU, bootstrap and multiple imputation t-test.
 }
 \details{
 \tabular{ll}{
