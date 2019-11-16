@@ -35,8 +35,8 @@ boot.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
   mx <- mean(x)
   vx <- var(x)
   if (is.null(y)) {
-    if (nx < 10) 
-      stop("number of observations should be at least 10")
+    if (nx < 2) 
+      stop("not enough 'x' observations")
     df <- nx - 1
     stderr <- sqrt(vx/nx)
     if (stderr < 10 * .Machine$double.eps * abs(mx)) 
@@ -131,6 +131,7 @@ boot.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
   names(df) <- "df"
   names(mu) <- if (paired || !is.null(y)) "difference in means" else "mean"
   attr(cint, "conf.level") <- conf.level
+  attr(boot.cint, "conf.level") <- conf.level
   rval <- list(statistic = tstat, parameter = df, p.value = pval, 
                boot.p.value = boot.pval,
                conf.int = cint, boot.conf.int = boot.cint,
@@ -171,10 +172,12 @@ print.boot.htest <- function (x, digits = getOption("digits"), prefix = "\t", ..
   out <- character()
   if (!is.null(x$boot.p.value)) {
     bfp <- format.pval(x$boot.p.value, digits = max(1L, digits - 3L))
-    cat("bootstrapped p-value", if (substr(bfp, 1L, 1L) == "<") bfp else paste("=", bfp), "\n")
+    cat("bootstrapped p-value", 
+        if (substr(bfp, 1L, 1L) == "<") bfp else paste("=", bfp), "\n")
   }
   if (!is.null(x$conf.int)) {
-    cat(format(100 * attr(x$conf.int, "conf.level")), " percent bootstrap percentile confidence interval:\n", 
+    cat(format(100 * attr(x$boot.conf.int, "conf.level")), 
+        " percent bootstrap percentile confidence interval:\n", 
         " ", paste(format(x$boot.conf.int[1:2], digits = digits), 
                    collapse = " "), "\n", sep = "")
   }
@@ -188,7 +191,8 @@ print.boot.htest <- function (x, digits = getOption("digits"), prefix = "\t", ..
   if (!is.null(x$p.value)) {
     fp <- format.pval(x$p.value, digits = max(1L, digits - 
                                                 3L))
-    out <- c(out, paste("p-value", if (substr(fp, 1L, 1L) == "<") fp else paste("=", fp)))
+    out <- c(out, paste("p-value", 
+                        if (substr(fp, 1L, 1L) == "<") fp else paste("=", fp)))
   }
   cat(strwrap(paste(out, collapse = ", ")), sep = "\n")
   if (!is.null(x$alternative)) {

@@ -74,7 +74,8 @@ boot.t.test(x, \dots)
   two means) an error is generated.
 }
 \value{
-  A list with class \code{"htest"} containing the following components:
+  A list with class \code{"boot.htest"} (derived from class \code{htest}) 
+  containing the following components:
   \item{statistic}{the value of the t-statistic.}
   \item{parameter}{the degrees of freedom for the t-statistic.}
   \item{p.value}{the p-value for the test.}
