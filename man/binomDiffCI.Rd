@@ -24,8 +24,7 @@ binomDiffCI(a, b, c, d, conf.level = 0.95, paired = FALSE,
   \item{paired}{ a logical value indicating whether the two groups are paired. }
   \item{method}{ character string specifing which method to use; see details. }
   \item{R}{ number of bootstrap replicates. }
-  \item{type}{ type of quantile used for bootstrap percentile interval; see 
-  \code{\link[stats]{quantile}}. }
+  \item{type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
 }
 \details{
   The Wald intervals (independent and paired) are obtained by applying the normal 
@@ -36,7 +35,7 @@ binomDiffCI(a, b, c, d, conf.level = 0.95, paired = FALSE,
   version of the interval is recommended. The intervals are proposed in 
   Newcombe (1998a) and Newcombe (1998b).
   
-  The bootstrap intervals are calculated by the bootstrap percentile method.
+  The bootstrap interval is calculated by using function \code{\link[boot]{boot.ci}}.
 }
 \value{
   A list with class \code{"confint"} containing the following components:
