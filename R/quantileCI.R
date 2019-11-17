@@ -1,6 +1,6 @@
 ## Confidence Intervals for quantiles
 quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
-                       R = 1000, type = c("norm", "basic", "perc", "bca"), 
+                       R = 9999, type = c("norm", "basic", "perc", "bca"), 
                        minLength = FALSE, na.rm = FALSE){
     if(!is.na(pmatch(method, "exact")))
         method <- "exact"
@@ -98,7 +98,7 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
 }
 
 medianCI <- function(x, conf.level = 0.95, method = "exact", 
-                     R = 1000, type = c("norm", "basic", "perc", "bca"), 
+                     R = 9999, type = c("norm", "basic", "perc", "bca"), 
                      minLength = FALSE, na.rm = FALSE){
     res <- quantileCI(x, prob = 0.5, conf.level = conf.level, method = method,
                       R = R, type = type, minLength = minLength, na.rm = na.rm)
@@ -110,7 +110,7 @@ medianCI <- function(x, conf.level = 0.95, method = "exact",
 }
 
 madCI <- function(x, conf.level = 0.95, method = "exact", minLength = FALSE,
-                  R = 1000, type = c("norm", "basic", "perc", "bca"),
+                  R = 9999, type = c("norm", "basic", "perc", "bca"),
                   na.rm = FALSE, constant = 1.4826){
   M <- median(x, na.rm = na.rm)
   res <- medianCI(constant*abs(x-M), conf.level = conf.level,

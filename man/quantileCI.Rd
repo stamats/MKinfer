@@ -9,13 +9,13 @@
 }
 \usage{
 quantileCI(x, prob = 0.5, conf.level = 0.95, method = "exact",
-           R = 1000, type = c("norm", "basic", "perc", "bca"), 
+           R = 9999, type = c("norm", "basic", "perc", "bca"), 
            minLength = FALSE, na.rm = FALSE)
 medianCI(x, conf.level = 0.95, method = "exact",
-         R = 1000, type = c("norm", "basic", "perc", "bca"), 
+         R = 9999, type = c("norm", "basic", "perc", "bca"), 
          minLength = FALSE, na.rm = FALSE)
 madCI(x, conf.level = 0.95, method = "exact", minLength = FALSE,
-      R = 1000, type = c("norm", "basic", "perc", "bca"), 
+      R = 9999, type = c("norm", "basic", "perc", "bca"), 
       na.rm = FALSE, constant = 1.4826)
 }
 \arguments{
@@ -77,17 +77,20 @@ madCI(x, method = "asymptotic")
 x <- rnorm(50)
 medianCI(x)
 medianCI(x, method = "asymptotic")
-medianCI(x, method = "boot")
+## (R = 999 to reduce computation time for R checks)
+medianCI(x, method = "boot", R = 999)
 
 madCI(x)
 madCI(x, method = "asymptotic")
-madCI(x, method = "boot")
+## (R = 999 to reduce computation time for R checks)
+madCI(x, method = "boot", R = 999)
 
 ## confidence interval for quantiles
 quantileCI(x, prob = 0.25)
 quantileCI(x, prob = 0.25, method = "asymptotic")
 
 quantileCI(x, prob = 0.75)
-quantileCI(x, prob = 0.75, method = "boot")
+## (R = 999 to reduce computation time for R checks)
+quantileCI(x, prob = 0.75, method = "boot", R = 999)
 }
 \keyword{univar}
