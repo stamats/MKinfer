@@ -11,12 +11,13 @@
 - Moved function pairwise.fun from MKmisc/MKdescr to MKinfer
 - Added bootstrap intervals to functions binomCI and binomDiffCI
 - Added bootstrap intervals to function normCI
-- Added functions meanCI and sdCI
+- Added functions meanCI and sdCI calling function normCI
 - Added bootstrap intervals to function normDiffCI
-- Added function meanDiffCI
+- Added function meanDiffCI calling function normDiffCI
 - Added bootstrap intervals to quantileCI, medianCI and madCI
 - Added bootstrap interval to cvCI
-- Added bootstrap t-test
+- Added function boot.t.test to compute bootstrap t-tests
+- Added function perm.t.test to compute permutation t-tests
 
 
 ###########################################################
