@@ -14,7 +14,7 @@
 binomDiffCI <- function(a, b, c, d, conf.level = 0.95, 
                         paired = FALSE, 
                         method = ifelse(paired, "wilson-cc", "wilson"),
-                        R = 1000, type = "all"){
+                        R = 9999, type = "all"){
   stopifnot(is.numeric(a), is.numeric(b), is.numeric(c), is.numeric(d),
             is.numeric(conf.level))
   stopifnot(length(a) == 1, length(b) == 1, length(c) == 1, 
