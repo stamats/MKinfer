@@ -2,9 +2,9 @@
 \alias{boot.t.test}
 \alias{boot.t.test.default}
 \alias{boot.t.test.formula}
-\title{Bootstrapped t-Test}
+\title{Bootstrap t-Test}
 \description{
-  Performs one and two sample bootstrapped t-tests on vectors of data.
+  Performs one and two sample bootstrap t-tests on vectors of data.
 }
 \usage{
 boot.t.test(x, \dots)
@@ -102,7 +102,8 @@ boot.t.test(x, \dots)
   Chapman and Hall/CRC 1993.
 }
 \seealso{
-  \code{\link{t.test}}, \code{\link{meanCI}}, \code{\link{meanDiffCI}}
+  \code{\link{t.test}}, \code{\link{meanCI}}, \code{\link{meanDiffCI}},
+  \code{\link{perm.t.test}}
 }
 \note{
   Code and documentation are for large parts identical to function 
