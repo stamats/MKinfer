@@ -9,9 +9,9 @@
 }
 \usage{
 normCI(x, mean = NULL, sd = NULL, conf.level = 0.95, 
-       boot = FALSE, R = 1000, type = "all", na.rm = TRUE)
-meanCI(x, conf.level = 0.95, boot = FALSE, R = 1000, type = "all", na.rm = TRUE)
-sdCI(x, conf.level = 0.95, boot = FALSE, R = 1000, type = "all", na.rm = TRUE)
+       boot = FALSE, R = 9999, type = "all", na.rm = TRUE)
+meanCI(x, conf.level = 0.95, boot = FALSE, R = 9999, type = "all", na.rm = TRUE)
+sdCI(x, conf.level = 0.95, boot = FALSE, R = 9999, type = "all", na.rm = TRUE)
 }
 \arguments{
   \item{x}{ vector of observations. }
@@ -49,19 +49,21 @@ x <- rnorm(50)
 normCI(x)
 meanCI(x)
 sdCI(x)
-## bootstrap intervals
-normCI(x, boot = TRUE)
-meanCI(x, boot = TRUE)
-sdCI(x, boot = TRUE)
+## bootstrap intervals (R = 999 to reduce computation time for R checks)
+normCI(x, boot = TRUE, R = 999)
+meanCI(x, boot = TRUE, R = 999)
+sdCI(x, boot = TRUE, R = 999)
 
 ## sd known
 normCI(x, sd = 1)
 ## bootstrap intervals only for mean (sd is ignored)
-normCI(x, sd = 1, boot = TRUE)
+## (R = 999 to reduce computation time for R checks)
+normCI(x, sd = 1, boot = TRUE, R = 999)
 
 ## mean known
 normCI(x, mean = 0)
 ## bootstrap intervals only for sd (mean is ignored)
-normCI(x, mean = 0, boot = TRUE)
+## (R = 999 to reduce computation time for R checks)
+normCI(x, mean = 0, boot = TRUE, R = 999)
 }
 \keyword{univar}

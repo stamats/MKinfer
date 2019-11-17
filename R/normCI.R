@@ -1,6 +1,6 @@
 ## Confidence Intervals for normal mean and standard deviation
 normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95, 
-                   boot = FALSE, R = 1000, type = "all", na.rm = TRUE){
+                   boot = FALSE, R = 9999, type = "all", na.rm = TRUE){
   if(!is.numeric(x))
     stop("'x' must be a numeric vector")
   if(!is.null(mean))
@@ -110,7 +110,7 @@ normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95,
                         method = METHOD),
                    class = "confint"))
 }
-meanCI <- function(x, conf.level = 0.95, boot = FALSE, R = 1000, 
+meanCI <- function(x, conf.level = 0.95, boot = FALSE, R = 9999, 
                    type = "all", na.rm = TRUE){
   res <- normCI(x = x, conf.level = conf.level, boot = boot, R = R,
                 type = type, na.rm = na.rm)
@@ -121,7 +121,7 @@ meanCI <- function(x, conf.level = 0.95, boot = FALSE, R = 1000,
   }
   res
 }
-sdCI <- function(x, conf.level = 0.95, boot = FALSE, R = 1000, 
+sdCI <- function(x, conf.level = 0.95, boot = FALSE, R = 9999, 
                    type = "all", na.rm = TRUE){
   res <- normCI(x = x, conf.level = conf.level, boot = boot, R = R,
                 type = type, na.rm = na.rm)
