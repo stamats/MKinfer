@@ -56,23 +56,28 @@ x <- rnorm(100)
 y <- rnorm(100, sd = 2)
 ## paired
 normDiffCI(x, y, paired = TRUE)
-normDiffCI(x, y, paired = TRUE, boot = TRUE)
+## (R = 999 to reduce computation time for R checks)
+normDiffCI(x, y, paired = TRUE, boot = TRUE, R = 999)
 ## compare
 normCI(x-y)
-normCI(x-y, boot = TRUE)
+## (R = 999 to reduce computation time for R checks)
+normCI(x-y, boot = TRUE, R = 999)
 
 ## unpaired
 y <- rnorm(90, mean = 1, sd = 2)
 ## classical
 normDiffCI(x, y, method = "classical")
-normDiffCI(x, y, method = "classical", boot = TRUE)
+## (R = 999 to reduce computation time for R checks)
+normDiffCI(x, y, method = "classical", boot = TRUE, R = 999)
 ## Welch (default is in case of function t.test)
 normDiffCI(x, y, method = "welch")
-normDiffCI(x, y, method = "welch", boot = TRUE)
+## (R = 999 to reduce computation time for R checks)
+normDiffCI(x, y, method = "welch", boot = TRUE, R = 999)
 ## Hsu
 normDiffCI(x, y, method = "hsu")
 ## In case of bootstrap there is no difference between welch and hsu
-normDiffCI(x, y, method = "hsu", boot = TRUE)
+## (R = 999 to reduce computation time for R checks)
+normDiffCI(x, y, method = "hsu", boot = TRUE, R = 999)
 
 \donttest{
 ## Monte-Carlo simulation: coverage probability
