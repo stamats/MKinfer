@@ -1,6 +1,6 @@
 ## Confidence Intervals for Binomial Proportions
 binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123, 
-                    R = 1000, type = "all"){
+                    R = 9999, type = "all"){
     if (!is.na(pmatch(method, "wilson")))
         method <- "wilson"
     METHODS <- c("wald", "wilson", "agresti-coull", "jeffreys", "modified wilson",

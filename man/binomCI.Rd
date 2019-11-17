@@ -6,7 +6,7 @@
 }
 \usage{
 binomCI(x, n, conf.level = 0.95, method = "wilson", rand = 123, 
-        R = 1000, type = "all")
+        R = 9999, type = "all")
 }
 \arguments{
   \item{x}{ number of successes }
@@ -89,7 +89,7 @@ binomCI(x = 42, n = 43, method = "clopper-pearson")
 binomCI(x = 42, n = 43, method = "arcsine")
 binomCI(x = 42, n = 43, method = "logit")
 binomCI(x = 42, n = 43, method = "witting")
-binomCI(x = 42, n = 43, method = "boot")
+binomCI(x = 42, n = 43, method = "boot") # may generate values > 1!
 
 ## the confidence interval computed by binom.test
 ## corresponds to the Clopper-Pearson interval
