@@ -201,6 +201,32 @@ t.test(extra ~ group, data = sleep)
 hsu.t.test(extra ~ group, data = sleep)
 ```
 
+## Bootstrap t-Test
+One and two sample bootstrap t-tests with equal or unequal variances in the
+two sample case.
+```{r}
+boot.t.test(1:10, y = c(7:20)) # without bootstrap: P = .00001855
+boot.t.test(1:10, y = c(7:20, 200)) # without bootstrap: P = .1245
+
+## Traditional interface
+with(sleep, boot.t.test(extra[group == 1], extra[group == 2]))
+## Formula interface
+boot.t.test(extra ~ group, data = sleep)
+```
+
+## Permutation t-Test
+One and two sample permutation t-tests with equal or unequal variances in the
+two sample case.
+```{r}
+perm.t.test(1:10, y = c(7:20)) # without bootstrap: P = .00001855
+perm.t.test(1:10, y = c(7:20, 200)) # without bootstrap: P = .1245
+
+## Traditional interface
+with(sleep, perm.t.test(extra[group == 1], extra[group == 2]))
+## Formula interface
+perm.t.test(extra ~ group, data = sleep)
+```
+
 
 ## Multiple Imputation t-Test
 Function mi.t.test can be used to compute a multiple imputation t-test by applying
