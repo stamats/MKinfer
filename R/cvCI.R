@@ -1,5 +1,5 @@
 cvCI <- function(x, conf.level = 0.95, method = "miller", 
-                 R = 1000, type = c("norm", "basic", "perc", "bca"), 
+                 R = 9999, type = c("norm", "basic", "perc", "bca"), 
                  na.rm = FALSE){
     stopifnot(is.numeric(x))
     if (!is.na(pmatch(method, "miller")))

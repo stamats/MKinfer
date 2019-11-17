@@ -6,7 +6,7 @@
   coefficient of variation.
 }
 \usage{
-cvCI(x, conf.level = 0.95, method = "miller", R = 1000, 
+cvCI(x, conf.level = 0.95, method = "miller", R = 9999, 
      type = c("norm", "basic", "perc", "bca"), na.rm = FALSE)
 }
 \arguments{
@@ -50,6 +50,6 @@ cvCI(x, method = "medmckay")
 cvCI(x, method = "medvangel")
 cvCI(x, method = "medcurto")
 cvCI(x, method = "gulhar")
-cvCI(x, method = "boot")
+cvCI(x, method = "boot", R = 999) # R = 999 to reduce computation time for R checks
 }
 \keyword{univar}

@@ -66,7 +66,7 @@ binomDiffCI(a = 63, b = 38, c = 30, d = 54, method = "wald")
 binomDiffCI(a = 63, b = 38, c = 30, d = 54, method = "wald-cc")
 ## wilson
 binomDiffCI(a = 63, b = 38, c = 30, d = 54)
-## bootstrap intervals (R = 999 to reduce computation time)
+## bootstrap intervals (R = 999 to reduce computation time for R checks)
 binomDiffCI(a = 63, b = 38, c = 30, d = 54, method = "boot", R = 999)
 
 ## Example 2: Altman et al. (2000, p. 50)
@@ -78,7 +78,7 @@ binomDiffCI(a = 5, b = 0, c = 51, d = 29, method = "wald")
 binomDiffCI(a = 5, b = 0, c = 51, d = 29, method = "wald-cc")
 ## wilson
 binomDiffCI(a = 5, b = 0, c = 51, d = 29)
-## bootstrap intervals (R = 999 to reduce computation time)
+## bootstrap intervals (R = 999 to reduce computation time for R checks)
 binomDiffCI(a = 5, b = 0, c = 51, d = 29, method = "boot", R = 999)
 
 
@@ -91,7 +91,7 @@ binomDiffCI(a = 14, b = 5, c = 0, d = 22, paired = TRUE, method = "wald-cc")
 binomDiffCI(a = 14, b = 5, c = 0, d = 22, paired = TRUE, method = "wilson")
 ## wilson with continuity correction
 binomDiffCI(a = 14, b = 5, c = 0, d = 22, paired = TRUE)
-## bootstrap intervals (R = 999 to reduce computation time)
+## bootstrap intervals (R = 999 to reduce computation time for R checks)
 binomDiffCI(a = 14, b = 5, c = 0, d = 22, paired = TRUE, method = "boot", R = 999)
 
 ## Example 4: Altman et al. (2000, p. 51)
@@ -103,7 +103,7 @@ binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE, method = "wald-cc
 binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE, method = "wilson")
 ## wilson with continuity correction
 binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE)
-## bootstrap intervals (R = 999 to reduce computation time)
+## bootstrap intervals (R = 999 to reduce computation time for R checks)
 binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE, method = "boot",
             type = c("norm", "basic", "stud", "perc"), R = 999) ## type = "bca" gives error
 }
