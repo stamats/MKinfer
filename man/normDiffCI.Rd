@@ -8,9 +8,9 @@
 }
 \usage{
 normDiffCI(x, y, conf.level = 0.95, paired = FALSE, method = "welch", 
-           boot = FALSE, R = 1000, type = "all", na.rm = TRUE)
+           boot = FALSE, R = 9999, type = "all", na.rm = TRUE)
 meanDiffCI(x, y, conf.level = 0.95, paired = FALSE, method = "welch", 
-           boot = FALSE, R = 1000, type = "all", na.rm = TRUE)
+           boot = FALSE, R = 9999, type = "all", na.rm = TRUE)
 }
 \arguments{
   \item{x}{ numeric vector of data values of group 1. }
@@ -76,16 +76,14 @@ normDiffCI(x, y, method = "hsu", boot = TRUE)
 
 \donttest{
 ## Monte-Carlo simulation: coverage probability
-M <- 100
-CIbootbca <- CIhsu <- CIwelch <- CIclass <- matrix(NA, nrow = M, ncol = 2)
+M <- 100 # increase for more stable/realistic results!
+CIhsu <- CIwelch <- CIclass <- matrix(NA, nrow = M, ncol = 2)
 for(i in 1:M){
   x <- rnorm(10)
   y <- rnorm(30, sd = 0.1)
   CIclass[i,] <- normDiffCI(x, y, method = "classical")$conf.int
   CIwelch[i,] <- normDiffCI(x, y, method = "welch")$conf.int
   CIhsu[i,] <- normDiffCI(x, y, method = "hsu")$conf.int
-  CIbootbca[i,] <- normDiffCI(x, y, method = "welch", boot = TRUE, R = 1000, 
-                              type = "bca")$conf.int$bca[c(4,5)]
 }
 ## coverage probabilies
 ## classical
@@ -94,8 +92,6 @@ sum(CIclass[,1] < 0 & 0 < CIclass[,2])/M
 sum(CIwelch[,1] < 0 & 0 < CIwelch[,2])/M
 ## Hsu
 sum(CIhsu[,1] < 0 & 0 < CIhsu[,2])/M
-## Bootstrap bca
-sum(CIbootbca[,1] < 0 & 0 < CIbootbca[,2])/M
 }
 }
 \keyword{univar}

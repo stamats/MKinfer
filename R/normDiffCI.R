@@ -1,6 +1,6 @@
 ## confidence interval for difference of means
 normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
-                       method = "welch",  boot = FALSE, R = 1000, 
+                       method = "welch",  boot = FALSE, R = 9999, 
                        type = "all", na.rm = TRUE){
   if(!is.na(pmatch(method, "welch"))) method <- "welch"
 
@@ -169,7 +169,7 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
                    class = "confint"))
 }
 meanDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
-                       method = "welch",  boot = FALSE, R = 1000, 
+                       method = "welch",  boot = FALSE, R = 9999, 
                        type = "all", na.rm = TRUE){
   normDiffCI(x = x, y = y, conf.level = conf.level, paired = paired, 
              method = method, boot = boot, R = R, type = type, 
