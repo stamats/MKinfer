@@ -219,6 +219,7 @@ One and two sample permutation t-tests with equal or unequal variances in the
 two sample case.
 ```{r}
 perm.t.test(1:10, y = c(7:20)) # without bootstrap: P = .00001855
+## permutation confidence interval sensitive to outlier!
 perm.t.test(1:10, y = c(7:20, 200)) # without bootstrap: P = .1245
 
 ## Traditional interface
