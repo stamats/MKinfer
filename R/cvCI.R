@@ -1,6 +1,7 @@
 cvCI <- function(x, conf.level = 0.95, method = "miller", 
-                 R = 9999, type = c("norm", "basic", "perc", "bca"), 
-                 na.rm = FALSE){
+                 R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
+                 na.rm = FALSE, 
+                 alternative = c("two.sided", "less", "greater")){
     stopifnot(is.numeric(x))
     if (!is.na(pmatch(method, "miller")))
         method <- "miller"
@@ -8,7 +9,8 @@ cvCI <- function(x, conf.level = 0.95, method = "miller",
                  "panichkitkosolkul", "medmiller", "medmckay", "medvangel",
                  "medcurto", "gulhar", "boot")
     method <- pmatch(method, METHODS)
-
+    alternative <- match.arg(alternative)
+    
     if (is.na(method))
         stop("invalid method")
     if (method == -1)
@@ -20,6 +22,9 @@ cvCI <- function(x, conf.level = 0.95, method = "miller",
         stop("'conf.level' has to be in [0.5, 1]")
 
     alpha <- 1 - conf.level
+    
+    if(alternative != "two.sided") alpha <- 2*alpha
+    
     zquant <- qnorm(1-alpha/2)
     cv <- CV(x = x, na.rm = na.rm)
     Infos <- NULL
@@ -113,19 +118,65 @@ cvCI <- function(x, conf.level = 0.95, method = "miller",
       METH <- "Gulhar et al (2012) confidence interval"
     }
     if(method == 12){ # boot
-      boot.cv <- 
-        boot.quant <- function(x, i){ 
-          CV(x[i]) 
-        } 
+      boot.cv <- function(x, i){ CV(x[i]) } 
       boot.out <- boot(x, statistic = boot.cv, R = R)
-      CI <- boot.ci(boot.out, type = type)
+      CI <- try(boot.ci(boot.out, type = bootci.type, conf = conf.level),
+                silent = TRUE)
+      if(inherits(CI, "try-error"))
+        stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
+      
       METH <- "Bootstrap confidence interval"
     }
 
+    if(alternative == "less")
+      if(method == 12){
+        if("normal" %in% names(CI)){ 
+          CI$normal[1,1] <- conf.level
+          CI$normal[1,2] <- 0
+        }
+        if("basic" %in% names(CI)){ 
+          CI$basic[1,1] <- conf.level
+          CI$basic[1,4] <- 0
+        }
+        if("percent" %in% names(CI)){ 
+          CI$percent[1,1] <- conf.level
+          CI$percent[1,4] <- 0
+        }
+        if("bca" %in% names(CI)){ 
+          CI$bca[1,1] <- conf.level
+          CI$bca[1,4] <- 0
+        }
+      }else
+        CI.lower <- 0
+    if(alternative == "greater")
+      if(method == 12){
+        if("normal" %in% names(CI)){ 
+          CI$normal[1,1] <- conf.level
+          CI$normal[1,3] <- Inf
+        }
+        if("basic" %in% names(CI)){ 
+          CI$basic[1,1] <- conf.level
+          CI$basic[1,5] <- Inf
+        }
+        if("percent" %in% names(CI)){ 
+          CI$percent[1,1] <- conf.level
+          CI$percent[1,5] <- Inf
+        }
+        if("bca" %in% names(CI)){ 
+          CI$bca[1,1] <- conf.level
+          CI$bca[1,5] <- Inf
+        }
+      }else
+        CI.upper <- Inf
     if(method != 12){
       CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
       rownames(CI) <- "CV"
-      colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
+      if(alternative == "two.sided")
+        colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
+      if(alternative == "less")
+        colnames(CI) <- c("0 %", paste((1-alpha/2)*100, "%"))
+      if(alternative == "greater")
+        colnames(CI) <- c(paste(alpha/2*100, "%"), "100 %")
       attr(CI, "conf.level") <- conf.level
     }
     names(cv) <- "CV"

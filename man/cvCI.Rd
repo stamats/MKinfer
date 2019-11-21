@@ -7,19 +7,27 @@
 }
 \usage{
 cvCI(x, conf.level = 0.95, method = "miller", R = 9999, 
-     type = c("norm", "basic", "perc", "bca"), na.rm = FALSE)
+     bootci.type = c("norm", "basic", "perc", "bca"), na.rm = FALSE,
+     alternative = c("two.sided", "less", "greater"))
 }
 \arguments{
-  \item{x}{ numeric vector. }
+  \item{x}{ numeric vector with positive numbers. }
   \item{conf.level}{ confidence level }
   \item{method}{ character string specifing which method to use; see details. }
   \item{R}{ number of bootstrap replicates; see details. }
-  \item{type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
+  \item{bootci.type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. 
+  Type \code{"student"} does not work.}
   \item{na.rm}{logical. Should missing values be removed?}
+  \item{alternative}{ a character string specifying one- or two-sided confidence intervals. 
+  Must be one of "two.sided" (default), "greater" or "less" (one-sided intervals). 
+  You can specify just the initial letter. }
 }
 \details{
   For details about the confidence intervals we refer to Gulhar et al (2012) and
   Arachchige et al (2019).
+  
+  In case of bootstrap intervals type \code{"student"} does not work, since
+  no standard error of CV is provided.
 }
 \value{
   A list with class \code{"confint"} containing the following components:
@@ -51,5 +59,8 @@ cvCI(x, method = "medvangel")
 cvCI(x, method = "medcurto")
 cvCI(x, method = "gulhar")
 cvCI(x, method = "boot", R = 999) # R = 999 to reduce computation time for R checks
+
+## one-sided
+
 }
 \keyword{univar}
