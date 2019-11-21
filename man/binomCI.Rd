@@ -6,7 +6,8 @@
 }
 \usage{
 binomCI(x, n, conf.level = 0.95, method = "wilson", rand = 123, 
-        R = 9999, bootci.type = "all")
+        R = 9999, bootci.type = "all", 
+        alternative = c("two.sided", "less", "greater"))
 }
 \arguments{
   \item{x}{ number of successes }
@@ -16,6 +17,9 @@ binomCI(x, n, conf.level = 0.95, method = "wilson", rand = 123,
   \item{rand}{ seed for random number generator; see details. }
   \item{R}{ number of bootstrap replicates. }
   \item{bootci.type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
+  \item{alternative}{ a character string specifying one- or two-sided confidence intervals. 
+  Must be one of "two.sided" (default), "greater" or "less" (one-sided intervals). 
+  You can specify just the initial letter. }
 }
 \details{
   The Wald interval is obtained by inverting the acceptance region of the Wald
