@@ -173,7 +173,7 @@ binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123,
             c(p, p*(1-p)/n)
         } 
         boot.out <- boot(DATA, statistic = boot.rf, R = R)
-        CI <- try(boot.ci(boot.out, type = type, conf = 1-alpha), silent = TRUE)
+        CI <- try(boot.ci(boot.out, type = bootci.type, conf = 1-alpha), silent = TRUE)
         if(inherits(CI, "try-error"))
             stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
         Infos <- c(sqrt(p.hat*q.hat)/sqrt(n), sqrt(var(boot.out$t[,1])))
