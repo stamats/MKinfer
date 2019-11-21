@@ -1,6 +1,7 @@
 ## Confidence Intervals for normal mean and standard deviation
 normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95, 
-                   boot = FALSE, R = 9999, type = "all", na.rm = TRUE){
+                   boot = FALSE, R = 9999, bootci.type = "all", na.rm = TRUE,
+                   alternative = c("two.sided", "less", "greater")){
   if(!is.numeric(x))
     stop("'x' must be a numeric vector")
   if(!is.null(mean))
@@ -14,6 +15,11 @@ normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95,
   if(conf.level < 0.5 | conf.level > 1)
     stop("'conf.level' has to be in [0.5, 1]")
 
+  alternative <- match.arg(alternative)
+  
+  alpha <- 1 - conf.level
+  if(alternative != "two.sided") alpha <- 2*alpha
+  
   Infos <- NULL
   if(is.null(mean)){
     m <- mean(x, na.rm = na.rm)
@@ -51,25 +57,117 @@ normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95,
       VAR <- SD^2*((n-1)/2*gamma((n-1)/2)/gamma(n/2) - 1)
       c(SD, VAR)
     } 
-    if(is.null(mean) & !is.null(sd)){
+    if(is.null(mean)){
       boot.out <- boot(x, statistic = boot.mean, R = R)
-      CI <- boot.ci(boot.out, type = type)
+      CI.AM <- try(boot.ci(boot.out, type = bootci.type, conf = 1-alpha),
+                silent = TRUE)
+      if(inherits(CI.AM, "try-error"))
+        stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
+      if(alternative == "less"){
+        if("normal" %in% names(CI.AM)){ 
+          CI.AM$normal[1,1] <- conf.level
+          CI.AM$normal[1,2] <- -Inf
+        }
+        if("basic" %in% names(CI.AM)){ 
+          CI.AM$basic[1,1] <- conf.level
+          CI.AM$basic[1,4] <- -Inf
+        }
+        if("student" %in% names(CI.AM)){ 
+          CI.AM$student[1,1] <- conf.level
+          CI.AM$student[1,4] <- -Inf
+        }
+        if("percent" %in% names(CI.AM)){ 
+          CI.AM$percent[1,1] <- conf.level
+          CI.AM$percent[1,4] <- -Inf
+        }
+        if("bca" %in% names(CI.AM)){ 
+          CI.AM$bca[1,1] <- conf.level
+          CI.AM$bca[1,4] <- -Inf
+        }
+      }
+      if(alternative == "greater"){
+        if("normal" %in% names(CI.AM)){ 
+          CI.AM$normal[1,1] <- conf.level
+          CI.AM$normal[1,3] <- Inf
+        }
+        if("basic" %in% names(CI.AM)){ 
+          CI.AM$basic[1,1] <- conf.level
+          CI.AM$basic[1,5] <- Inf
+        }
+        if("student" %in% names(CI.AM)){ 
+          CI.AM$student[1,1] <- conf.level
+          CI.AM$student[1,5] <- Inf
+        }
+        if("percent" %in% names(CI.AM)){ 
+          CI.AM$percent[1,1] <- conf.level
+          CI.AM$percent[1,5] <- Inf
+        }
+        if("bca" %in% names(CI.AM)){ 
+          CI.AM$bca[1,1] <- conf.level
+          CI.AM$bca[1,5] <- Inf
+        }
+      }
     }    
-    if(is.null(sd) & !is.null(mean)){
+    if(is.null(sd)){
       boot.out <- boot(x, statistic = boot.sd, R = R)
-      CI <- boot.ci(boot.out, type = type)
-    }    
-    if(is.null(mean) & is.null(sd)){
-      boot.out.mean <- boot(x, statistic = boot.mean, R = R)
-      boot.out.sd <- boot(x, statistic = boot.sd, R = R)
-      CI.AM <- boot.ci(boot.out.mean, type = type)
-      CI.SD <- boot.ci(boot.out.sd, type = type)
-      CI <- list("mean" = CI.AM, "standard deviation" = CI.SD)
+      CI.SD <- try(boot.ci(boot.out, type = bootci.type, conf = 1-alpha),
+                silent = TRUE)
+      if(inherits(CI.SD, "try-error"))
+        stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
+      if(alternative == "less"){
+        if("normal" %in% names(CI.SD)){ 
+          CI.SD$normal[1,1] <- conf.level
+          CI.SD$normal[1,2] <- 0
+        }
+        if("basic" %in% names(CI.SD)){ 
+          CI.SD$basic[1,1] <- conf.level
+          CI.SD$basic[1,4] <- 0
+        }
+        if("student" %in% names(CI.SD)){ 
+          CI.SD$student[1,1] <- conf.level
+          CI.SD$student[1,4] <- 0
+        }
+        if("percent" %in% names(CI.SD)){ 
+          CI.SD$percent[1,1] <- conf.level
+          CI.SD$percent[1,4] <- 0
+        }
+        if("bca" %in% names(CI.SD)){ 
+          CI.SD$bca[1,1] <- conf.level
+          CI.SD$bca[1,4] <- 0
+        }
+      }
+      if(alternative == "greater"){
+        if("normal" %in% names(CI.SD)){ 
+          CI.SD$normal[1,1] <- conf.level
+          CI.SD$normal[1,3] <- Inf
+        }
+        if("basic" %in% names(CI.SD)){ 
+          CI.SD$basic[1,1] <- conf.level
+          CI.SD$basic[1,5] <- Inf
+        }
+        if("student" %in% names(CI.SD)){ 
+          CI.SD$student[1,1] <- conf.level
+          CI.SD$student[1,5] <- Inf
+        }
+        if("percent" %in% names(CI.SD)){ 
+          CI.SD$percent[1,1] <- conf.level
+          CI.SD$percent[1,5] <- Inf
+        }
+        if("bca" %in% names(CI.SD)){ 
+          CI.SD$bca[1,1] <- conf.level
+          CI.SD$bca[1,5] <- Inf
+        }
+      }
     }
+    
+    if(is.null(mean) && is.null(sd))
+      CI <- list("mean" = CI.AM, "standard deviation" = CI.SD)
+    if(is.null(mean) && !is.null(sd)) CI <- CI.AM
+    if(!is.null(mean) && is.null(sd)) CI <- CI.SD
+    
     METHOD <- "Bootstrap confidence interval(s)"
   }else{
     if(na.rm) n <- length(x[!is.na(x)]) else n <- length(x)
-    alpha <- 1 - conf.level
     if(is.null(sd)){
       k <- qt(1-alpha/2, df = n-1)
     }else{
@@ -78,30 +176,33 @@ normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95,
     if(is.null(mean)){
       sem <- s/sqrt(n)
       names(sem) <- "SE of mean"
-      CI.lower.mean <- m - k*sem
-      CI.upper.mean <- m + k*sem
+      CI.lower.mean <- ifelse(alternative == "less", -Inf, m - k*sem)
+      CI.upper.mean <- ifelse(alternative == "greater", Inf, m + k*sem)
       Infos <- sem
     }
     if(is.null(sd)){
-      CI.lower.sd <- sqrt(n-1)*s/sqrt(qchisq(1-alpha/2, df = n-1))
-      CI.upper.sd <- sqrt(n-1)*s/sqrt(qchisq(alpha/2, df = n-1))
+      CI.lower.sd <- ifelse(alternative == "less", 0, sqrt(n-1)*s/sqrt(qchisq(1-alpha/2, df = n-1)))
+      CI.upper.sd <- ifelse(alternative == "greater", Inf, sqrt(n-1)*s/sqrt(qchisq(alpha/2, df = n-1)))
     }
     if(is.null(mean) & is.null(sd)){
       CI <- rbind(c(CI.lower.mean, CI.upper.mean),
                   c(CI.lower.sd, CI.upper.sd))
       rownames(CI) <- c("mean", "sd")
-      colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
     }else{
       if(is.null(mean)){
         CI <- matrix(c(CI.lower.mean, CI.upper.mean), nrow = 1)
         rownames(CI) <- "mean"
-        colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
       }else{
         CI <- matrix(c(CI.lower.sd, CI.upper.sd), nrow = 1)
         rownames(CI) <- "sd"
-        colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
       }
     }
+    if(alternative == "two.sided")
+      colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
+    if(alternative == "less")
+      colnames(CI) <- c("0 %", paste((1-alpha/2)*100, "%"))
+    if(alternative == "greater")
+      colnames(CI) <- c(paste(alpha/2*100, "%"), "100 %")
     attr(CI, "conf.level") <- conf.level
     METHOD <- "Exact confidence interval(s)"
   }
@@ -111,9 +212,11 @@ normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95,
                    class = "confint"))
 }
 meanCI <- function(x, conf.level = 0.95, boot = FALSE, R = 9999, 
-                   type = "all", na.rm = TRUE){
+                   bootci.type = "all", na.rm = TRUE,
+                   alternative = c("two.sided", "less", "greater")){
   res <- normCI(x = x, conf.level = conf.level, boot = boot, R = R,
-                type = type, na.rm = na.rm)
+                bootci.type = bootci.type, na.rm = na.rm, 
+                alternative = alternative)
   if(boot){
     res$conf.int <- res$conf.int[[1]]
   }else{
@@ -122,9 +225,11 @@ meanCI <- function(x, conf.level = 0.95, boot = FALSE, R = 9999,
   res
 }
 sdCI <- function(x, conf.level = 0.95, boot = FALSE, R = 9999, 
-                   type = "all", na.rm = TRUE){
+                 bootci.type = "all", na.rm = TRUE,
+                 alternative = c("two.sided", "less", "greater")){
   res <- normCI(x = x, conf.level = conf.level, boot = boot, R = R,
-                type = type, na.rm = na.rm)
+                bootci.type = bootci.type, na.rm = na.rm, 
+                alternative = alternative)
   if(boot){
     res$conf.int <- res$conf.int[[2]]
   }else{
