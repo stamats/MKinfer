@@ -61,6 +61,8 @@ cvCI(x, method = "gulhar")
 cvCI(x, method = "boot", R = 999) # R = 999 to reduce computation time for R checks
 
 ## one-sided
-
+cvCI(x, alternative = "less")
+cvCI(x, alternative = "greater")
+cvCI(x, method = "boot", bootci.type = "bca", alternative = "less", R = 999)
 }
 \keyword{univar}

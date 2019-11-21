@@ -146,7 +146,7 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
         c(D, VAR)
       } 
       boot.out <- boot(DATA, statistic = boot.diff, R = R)
-      CI <- try(boot.ci(boot.out, type = bootci.type, conf = conf.level),
+      CI <- try(boot.ci(boot.out, type = bootci.type, conf = 1-alpha),
                 silent = TRUE)
       if(inherits(CI, "try-error"))
         stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
@@ -222,7 +222,7 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
         c(D, VAR)
       } 
       boot.out <- boot(DATA, statistic = boot.rf, strata=DATA$group, R = R)
-      CI <- try(boot.ci(boot.out, type = bootci.type, conf = conf.level), 
+      CI <- try(boot.ci(boot.out, type = bootci.type, conf = 1-alpha), 
                 silent = TRUE)
       if(inherits(CI, "try-error"))
         stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")

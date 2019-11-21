@@ -120,7 +120,7 @@ cvCI <- function(x, conf.level = 0.95, method = "miller",
     if(method == 12){ # boot
       boot.cv <- function(x, i){ CV(x[i]) } 
       boot.out <- boot(x, statistic = boot.cv, R = R)
-      CI <- try(boot.ci(boot.out, type = bootci.type, conf = conf.level),
+      CI <- try(boot.ci(boot.out, type = bootci.type, conf = 1-alpha),
                 silent = TRUE)
       if(inherits(CI, "try-error"))
         stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
