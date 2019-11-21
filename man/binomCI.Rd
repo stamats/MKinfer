@@ -6,7 +6,7 @@
 }
 \usage{
 binomCI(x, n, conf.level = 0.95, method = "wilson", rand = 123, 
-        R = 9999, type = "all")
+        R = 9999, bootci.type = "all")
 }
 \arguments{
   \item{x}{ number of successes }
@@ -15,7 +15,7 @@ binomCI(x, n, conf.level = 0.95, method = "wilson", rand = 123,
   \item{method}{ character string specifing which method to use; see details. }
   \item{rand}{ seed for random number generator; see details. }
   \item{R}{ number of bootstrap replicates. }
-  \item{type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
+  \item{bootci.type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
 }
 \details{
   The Wald interval is obtained by inverting the acceptance region of the Wald

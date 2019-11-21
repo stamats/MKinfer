@@ -1,13 +1,15 @@
 ## Confidence Intervals for Binomial Proportions
 binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123, 
-                    R = 9999, type = "all"){
+                    R = 9999, bootci.type = "all", 
+                    alternative = c("two.sided", "less", "greater")){
     if (!is.na(pmatch(method, "wilson")))
         method <- "wilson"
     METHODS <- c("wald", "wilson", "agresti-coull", "jeffreys", "modified wilson",
                  "modified jeffreys", "clopper-pearson", "arcsine", "logit", 
                  "witting", "wald-cc", "boot")
     method <- pmatch(method, METHODS)
-
+    alternative <- match.arg(alternative)
+    
     if (is.na(method))
         stop("invalid method")
     if (method == -1)
@@ -27,6 +29,9 @@ binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123,
     x <- as.integer(x)
     n <- as.integer(n)
     alpha <- 1 - conf.level
+    
+    if(alternative != "two.sided") alpha <- 2*alpha
+    
     kappa <- qnorm(1-alpha/2)
     p.hat <- x/n
     q.hat <- 1 - p.hat
@@ -150,8 +155,8 @@ binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123,
         est <- p.hat
         term2 <- kappa*sqrt(p.hat*q.hat)/sqrt(n)
         CC <- 0.5/n
-        CI.lower <- max(0, p.hat - term2 + CC)
-        CI.upper <- min(1, p.hat + term2 - CC)
+        CI.lower <- max(0, p.hat - term2 - CC)
+        CI.upper <- min(1, p.hat + term2 + CC)
         Infos <- term2/kappa
         names(Infos) <- "standard error of prob"
     }
@@ -168,16 +173,70 @@ binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123,
             c(p, p*(1-p)/n)
         } 
         boot.out <- boot(DATA, statistic = boot.rf, R = R)
-        CI <- boot.ci(boot.out, type = type)
+        CI <- try(boot.ci(boot.out, type = type, conf = 1-alpha), silent = TRUE)
+        if(inherits(CI, "try-error"))
+            stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
         Infos <- c(sqrt(p.hat*q.hat)/sqrt(n), sqrt(var(boot.out$t[,1])))
         names(Infos) <- c("standard error of prob", 
                           "bootstrap standard error of prob")
     }
-    
+    if(alternative == "less")
+        if(method == 12){
+            if("normal" %in% names(CI)){ 
+                CI$normal[1,1] <- conf.level
+                CI$normal[1,2] <- -Inf
+            }
+            if("basic" %in% names(CI)){ 
+                CI$basic[1,1] <- conf.level
+                CI$basic[1,4] <- -Inf
+            }
+            if("student" %in% names(CI)){ 
+                CI$student[1,1] <- conf.level
+                CI$student[1,4] <- -Inf
+            }
+            if("percent" %in% names(CI)){ 
+                CI$percent[1,1] <- conf.level
+                CI$percent[1,4] <- -Inf
+            }
+            if("bca" %in% names(CI)){ 
+                CI$bca[1,1] <- conf.level
+                CI$bca[1,4] <- -Inf
+            }
+        }else
+            CI.lower <- -Inf
+    if(alternative == "greater")
+        if(method == 12){
+            if("normal" %in% names(CI)){ 
+                CI$normal[1,1] <- conf.level
+                CI$normal[1,3] <- Inf
+            }
+            if("basic" %in% names(CI)){ 
+                CI$basic[1,1] <- conf.level
+                CI$basic[1,5] <- Inf
+            }
+            if("student" %in% names(CI)){ 
+                CI$student[1,1] <- conf.level
+                CI$student[1,5] <- Inf
+            }
+            if("percent" %in% names(CI)){ 
+                CI$percent[1,1] <- conf.level
+                CI$percent[1,5] <- Inf
+            }
+            if("bca" %in% names(CI)){ 
+                CI$bca[1,1] <- conf.level
+                CI$bca[1,5] <- Inf
+            }
+        }else
+            CI.upper <- Inf
     if(method != 12){
         CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
         rownames(CI) <- "prob"
-        colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
+        if(alternative == "two.sided")
+            colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
+        if(alternative == "less")
+            colnames(CI) <- c("0 %", paste((1-alpha/2)*100, "%"))
+        if(alternative == "greater")
+            colnames(CI) <- c(paste(alpha/2*100, "%"), "100 %")
         attr(CI, "conf.level") <- conf.level
     }
     names(est) <- "prob"
