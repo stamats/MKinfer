@@ -9,7 +9,8 @@
 \usage{
 binomDiffCI(a, b, c, d, conf.level = 0.95, paired = FALSE, 
             method = ifelse(paired, "wilson-cc", "wilson"), 
-            R = 9999, type = "all")
+            R = 9999, bootci.type = "all", 
+            alternative = c("two.sided", "less", "greater"))
 }
 \arguments{
   \item{a}{ independent: number of successes of group 1; 
@@ -24,7 +25,10 @@ binomDiffCI(a, b, c, d, conf.level = 0.95, paired = FALSE,
   \item{paired}{ a logical value indicating whether the two groups are paired. }
   \item{method}{ character string specifing which method to use; see details. }
   \item{R}{ number of bootstrap replicates. }
-  \item{type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
+  \item{bootci.type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
+  \item{alternative}{ a character string specifying one- or two-sided confidence intervals. 
+  Must be one of "two.sided" (default), "greater" or "less" (one-sided intervals). 
+  You can specify just the initial letter. }
 }
 \details{
   The Wald intervals (independent and paired) are obtained by applying the normal 
@@ -68,6 +72,12 @@ binomDiffCI(a = 63, b = 38, c = 30, d = 54, method = "wald-cc")
 binomDiffCI(a = 63, b = 38, c = 30, d = 54)
 ## bootstrap intervals (R = 999 to reduce computation time for R checks)
 binomDiffCI(a = 63, b = 38, c = 30, d = 54, method = "boot", R = 999)
+## one-sided
+binomDiffCI(a = 63, b = 38, c = 30, d = 54, alternative = "greater")
+## bootstrap intervals (R = 999 to reduce computation time for R checks)
+binomDiffCI(a = 63, b = 38, c = 30, d = 54, method = "boot", R = 999,
+            bootci.type = "bca", alternative = "greater")
+
 
 ## Example 2: Altman et al. (2000, p. 50)
 ## the confidence interval computed by prop.test
@@ -80,6 +90,11 @@ binomDiffCI(a = 5, b = 0, c = 51, d = 29, method = "wald-cc")
 binomDiffCI(a = 5, b = 0, c = 51, d = 29)
 ## bootstrap intervals (R = 999 to reduce computation time for R checks)
 binomDiffCI(a = 5, b = 0, c = 51, d = 29, method = "boot", R = 999)
+## one-sided
+binomDiffCI(a = 5, b = 0, c = 51, d = 29, alternative = "less")
+## bootstrap intervals (R = 999 to reduce computation time for R checks)
+binomDiffCI(a = 5, b = 0, c = 51, d = 29, method = "boot", R = 999,
+            bootci.type = "perc", alternative = "less")
 
 
 ## Example 3: Altman et al. (2000, p. 51)
@@ -105,6 +120,6 @@ binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE, method = "wilson"
 binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE)
 ## bootstrap intervals (R = 999 to reduce computation time for R checks)
 binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE, method = "boot",
-            type = c("norm", "basic", "stud", "perc"), R = 999) ## type = "bca" gives error
+            bootci.type = c("norm", "basic", "stud", "perc"), R = 999) ## type = "bca" gives error
 }
 \keyword{univar}

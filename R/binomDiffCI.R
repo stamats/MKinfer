@@ -14,7 +14,8 @@
 binomDiffCI <- function(a, b, c, d, conf.level = 0.95, 
                         paired = FALSE, 
                         method = ifelse(paired, "wilson-cc", "wilson"),
-                        R = 9999, type = "all"){
+                        R = 9999, bootci.type = "all",
+                        alternative = c("two.sided", "less", "greater")){
   stopifnot(is.numeric(a), is.numeric(b), is.numeric(c), is.numeric(d),
             is.numeric(conf.level))
   stopifnot(length(a) == 1, length(b) == 1, length(c) == 1, 
@@ -29,7 +30,6 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
   b <- trunc(b)
   c <- trunc(c)
   d <- trunc(d)
-  alpha <- 1 - conf.level
   
   if(paired){
     METHODS <- c("wald", "wald-cc", "wilson", "wilson-cc", "boot")
@@ -43,7 +43,13 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
     stop("invalid method")
   if (method == -1)
     stop("ambiguous method")
+  alternative <- match.arg(alternative)
   
+  alpha <- 1 - conf.level
+
+  if(alternative != "two.sided") alpha <- 2*alpha
+
+  print(alternative)
   Infos <- NULL
   if(paired){
     n <- a + b + c + d
@@ -73,8 +79,8 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
       SED <- sqrt((b+c) - (b-c)^2/n)/n
       ## error in Newcombe (1998)
       CC <- 0.5/n
-      CI.lower <- max(-1, D - z*SED + CC)
-      CI.upper <- min(D + z*SED - CC, 1)
+      CI.lower <- max(-1, D - z*SED - CC)
+      CI.upper <- min(D + z*SED + CC, 1)
       Infos <- list(SED, c(p1, p2))
       names(Infos[[1]]) <- "SE of difference of proportions"
       names(Infos[[2]]) <- c("proportion of group 1", "proportion of group 2")
@@ -140,7 +146,11 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
         c(D, VAR)
       } 
       boot.out <- boot(DATA, statistic = boot.diff, R = R)
-      CI <- boot.ci(boot.out, type = type)
+      CI <- try(boot.ci(boot.out, type = bootci.type, conf = conf.level),
+                silent = TRUE)
+      if(inherits(CI, "try-error"))
+        stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
+      
       Infos <- c(p1, p2)
       names(Infos) <- c("proportion of group 1", "proportion of group 2")
     }
@@ -212,8 +222,11 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
         c(D, VAR)
       } 
       boot.out <- boot(DATA, statistic = boot.rf, strata=DATA$group, R = R)
-      CI <- boot.ci(boot.out, type = type)
-
+      CI <- try(boot.ci(boot.out, type = bootci.type, conf = conf.level), 
+                silent = TRUE)
+      if(inherits(CI, "try-error"))
+        stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
+      
       Infos <- c(p1, p2)
       names(Infos) <- c("proportion of group 1", "proportion of group 2")
     }
@@ -222,11 +235,64 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
                         "confidence interval (independent proportions)")
   }
 
+  if(alternative == "less")
+    if(METHODS[method] == "boot"){
+      if("normal" %in% names(CI)){ 
+        CI$normal[1,1] <- conf.level
+        CI$normal[1,2] <- -1
+      }
+      if("basic" %in% names(CI)){ 
+        CI$basic[1,1] <- conf.level
+        CI$basic[1,4] <- -1
+      }
+      if("student" %in% names(CI)){ 
+        CI$student[1,1] <- conf.level
+        CI$student[1,4] <- -1
+      }
+      if("percent" %in% names(CI)){ 
+        CI$percent[1,1] <- conf.level
+        CI$percent[1,4] <- -1
+      }
+      if("bca" %in% names(CI)){ 
+        CI$bca[1,1] <- conf.level
+        CI$bca[1,4] <- -1
+      }
+    }else
+      CI.lower <- -1
+  if(alternative == "greater")
+    if(METHODS[method] == "boot"){
+      if("normal" %in% names(CI)){ 
+        CI$normal[1,1] <- conf.level
+        CI$normal[1,3] <- 1
+      }
+      if("basic" %in% names(CI)){ 
+        CI$basic[1,1] <- conf.level
+        CI$basic[1,5] <- 1
+      }
+      if("student" %in% names(CI)){ 
+        CI$student[1,1] <- conf.level
+        CI$student[1,5] <- 1
+      }
+      if("percent" %in% names(CI)){ 
+        CI$percent[1,1] <- conf.level
+        CI$percent[1,5] <- 1
+      }
+      if("bca" %in% names(CI)){ 
+        CI$bca[1,1] <- conf.level
+        CI$bca[1,5] <- 1
+      }
+    }else
+      CI.upper <- 1
+  
   if(METHODS[method] != "boot"){
     CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
     rownames(CI) <- nameCI
-    colnames(CI) <- c(paste(alpha/2*100, "%"),
-                      paste((1-alpha/2)*100, "%"))
+    if(alternative == "two.sided")
+      colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
+    if(alternative == "less")
+      colnames(CI) <- c("0 %", paste((1-alpha/2)*100, "%"))
+    if(alternative == "greater")
+      colnames(CI) <- c(paste(alpha/2*100, "%"), "100 %")
     attr(CI, "conf.level") <- conf.level
   }
   
