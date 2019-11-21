@@ -184,50 +184,50 @@ binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123,
         if(method == 12){
             if("normal" %in% names(CI)){ 
                 CI$normal[1,1] <- conf.level
-                CI$normal[1,2] <- -Inf
+                CI$normal[1,2] <- 0
             }
             if("basic" %in% names(CI)){ 
                 CI$basic[1,1] <- conf.level
-                CI$basic[1,4] <- -Inf
+                CI$basic[1,4] <- 0
             }
             if("student" %in% names(CI)){ 
                 CI$student[1,1] <- conf.level
-                CI$student[1,4] <- -Inf
+                CI$student[1,4] <- 0
             }
             if("percent" %in% names(CI)){ 
                 CI$percent[1,1] <- conf.level
-                CI$percent[1,4] <- -Inf
+                CI$percent[1,4] <- 0
             }
             if("bca" %in% names(CI)){ 
                 CI$bca[1,1] <- conf.level
-                CI$bca[1,4] <- -Inf
+                CI$bca[1,4] <- 0
             }
         }else
-            CI.lower <- -Inf
+            CI.lower <- 0
     if(alternative == "greater")
         if(method == 12){
             if("normal" %in% names(CI)){ 
                 CI$normal[1,1] <- conf.level
-                CI$normal[1,3] <- Inf
+                CI$normal[1,3] <- 1
             }
             if("basic" %in% names(CI)){ 
                 CI$basic[1,1] <- conf.level
-                CI$basic[1,5] <- Inf
+                CI$basic[1,5] <- 1
             }
             if("student" %in% names(CI)){ 
                 CI$student[1,1] <- conf.level
-                CI$student[1,5] <- Inf
+                CI$student[1,5] <- 1
             }
             if("percent" %in% names(CI)){ 
                 CI$percent[1,1] <- conf.level
-                CI$percent[1,5] <- Inf
+                CI$percent[1,5] <- 1
             }
             if("bca" %in% names(CI)){ 
                 CI$bca[1,1] <- conf.level
-                CI$bca[1,5] <- Inf
+                CI$bca[1,5] <- 1
             }
         }else
-            CI.upper <- Inf
+            CI.upper <- 1
     if(method != 12){
         CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
         rownames(CI) <- "prob"

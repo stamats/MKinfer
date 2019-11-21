@@ -95,5 +95,12 @@ binomCI(x = 42, n = 43, method = "boot") # may generate values > 1!
 ## corresponds to the Clopper-Pearson interval
 binomCI(x = 42, n = 43, method = "clopper-pearson")$conf.int
 binom.test(x = 42, n = 43)$conf.int
+
+## one-sided intervals
+binomCI(x = 10, n = 43, alternative = "less")
+binomCI(x = 10, n = 43, alternative = "less", method = "boot", 
+        bootci.type = "bca")
+binomCI(x = 10, n = 43, alternative = "greater", method = "boot", 
+        bootci.type = "perc")
 }
 \keyword{univar}
