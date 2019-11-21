@@ -89,7 +89,8 @@ binomCI(x = 42, n = 43, method = "clopper-pearson")
 binomCI(x = 42, n = 43, method = "arcsine")
 binomCI(x = 42, n = 43, method = "logit")
 binomCI(x = 42, n = 43, method = "witting")
-binomCI(x = 42, n = 43, method = "boot") # may generate values > 1!
+## bootstrap intervals (R = 999 to reduce computation time for R checks)
+binomCI(x = 42, n = 43, method = "boot", R = 999) # may generate values > 1!
 
 ## the confidence interval computed by binom.test
 ## corresponds to the Clopper-Pearson interval
@@ -99,8 +100,8 @@ binom.test(x = 42, n = 43)$conf.int
 ## one-sided intervals
 binomCI(x = 10, n = 43, alternative = "less")
 binomCI(x = 10, n = 43, alternative = "less", method = "boot", 
-        bootci.type = "bca")
+        bootci.type = "bca", R = 999)
 binomCI(x = 10, n = 43, alternative = "greater", method = "boot", 
-        bootci.type = "perc")
+        bootci.type = "perc", R = 999)
 }
 \keyword{univar}
