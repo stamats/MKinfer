@@ -3,6 +3,15 @@
 ###############################################################################
 
 ###########################################################
+## Version 0.3
+###########################################################
+- corrected minor bug for wald-cc in binomCI and binomDiffCI
+- corrected minor bug in case of bootstrap confidence intervals (conf.level 
+  was not passed through)
+- introduced one-sided confidence intervals in all *CI functions
+
+
+###########################################################
 ## Version 0.2
 ###########################################################
 - Added new function binomDiffCI for computing confidence intervals for
