@@ -38,7 +38,7 @@ binom.test(x = 12, n = 50)$conf.int
 ```
 
 For all intervals implemented see the help page of function binomCI. One can
-also compute bootstrap intervals.
+also compute bootstrap intervals as well as one-sided intervals.
 
 
 ### Difference of Two Binomial Proportions
@@ -53,7 +53,7 @@ binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE)
 ```
 
 For all intervals implemented see the help page of function binomDiffCI. One
-can also compute boostrap intervals.
+can also compute boostrap intervals as well as one-sided intervals.
 
 
 ### Mean and SD
@@ -67,7 +67,7 @@ sdCI(x)
 ## SD known
 normCI(x, sd = 3)
 ## mean known
-normCI(x, mean = 2)
+normCI(x, mean = 2, alternative = "less")
 ## bootstrap
 meanCI(x, boot = TRUE)
 ```
@@ -95,9 +95,9 @@ normDiffCI(x, y, method = "welch")
 ## Hsu
 normDiffCI(x, y, method = "hsu")
 ## bootstrap: assuming equal variances
-normDiffCI(x, y, method = "classical", boot = TRUE, type = "bca")
+normDiffCI(x, y, method = "classical", boot = TRUE, bootci.type = "bca")
 ## bootstrap: assuming unequal variances
-normDiffCI(x, y, method = "welch", boot = TRUE, type = "bca")
+normDiffCI(x, y, method = "welch", boot = TRUE, bootci.type = "bca")
 ```
 
 
@@ -125,7 +125,7 @@ sum(CIhsu[,1] < 0 & 0 < CIhsu[,2])/M
 
 
 ### Coefficient of Variation
-We provide 11 different confidence intervals for the (classical) coefficient 
+We provide 12 different confidence intervals for the (classical) coefficient 
 of variation; e.g.
 ```{r}
 x <- rnorm(100, mean = 10, sd = 2) # CV = 0.2
