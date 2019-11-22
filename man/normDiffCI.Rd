@@ -8,9 +8,11 @@
 }
 \usage{
 normDiffCI(x, y, conf.level = 0.95, paired = FALSE, method = "welch", 
-           boot = FALSE, R = 9999, type = "all", na.rm = TRUE)
+           boot = FALSE, R = 9999, bootci.type = "all", na.rm = TRUE, 
+           alternative = c("two.sided", "less", "greater"))
 meanDiffCI(x, y, conf.level = 0.95, paired = FALSE, method = "welch", 
-           boot = FALSE, R = 9999, type = "all", na.rm = TRUE)
+           boot = FALSE, R = 9999, bootci.type = "all", na.rm = TRUE, 
+           alternative = c("two.sided", "less", "greater"))
 }
 \arguments{
   \item{x}{ numeric vector of data values of group 1. }
@@ -20,8 +22,11 @@ meanDiffCI(x, y, conf.level = 0.95, paired = FALSE, method = "welch",
   \item{method}{ a character string specifing which method to use in the unpaired case; see details. }
   \item{boot}{ a logical value indicating whether bootstrapped confidence intervals shall be computed. }
   \item{R}{ number of bootstrap replicates. }
-  \item{type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
+  \item{bootci.type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
   \item{na.rm}{ a logical value indicating whether \code{NA} values should be stripped before the computation proceeds. }
+  \item{alternative}{ a character string specifying one- or two-sided confidence intervals. 
+  Must be one of "two.sided" (default), "greater" or "less" (one-sided intervals). 
+  You can specify just the initial letter. }
 }
 \details{
   The standard confidence intervals for the difference of means are
@@ -69,7 +74,7 @@ y <- rnorm(90, mean = 1, sd = 2)
 normDiffCI(x, y, method = "classical")
 ## (R = 999 to reduce computation time for R checks)
 normDiffCI(x, y, method = "classical", boot = TRUE, R = 999)
-## Welch (default is in case of function t.test)
+## Welch (default as in case of function t.test)
 normDiffCI(x, y, method = "welch")
 ## (R = 999 to reduce computation time for R checks)
 normDiffCI(x, y, method = "welch", boot = TRUE, R = 999)
@@ -78,6 +83,10 @@ normDiffCI(x, y, method = "hsu")
 ## In case of bootstrap there is no difference between welch and hsu
 ## (R = 999 to reduce computation time for R checks)
 normDiffCI(x, y, method = "hsu", boot = TRUE, R = 999)
+
+## one-sided
+normDiffCI(x, y, alternative = "less")
+normDiffCI(x, y, boot = TRUE, R = 999, alternative = "greater")
 
 \donttest{
 ## Monte-Carlo simulation: coverage probability

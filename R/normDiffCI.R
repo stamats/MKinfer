@@ -1,12 +1,13 @@
 ## confidence interval for difference of means
 normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
                        method = "welch",  boot = FALSE, R = 9999, 
-                       type = "all", na.rm = TRUE){
+                       bootci.type = "all", na.rm = TRUE,
+                       alternative = c("two.sided", "less", "greater")){
   if(!is.na(pmatch(method, "welch"))) method <- "welch"
 
   METHODS <- c("classical", "welch", "hsu")
   method <- pmatch(method, METHODS)
-
+  
   if (is.na(method))
     stop("invalid method")
   if (method == -1)
@@ -21,11 +22,17 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
   if(conf.level < 0.5 | conf.level > 1)
     stop("'conf.level' has to be in [0.5, 1]")
 
+  alternative <- match.arg(alternative)
+  
   Infos <- NULL
   alpha <- 1 - conf.level
+  
+  if(alternative != "two.sided") alpha <- 2*alpha
+  
   if(paired){
     CIres <- normCI(x = x-y, conf.level = conf.level, boot = boot, R = R, 
-                    type = type, na.rm = na.rm)
+                    bootci.type = bootci.type, na.rm = na.rm, 
+                    alternative = alternative)
     d <- CIres$estimate
     names(d) <- c("mean of differences", "sd of differences")
     if(boot){
@@ -72,7 +79,10 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
         } 
         boot.out <- boot(DATA, statistic = boot.diff.class, 
                          strata=DATA$group, R = R)
-        CI <- boot.ci(boot.out, type = type)
+        CI <- try(boot.ci(boot.out, type = bootci.type, conf = 1 - alpha),
+                  silent = TRUE)
+        if(inherits(CI, "try-error"))
+          stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
         method <- "Bootstrap confidence interval (equal variances, unpaired)"
       }else{
         method <- "Classical confidence interval (unpaired)"
@@ -103,7 +113,10 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
         } 
         boot.out <- boot(DATA, statistic = boot.diff.welch, 
                          strata=DATA$group, R = R)
-        CI <- boot.ci(boot.out, type = type)
+        CI <- try(boot.ci(boot.out, type = bootci.type, conf = 1 - alpha),
+                  silent = TRUE)
+        if(inherits(CI, "try-error"))
+          stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
         method <- "Bootstrap confidence interval (unequal variances, unpaired)"
       }else{
         method <- "Welch confidence interval (unpaired)"
@@ -134,8 +147,11 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
         } 
         boot.out <- boot(DATA, statistic = boot.diff.welch, 
                          strata=DATA$group, R = R)
-        CI <- boot.ci(boot.out, type = type)
+        CI <- try(boot.ci(boot.out, type = bootci.type, conf = 1 - alpha),
+                  silent = TRUE)
         method <- "Bootstrap confidence interval (unequal variances, unpaired)"
+        if(inherits(CI, "try-error"))
+          stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
       }else{
         method <- "Hsu confidence interval (unpaired)"
       }
@@ -143,8 +159,53 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
     if(!boot){
       t.alpha <- qt(1-alpha/2, df = df)
       ## confidence bounds
-      CI.lower <- d - t.alpha*se
-      CI.upper <- d + t.alpha*se
+      CI.lower <- ifelse(alternative == "less", -Inf, d - t.alpha*se)
+      CI.upper <- ifelse(alternative == "greater", Inf, d + t.alpha*se)
+    }else{
+      if(alternative == "less" && !paired){
+        if("normal" %in% names(CI)){ 
+          CI$normal[1,1] <- conf.level
+          CI$normal[1,2] <- -Inf
+        }
+        if("basic" %in% names(CI)){ 
+          CI$basic[1,1] <- conf.level
+          CI$basic[1,4] <- -Inf
+        }
+        if("student" %in% names(CI)){ 
+          CI$student[1,1] <- conf.level
+          CI$student[1,4] <- -Inf
+        }
+        if("percent" %in% names(CI)){ 
+          CI$percent[1,1] <- conf.level
+          CI$percent[1,4] <- -Inf
+        }
+        if("bca" %in% names(CI)){ 
+          CI$bca[1,1] <- conf.level
+          CI$bca[1,4] <- -Inf
+        }
+      }
+      if(alternative == "greater" && !paired){
+        if("normal" %in% names(CI)){ 
+          CI$normal[1,1] <- conf.level
+          CI$normal[1,3] <- Inf
+        }
+        if("basic" %in% names(CI)){ 
+          CI$basic[1,1] <- conf.level
+          CI$basic[1,5] <- Inf
+        }
+        if("student" %in% names(CI)){ 
+          CI$student[1,1] <- conf.level
+          CI$student[1,5] <- Inf
+        }
+        if("percent" %in% names(CI)){ 
+          CI$percent[1,1] <- conf.level
+          CI$percent[1,5] <- Inf
+        }
+        if("bca" %in% names(CI)){ 
+          CI$bca[1,1] <- conf.level
+          CI$bca[1,5] <- Inf
+        }
+      }
     }
     names(d) <- "difference in means"
     Infos <- list(c(se, d/s), c(mx, sqrt(vx), my, sqrt(vy)))
@@ -159,8 +220,12 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
     }else{
       rownames(CI) <- "difference in means"
     }
-    colnames(CI) <- c(paste(alpha/2*100, "%"),
-                      paste((1-alpha/2)*100, "%"))
+    if(alternative == "two.sided")
+      colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
+    if(alternative == "less")
+      colnames(CI) <- c("0 %", paste((1-alpha/2)*100, "%"))
+    if(alternative == "greater")
+      colnames(CI) <- c(paste(alpha/2*100, "%"), "100 %")
     attr(CI, "conf.level") <- conf.level
   }
 
@@ -170,8 +235,10 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
 }
 meanDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
                        method = "welch",  boot = FALSE, R = 9999, 
-                       type = "all", na.rm = TRUE){
+                       bootci.type = "all", na.rm = TRUE,
+                       alternative = c("two.sided", "less", "greater")){
   normDiffCI(x = x, y = y, conf.level = conf.level, paired = paired, 
-             method = method, boot = boot, R = R, type = type, 
-             na.rm = na.rm)
+             method = method, boot = boot, R = R, 
+             bootci.type = bootci.type, na.rm = na.rm, 
+             alternative = alternative)
 }
