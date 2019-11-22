@@ -9,14 +9,17 @@
 }
 \usage{
 quantileCI(x, prob = 0.5, conf.level = 0.95, method = "exact",
-           R = 9999, type = c("norm", "basic", "perc", "bca"), 
-           minLength = FALSE, na.rm = FALSE)
+           R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
+           minLength = FALSE, na.rm = FALSE, 
+           alternative = c("two.sided", "less", "greater"))
 medianCI(x, conf.level = 0.95, method = "exact",
-         R = 9999, type = c("norm", "basic", "perc", "bca"), 
-         minLength = FALSE, na.rm = FALSE)
+         R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
+         minLength = FALSE, na.rm = FALSE, 
+         alternative = c("two.sided", "less", "greater"))
 madCI(x, conf.level = 0.95, method = "exact", minLength = FALSE,
-      R = 9999, type = c("norm", "basic", "perc", "bca"), 
-      na.rm = FALSE, constant = 1.4826)
+      R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
+      na.rm = FALSE, constant = 1.4826, 
+      alternative = c("two.sided", "less", "greater"))
 }
 \arguments{
   \item{x}{ numeric data vector }
@@ -25,9 +28,12 @@ madCI(x, conf.level = 0.95, method = "exact", minLength = FALSE,
   \item{method}{ character string specifing which method to use; see details. }
   \item{minLength}{ logical, see details}
   \item{R}{ number of bootstrap replicates. }
-  \item{type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
+  \item{bootci.type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
   \item{na.rm}{ logical, remove \code{NA} values. }
   \item{constant}{ scale factor (see \code{\link[stats]{mad}}). }
+  \item{alternative}{ a character string specifying one- or two-sided confidence intervals. 
+  Must be one of "two.sided" (default), "greater" or "less" (one-sided intervals). 
+  You can specify just the initial letter. }
 }
 \details{
   The exact confidence interval (\code{method = "exact"}) is computed using binomial
@@ -92,5 +98,10 @@ quantileCI(x, prob = 0.25, method = "asymptotic")
 quantileCI(x, prob = 0.75)
 ## (R = 999 to reduce computation time for R checks)
 quantileCI(x, prob = 0.75, method = "boot", R = 999)
+
+## one-sided
+quantileCI(x, prob = 0.75, alternative = "greater")
+medianCI(x, alternative = "less", method = "asymptotic")
+madCI(x, alternative = "greater", method = "boot", R = 999)
 }
 \keyword{univar}

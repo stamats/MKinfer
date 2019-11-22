@@ -1,13 +1,15 @@
 ## Confidence Intervals for quantiles
 quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
-                       R = 9999, type = c("norm", "basic", "perc", "bca"), 
-                       minLength = FALSE, na.rm = FALSE){
+                       R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
+                       minLength = FALSE, na.rm = FALSE,
+                       alternative = c("two.sided", "less", "greater")){
     if(!is.na(pmatch(method, "exact")))
         method <- "exact"
 
     METHODS <- c("exact", "asymptotic", "boot")
     method <- pmatch(method, METHODS)
-
+    alternative <- match.arg(alternative)
+    
     if(is.na(method))
         stop("invalid method")
 
@@ -27,6 +29,9 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
         stop("'conf.level' has to be in [0.5, 1]")
 
     alpha <- 1 - conf.level
+    
+    if(alternative != "two.sided") alpha <- 2*alpha
+    
     z <- qnorm(1-alpha/2)
     if(na.rm) x <- x[!is.na(x)]
     n <- length(x)
@@ -47,9 +52,10 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
           }
         }
         if(all(pcov.vec == 0)){
-          CI <- matrix(c(xs[1], xs[n]), nrow = 1)
+          CI.lower <- ifelse(alternative == "less", -Inf, xs[1])
+          CI.upper <- ifelse(alternative == "greater", Inf, xs[n])
+          CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
           attr(CI, "conf.level") <- 1
-          alpha <- 0
           rownames(CI) <- rep(paste(100*prob, "% quantile"), nrow(CI))
           colnames(CI) <- c("lower", "upper")
         }else{
@@ -60,6 +66,8 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
           if(minLength){
             CI <- CI[which.min(diff(t(CI))),,drop = FALSE]
           }
+          if(alternative == "less") CI.mat[,1] <- -Inf
+          if(alternative == "greater") CI.mat[,2] <- Inf
           attr(CI, "conf.level") <- pcov.min
           rownames(CI) <- rep(paste(100*prob, "% quantile"), nrow(CI))
           colnames(CI) <- c("lower", "upper")
@@ -74,10 +82,17 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
         prob.sd <- sqrt(n*prob*(1-prob))
         k.lo <- max(1, floor(n*prob - z*prob.sd))
         k.up <- min(n, ceiling(n*prob + z*prob.sd))
-        CI <- matrix(c(xs[k.lo], xs[k.up]), nrow = 1)
+        CI.lower <- ifelse(alternative == "less", -Inf, xs[k.lo])
+        CI.upper <- ifelse(alternative == "greater", Inf, xs[k.up])
+        CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
         attr(CI, "conf.level") <- conf.level
         rownames(CI) <- rep(paste(100*prob, "% quantile"), nrow(CI))
-        colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
+        if(alternative == "two.sided")
+          colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
+        if(alternative == "less")
+          colnames(CI) <- c("0 %", paste((1-alpha/2)*100, "%"))
+        if(alternative == "greater")
+          colnames(CI) <- c(paste(alpha/2*100, "%"), "100 %")
         meth <- "asymptotic confidence interval"
     }
     if(method == 3){ # boot
@@ -85,23 +100,70 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
         quantile(x[i], probs = prob) 
       } 
       boot.out <- boot(x, statistic = boot.quant, R = R)
-      CI <- boot.ci(boot.out, type = type)
+      CI <- try(boot.ci(boot.out, type = bootci.type, conf = 1 - alpha),
+                silent = TRUE)
+      if(inherits(CI, "try-error"))
+        stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
+      if(alternative == "less"){
+        if("normal" %in% names(CI)){ 
+          CI$normal[1,1] <- conf.level
+          CI$normal[1,2] <- -Inf
+        }
+        if("basic" %in% names(CI)){ 
+          CI$basic[1,1] <- conf.level
+          CI$basic[1,4] <- -Inf
+        }
+        if("student" %in% names(CI)){ 
+          CI$student[1,1] <- conf.level
+          CI$student[1,4] <- -Inf
+        }
+        if("percent" %in% names(CI)){ 
+          CI$percent[1,1] <- conf.level
+          CI$percent[1,4] <- -Inf
+        }
+        if("bca" %in% names(CI)){ 
+          CI$bca[1,1] <- conf.level
+          CI$bca[1,4] <- -Inf
+        }
+      }
+      if(alternative == "greater"){
+        if("normal" %in% names(CI)){ 
+          CI$normal[1,1] <- conf.level
+          CI$normal[1,3] <- Inf
+        }
+        if("basic" %in% names(CI)){ 
+          CI$basic[1,1] <- conf.level
+          CI$basic[1,5] <- Inf
+        }
+        if("student" %in% names(CI)){ 
+          CI$student[1,1] <- conf.level
+          CI$student[1,5] <- Inf
+        }
+        if("percent" %in% names(CI)){ 
+          CI$percent[1,1] <- conf.level
+          CI$percent[1,5] <- Inf
+        }
+        if("bca" %in% names(CI)){ 
+          CI$bca[1,1] <- conf.level
+          CI$bca[1,5] <- Inf
+        }
+      }
       meth <- "bootstrap confidence interval"
     }
 
     names(est) <- paste(100*prob, "% quantile")
-
-
     return(structure(list("estimate" = est, "conf.int" = CI,
                           "method" = meth),
                      class = "confint"))
 }
 
 medianCI <- function(x, conf.level = 0.95, method = "exact", 
-                     R = 9999, type = c("norm", "basic", "perc", "bca"), 
-                     minLength = FALSE, na.rm = FALSE){
+                     R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
+                     minLength = FALSE, na.rm = FALSE,
+                     alternative = c("two.sided", "less", "greater")){
     res <- quantileCI(x, prob = 0.5, conf.level = conf.level, method = method,
-                      R = R, type = type, minLength = minLength, na.rm = na.rm)
+                      R = R, bootci.type = bootci.type, minLength = minLength,
+                      na.rm = na.rm, alternative = alternative)
     if(method != "boot"){
       rownames(res$conf.int) <- rep("median", nrow(res$conf.int))
     }
@@ -110,12 +172,14 @@ medianCI <- function(x, conf.level = 0.95, method = "exact",
 }
 
 madCI <- function(x, conf.level = 0.95, method = "exact", minLength = FALSE,
-                  R = 9999, type = c("norm", "basic", "perc", "bca"),
-                  na.rm = FALSE, constant = 1.4826){
+                  R = 9999, bootci.type = c("norm", "basic", "perc", "bca"),
+                  na.rm = FALSE, constant = 1.4826,
+                  alternative = c("two.sided", "less", "greater")){
   M <- median(x, na.rm = na.rm)
   res <- medianCI(constant*abs(x-M), conf.level = conf.level,
-                  method = method, R = R, type = type, 
-                  minLength = minLength, na.rm = na.rm)
+                  method = method, R = R, bootci.type = bootci.type, 
+                  minLength = minLength, na.rm = na.rm, 
+                  alternative = alternative)
   if(method != "boot"){
     rownames(res$conf.int) <- rep("MAD", nrow(res$conf.int))
   }
