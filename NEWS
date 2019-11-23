@@ -9,7 +9,7 @@
 - corrected minor bug in case of bootstrap confidence intervals (conf.level 
   was not passed through)
 - introduced one-sided confidence intervals in all *CI functions
-
+- added references to description and vignette
 
 ###########################################################
 ## Version 0.2

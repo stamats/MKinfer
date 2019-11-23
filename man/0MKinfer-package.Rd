@@ -6,14 +6,20 @@
 Inferential Statistics.
 }
 \description{
-Functions not available in standard R packages such as computation of various confidence intervals including bootstrapped versions as well as HSU, permutation, bootstrap and multiple imputation t-test.
+Computation of various confidence intervals (Altman et al. (2000), ISBN:978-0-727-91375-3; 
+Hedderich and Sachs (2018), ISBN:978-3-662-56657-2) including bootstrapped 
+versions (Davison and Hinkley (1997), ISBN:978-0-511-80284-3) as well as 
+Hsu (Hedderich and Sachs (2018), ISBN:978-3-662-56657-2), 
+permutation (Janssen (1997), <doi:10.1016/S0167-7152(97)00043-6>), 
+bootstrap (Davison and Hinkley (1997), ISBN:978-0-511-80284-3) and 
+multiple imputation (Barnard and Rubin (1999), <doi:10.1093/biomet/86.4.948>) t-test.
 }
 \details{
 \tabular{ll}{
 Package: \tab MKinfer\cr
 Type: \tab Package\cr
 Version: \tab 0.3\cr
-Date: \tab 2019-11-22\cr
+Date: \tab 2019-11-23\cr
 Depends: \tab R(>= 3.5.0)\cr
 Imports: \tab stats, MKdescr, boot, arrangements\cr
 Suggests: \tab Amelia, knitr, rmarkdown, exactRankTests\cr
