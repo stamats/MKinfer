@@ -37,7 +37,7 @@ meanDiffCI(x, y, conf.level = 0.95, paired = FALSE, method = "welch",
   methods use different formulas for computing the degrees of freedom of the
   respective t-distribution providing the quantiles in the confidence interval.
   Instead of the Welch-Satterhwaite equation the method of Hsu uses the minimum
-  of the group sample sizes minus 1; see Section 6.8.3 of Hedderich and Sachs (2016).
+  of the group sample sizes minus 1; see Section 6.8.3 of Hedderich and Sachs (2018).
 }
 \value{
   A list with class \code{"confint"} containing the following components:
@@ -51,7 +51,7 @@ meanDiffCI(x, y, conf.level = 0.95, paired = FALSE, method = "welch",
   John Wiley and Sons 2000.
 
   J. Hedderich, L. Sachs. \emph{Angewandte Statistik: Methodensammlung mit R}.
-  Springer 2016.
+  Springer 2018.
 }
 \author{ Matthias Kohl \email{Matthias.Kohl@stamats.de}}
 %\note{}

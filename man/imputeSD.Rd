@@ -15,7 +15,7 @@ imputeSD(SD1, SD2, SDchange)
 }
 \details{
   The function imputes standard deviations for changes from baseline
-  adopting the approach describe in the Cochrane handbook, Section 16.1.3.2.
+  adopting the approach describe in the Cochrane handbook (2019), Section 6.5.2.8.
 
   1) Missing \code{SD1} are replaced by correspondig values of \code{SD2} and
      vice versa.
