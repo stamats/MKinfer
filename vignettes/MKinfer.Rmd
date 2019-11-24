@@ -5,6 +5,7 @@ date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: true
+bibliography: MKinfer.bib
 vignette: >
   %\VignetteIndexEntry{MKinfer}
   %\VignetteEngine{knitr::rmarkdown}
@@ -13,10 +14,10 @@ vignette: >
 
 
 ## Introduction  
-Package MKinfer includes a collection of functions for inferential statistics 
-not available in standard R packages such as computation of various confidence 
-intervals (including bootstrapped versions), HSU t-test and multiple imputation 
-t-test.
+Package MKinfer includes a collection of functions for the computation of 
+various confidence intervals [@Altman2000; @Hedderich2018] including bootstrapped 
+versions [@Davison1997] as well as Hsu [@Hedderich2018], permutation [@Janssen1997], 
+bootstrap [@Davison1997] and multiple imputation [@Barnard1999] t-test.
 
 We first load the package.
 ```{r}
@@ -27,7 +28,7 @@ library(MKinfer)
 ## Confidence Intervals
 ### Binomial Proportion
 There are several functions for computing confidence intervals. We can compute
-10 different confidence intervals for binomial proportions; e.g.
+12 different confidence intervals for binomial proportions [@DasGupta2001]; e.g.
 ```{r}
 ## default: "wilson"
 binomCI(x = 12, n = 50)
@@ -38,13 +39,14 @@ binom.test(x = 12, n = 50)$conf.int
 ```
 
 For all intervals implemented see the help page of function binomCI. One can
-also compute bootstrap intervals as well as one-sided intervals.
+also compute bootstrap intervals via function boot.ci of package boot [@Davison1997] 
+as well as one-sided intervals.
 
 
 ### Difference of Two Binomial Proportions
 There are several functions for computing confidence intervals. We can compute
 different confidence intervals for the difference of two binomial proportions
-(independent and paired case); e.g.
+(independent [@Newcombe1998a] and paired case [@Newcombe1998b]); e.g.
 ```{r}
 ## default: wilson 
 binomDiffCI(a = 5, b = 0, c = 51, d = 29)
@@ -53,11 +55,12 @@ binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE)
 ```
 
 For all intervals implemented see the help page of function binomDiffCI. One
-can also compute boostrap intervals as well as one-sided intervals.
+can also compute boostrap intervals via function boot.ci of package 
+boot [@Davison1997]  as well as one-sided intervals.
 
 
 ### Mean and SD
-We can compute confidence intervals for mean and SD of a normal distribution.
+We can compute confidence intervals for mean and SD [@Altman2000, @Davison1997].
 ```{r}
 x <- rnorm(50, mean = 2, sd = 3)
 ## mean and SD unknown
@@ -74,8 +77,8 @@ meanCI(x, boot = TRUE)
 
 
 ### Difference in Means
-We can compute confidence interval for the difference of means assuming 
-normal distributions.
+We can compute confidence interval for the difference of means [@Altman2000; 
+@Hedderich2018; @Davison1997].
 ```{r}
 x <- rnorm(20)
 y <- rnorm(20, sd = 2)
@@ -126,7 +129,7 @@ sum(CIhsu[,1] < 0 & 0 < CIhsu[,2])/M
 
 ### Coefficient of Variation
 We provide 12 different confidence intervals for the (classical) coefficient 
-of variation; e.g.
+of variation [@Gulhar2012; @Davison1997]; e.g.
 ```{r}
 x <- rnorm(100, mean = 10, sd = 2) # CV = 0.2
 ## default: "miller"
@@ -141,7 +144,7 @@ For all intervals implemented see the help page of function cvCI.
 
 
 ### Quantiles, Median and MAD
-We start with the computation of confidence intervals for quantiles.
+We start with the computation of confidence intervals for quantiles [@Hedderich2018; @Davison1997].
 ```{r}
 x <- rexp(100, rate = 0.5)
 ## exact
@@ -185,8 +188,8 @@ madCI(x = x, constant = 1)
 ## Hsu Two-Sample t-Test
 The Hsu two-sample t-test is an alternative to the Welch two-sample t-test using
 a different formula for computing the degrees of freedom of the respective 
-t-distribution. The following code is taken and adapted from the help page of
-the t.test function.
+t-distribution [@Hedderich2018]. The following code is taken and adapted from 
+the help page of the t.test function.
 ```{r}
 t.test(1:10, y = c(7:20))      # P = .00001855
 t.test(1:10, y = c(7:20, 200)) # P = .1245    -- NOT significant anymore
@@ -203,7 +206,7 @@ hsu.t.test(extra ~ group, data = sleep)
 
 ## Bootstrap t-Test
 One and two sample bootstrap t-tests with equal or unequal variances in the
-two sample case.
+two sample case [@Efron1993].
 ```{r}
 boot.t.test(1:10, y = c(7:20)) # without bootstrap: P = .00001855
 boot.t.test(1:10, y = c(7:20, 200)) # without bootstrap: P = .1245
@@ -215,12 +218,12 @@ boot.t.test(extra ~ group, data = sleep)
 ```
 
 ## Permutation t-Test
-One and two sample permutation t-tests with equal or unequal variances in the
-two sample case.
+One and two sample permutation t-tests with equal [@Efron1993] or unequal 
+variances [@Janssen1997] in the two sample case.
 ```{r}
-perm.t.test(1:10, y = c(7:20)) # without bootstrap: P = .00001855
+perm.t.test(1:10, y = c(7:20)) # without permutation: P = .00001855
 ## permutation confidence interval sensitive to outlier!
-perm.t.test(1:10, y = c(7:20, 200)) # without bootstrap: P = .1245
+perm.t.test(1:10, y = c(7:20, 200)) # without permutation: P = .1245
 
 ## Traditional interface
 with(sleep, perm.t.test(extra[group == 1], extra[group == 2]))
@@ -231,8 +234,8 @@ perm.t.test(extra ~ group, data = sleep)
 
 ## Multiple Imputation t-Test
 Function mi.t.test can be used to compute a multiple imputation t-test by applying
-the approch of Rubin (1987) in combination with the adjustment of 
-Barnard and Rubin (1999).
+the approch of Rubin [@Rubin1987] in combination with the adjustment of 
+Barnard and Rubin [@Barnard1999].
 ```{r}
 ## Generate some data
 set.seed(123)
@@ -276,10 +279,26 @@ mi.t.test(res$imputations, x = "variable", y = "pair", paired = TRUE)
 ```
 
 
+## Repeated Measures One-Way ANOVA
+We provide a simple wrapper function that allows to compute a classical
+repeated measures one-way ANOVA as well as a respective mixed effects model.
+In addition, the non-parametric Friedman and Quade tests can be computed.
+```{r}
+set.seed(123)
+outcome <- c(rnorm(10), rnorm(10, mean = 1.5), rnorm(10, mean = 1))
+timepoints <- factor(rep(1:3, each = 10))
+patients <- factor(rep(1:10, times = 3))
+rm.oneway.test(outcome, timepoints, patients)
+rm.oneway.test(outcome, timepoints, patients, method = "lme")
+rm.oneway.test(outcome, timepoints, patients, method = "friedman")
+rm.oneway.test(outcome, timepoints, patients, method = "quade")
+```
+
+
 ## Imputation of Standard Deviations for Changes from Baseline
 The function imputeSD can be used to impute standard deviations for changes
-from baseline adopting the approach of Section 16.1.3.2 of the Cochrane
-handbook (2011).
+from baseline adopting the approach of the Cochrane handbook 
+[@Cochrane2019, Section 6.5.2.8].
 ```{r}
 SD1 <- c(0.149, 0.022, 0.036, 0.085, 0.125, NA, 0.139, 0.124, 0.038)
 SD2 <- c(NA, 0.039, 0.038, 0.087, 0.125, NA, 0.135, 0.126, 0.038)
@@ -305,3 +324,6 @@ pairwise.fun(airquality$Ozone, airquality$Month,
 ```{r}
 sessionInfo()
 ```
+
+
+## References
