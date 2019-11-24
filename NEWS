@@ -10,6 +10,9 @@
   was not passed through)
 - introduced one-sided confidence intervals in all *CI functions
 - added references to description and vignette
+- added function rm.oneway.test to compute parametric and non-parametric
+  one-way ANOVA with repeated measures
+  
 
 ###########################################################
 ## Version 0.2

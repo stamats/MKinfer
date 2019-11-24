@@ -2,6 +2,7 @@ import("stats")
 importFrom("MKdescr", "CV")
 importFrom("boot", "boot", "boot.ci")
 importFrom("arrangements", "permutations", "npermutations")
+importFrom("nlme", "lme", "anova.lme")
 export(binomCI,
        binomDiffCI,
        boot.t.test,
@@ -18,7 +19,8 @@ export(binomCI,
        normDiffCI,
        meanDiffCI,
        quantileCI,
-       pairwise.fun)
+       pairwise.fun,
+       rm.oneway.test)
 
 S3method(hsu.t.test, default)
 S3method(hsu.t.test, formula)
