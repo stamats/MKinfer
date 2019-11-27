@@ -19,7 +19,7 @@ multiple imputation (Barnard and Rubin (1999), <doi:10.1093/biomet/86.4.948>) t-
 Package: \tab MKinfer\cr
 Type: \tab Package\cr
 Version: \tab 0.3\cr
-Date: \tab 2019-11-24\cr
+Date: \tab 2019-11-27\cr
 Depends: \tab R(>= 3.5.0)\cr
 Imports: \tab stats, MKdescr, boot, arrangements\cr
 Suggests: \tab Amelia, knitr, rmarkdown, exactRankTests\cr
