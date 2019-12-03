@@ -49,7 +49,7 @@ hsu.t.test(x, \dots)
   two means) an error is generated.
 
   One should at least have six observations per group to apply the test; see
-  Section 6.8.3 of Hedderich and Sachs (2016).
+  Section 6.8.3 and 7.4.4.2 of Hedderich and Sachs (2018).
 }
 \value{
   A list with class \code{"htest"} containing the following components:
@@ -72,7 +72,11 @@ hsu.t.test(x, \dots)
 }
 \references{
   J. Hedderich, L. Sachs. \emph{Angewandte Statistik: Methodensammlung mit R}.
-  Springer 2016.
+  Springer 2018.
+  
+  Hsu, P. (1938). Contribution to the theory of ``student's'' t-test as 
+  applied to the problem of two samples. \emph{Statistical Research Memoirs} \bold{2}, 
+  1-24.
 }
 \seealso{\code{\link{t.test}}}
 \examples{
