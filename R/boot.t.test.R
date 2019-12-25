@@ -1,4 +1,4 @@
-boot.t.test <- function (x, ...){ 
+boot.t.test <- function(x, ...){ 
   UseMethod("boot.t.test")
 }
 boot.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less", "greater"), 
