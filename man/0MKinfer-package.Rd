@@ -13,15 +13,16 @@ Hsu (Hedderich and Sachs (2018), ISBN:978-3-662-56657-2),
 permutation (Janssen (1997), <doi:10.1016/S0167-7152(97)00043-6>), 
 bootstrap (Davison and Hinkley (1997), ISBN:978-0-511-80284-3) and 
 multiple imputation (Barnard and Rubin (1999), <doi:10.1093/biomet/86.4.948>) t-test.
+Graphical visualization by volcano plots.
 }
 \details{
 \tabular{ll}{
 Package: \tab MKinfer\cr
 Type: \tab Package\cr
 Version: \tab 0.4\cr
-Date: \tab 2019-11-30\cr
+Date: \tab 2019-12-25\cr
 Depends: \tab R(>= 3.5.0)\cr
-Imports: \tab stats, MKdescr, boot, arrangements\cr
+Imports: \tab stats, MKdescr, boot, arrangements, nlme\cr
 Suggests: \tab Amelia, knitr, rmarkdown, exactRankTests\cr
 License: \tab LGPL-3\cr
 URL: \tab http://www.stamats.de/\cr
