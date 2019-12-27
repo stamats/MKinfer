@@ -6,16 +6,16 @@
   Produce volcano plot(s) of the given effect size and p values. 
 }
 \usage{
-volcano(effect, pval, \dots)
+volcano(x, \dots)
 
-\S3method{volcano}{default}(effect, pval, effect0 = 0, sig.level = 0.05, 
+\S3method{volcano}{default}(x, pval, effect0 = 0, sig.level = 0.05, 
                             effect.low = NULL, effect.high = NULL,
                             color.low = "#4575B4", color.high = "#D73027",
                             xlab = "effect size", ylab = "-log10(p value)",
                             title = "Volcano Plot", alpha = 1, shape = 19, \dots)
 }
 \arguments{
-  \item{effect}{ numeric, measure of effect size.}
+  \item{x}{ in case of default method: measure of effect size.}
   \item{pval}{ numeric, (adjusted) p values.}
   \item{effect0}{ single numeric, value for no effect.}
   \item{sig.level}{ single numeric, significance level.}

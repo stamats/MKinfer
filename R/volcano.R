@@ -1,11 +1,12 @@
-volcano <- function(effect, pval, ...){ 
+volcano <- function(x, ...){ 
   UseMethod("volcano")
 }
-volcano.default <- function(effect, pval, effect0 = 0, sig.level = 0.05, 
+volcano.default <- function(x, pval, effect0 = 0, sig.level = 0.05, 
                             effect.low = NULL, effect.high = NULL,
                             color.low = "#4575B4", color.high = "#D73027",
                             xlab = "effect size", ylab = "-log10(p value)",
                             title = "Volcano Plot", alpha = 1, shape = 19, ...){
+  effect <- x
   stopifnot(is.numeric(effect), is.numeric(pval))
   stopifnot(all(pval > 0), all(pval <= 1))
   stopifnot(length(effect0) == 1)
