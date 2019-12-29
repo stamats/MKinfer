@@ -15,7 +15,7 @@ cvCI(x, conf.level = 0.95, method = "miller", R = 9999,
   \item{conf.level}{ confidence level }
   \item{method}{ character string specifing which method to use; see details. }
   \item{R}{ number of bootstrap replicates; see details. }
-  \item{bootci.type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. 
+  \item{bootci.type}{ type of bootstrap interval; see \code{boot.ci}. 
   Type \code{"student"} does not work.}
   \item{na.rm}{logical. Should missing values be removed?}
   \item{alternative}{ a character string specifying one- or two-sided confidence intervals. 
@@ -44,7 +44,7 @@ cvCI(x, conf.level = 0.95, method = "miller", R = 9999,
 }
 \author{ Matthias Kohl \email{Matthias.Kohl@stamats.de}}
 %\note{}
-\seealso{\code{\link{CV}}}
+\seealso{\code{\link[MKdescr]{CV}}, \code{\link[boot]{boot.ci}}}
 \examples{
 x <- rnorm(100, mean = 10, sd = 2) # CV = 0.2
 cvCI(x, method = "miller")

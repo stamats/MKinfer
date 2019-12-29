@@ -295,6 +295,34 @@ rm.oneway.test(outcome, timepoints, patients, method = "quade")
 ```
 
 
+## Volcano Plots
+Volcano plots can be used to visualize the results when many tests have been
+applied. They show a measure of effect size in combination with (adjusted)
+p values.
+```{r, fig.width=7, fig.height=7}
+## Generate some data
+x <- matrix(rnorm(1000, mean = 10), nrow = 10)
+g1 <- rep("control", 10)
+y1 <- matrix(rnorm(500, mean = 11.75), nrow = 10)
+y2 <- matrix(rnorm(500, mean = 9.75, sd = 3), nrow = 10)
+g2 <- rep("treatment", 10)
+group <- factor(c(g1, g2))
+Data <- rbind(x, cbind(y1, y2))
+## compute Hsu t-test
+pvals <- apply(Data, 2, function(x, group) hsu.t.test(x ~ group)$p.value,
+               group = group)
+## compute log-fold change
+logfc <- function(x, group){
+  res <- tapply(x, group, mean)
+  log2(res[1]/res[2])
+}
+lfcs <- apply(Data, 2, logfc, group = group)
+volcano(lfcs, p.adjust(pvals, method = "fdr"), 
+        effect.low = -0.25, effect.high = 0.25, 
+        xlab = "log-fold change", ylab = "-log10(adj. p value)")
+```
+
+
 ## Imputation of Standard Deviations for Changes from Baseline
 The function imputeSD can be used to impute standard deviations for changes
 from baseline adopting the approach of the Cochrane handbook 

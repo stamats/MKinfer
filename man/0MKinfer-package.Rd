@@ -20,9 +20,9 @@ Graphical visualization by volcano plots.
 Package: \tab MKinfer\cr
 Type: \tab Package\cr
 Version: \tab 0.4\cr
-Date: \tab 2019-12-25\cr
+Date: \tab 2019-12-29\cr
 Depends: \tab R(>= 3.5.0)\cr
-Imports: \tab stats, MKdescr, boot, arrangements, nlme\cr
+Imports: \tab stats, MKdescr, boot, arrangements, nlme, ggplot2\cr
 Suggests: \tab Amelia, knitr, rmarkdown, exactRankTests\cr
 License: \tab LGPL-3\cr
 URL: \tab http://www.stamats.de/\cr
