@@ -19,8 +19,8 @@ Graphical visualization by volcano plots.
 \tabular{ll}{
 Package: \tab MKinfer\cr
 Type: \tab Package\cr
-Version: \tab 0.4\cr
-Date: \tab 2019-12-29\cr
+Version: \tab 0.5\cr
+Date: \tab 2020-04-06\cr
 Depends: \tab R(>= 3.5.0)\cr
 Imports: \tab stats, MKdescr, boot, arrangements, nlme, ggplot2\cr
 Suggests: \tab Amelia, knitr, rmarkdown, exactRankTests\cr
