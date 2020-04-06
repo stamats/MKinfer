@@ -193,10 +193,10 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
       names(Infos[[2]]) <- c("proportion of group 1", "proportion of group 2")
     }
     if(method == 3){ ## Wilson
-      CI1 <- binomCI(a, m, method = "wilson")$conf.int
+      CI1 <- binomCI(a, m, method = "wilson", conf.level = 1-alpha)$conf.int
       l1 <- CI1[1]
       u1 <- CI1[2]
-      CI2 <- binomCI(b, n, method = "wilson")$conf.int
+      CI2 <- binomCI(b, n, method = "wilson", conf.level = 1-alpha)$conf.int
       l2 <- CI2[1]
       u2 <- CI2[2]
       CI.lower <- D - sqrt((p1-l1)^2 + (u2-p2)^2)
