@@ -222,6 +222,7 @@ meanCI <- function(x, conf.level = 0.95, boot = FALSE, R = 9999,
   }else{
     res$conf.int <- res$conf.int[1,,drop = FALSE]
   }
+  attr(res$conf.int, "conf.level") <- conf.level
   res
 }
 sdCI <- function(x, conf.level = 0.95, boot = FALSE, R = 9999, 
@@ -235,6 +236,7 @@ sdCI <- function(x, conf.level = 0.95, boot = FALSE, R = 9999,
   }else{
     res$conf.int <- res$conf.int[2,,drop = FALSE]
   }
+  attr(res$conf.int, "conf.level") <- conf.level
   res
 }
 

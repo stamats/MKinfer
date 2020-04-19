@@ -7,6 +7,7 @@
 ###########################################################
 - corrected bug in wilson method in binomDiffCI (alpha was not passed through)
   detected by Takuya Yanagida.
+- attribute conf.level was not set in meanCI and sdCI.
 
 ###########################################################
 ## Version 0.4
