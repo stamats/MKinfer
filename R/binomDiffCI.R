@@ -49,7 +49,6 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
 
   if(alternative != "two.sided") alpha <- 2*alpha
 
-  print(alternative)
   Infos <- NULL
   if(paired){
     n <- a + b + c + d
