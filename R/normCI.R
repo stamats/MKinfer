@@ -60,7 +60,7 @@ normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95,
     if(is.null(mean)){
       boot.out <- boot(x, statistic = boot.mean, R = R)
       CI.AM <- try(boot.ci(boot.out, type = bootci.type, conf = 1-alpha),
-                silent = TRUE)
+                   silent = TRUE)
       if(inherits(CI.AM, "try-error"))
         stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
       if(alternative == "less"){
@@ -111,7 +111,7 @@ normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95,
     if(is.null(sd)){
       boot.out <- boot(x, statistic = boot.sd, R = R)
       CI.SD <- try(boot.ci(boot.out, type = bootci.type, conf = 1-alpha),
-                silent = TRUE)
+                   silent = TRUE)
       if(inherits(CI.SD, "try-error"))
         stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
       if(alternative == "less"){
