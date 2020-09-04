@@ -3,6 +3,12 @@
 ###############################################################################
 
 ###########################################################
+## Version 0.6
+###########################################################
+- removed an unnecessary print in function binomDiffCI
+- use lgamma instead of gamma to compute variance of SD (inside normCI)
+
+###########################################################
 ## Version 0.5
 ###########################################################
 - corrected bug in wilson method in binomDiffCI (alpha was not passed through)

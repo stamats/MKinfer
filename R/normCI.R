@@ -54,7 +54,7 @@ normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95,
     boot.sd <- function(x, i){
       SD <- sd(x[i]) 
       n <- length(i)
-      VAR <- SD^2*((n-1)/2*gamma((n-1)/2)/gamma(n/2) - 1)
+      VAR <- SD^2*((n-1)/2*exp(lgamma((n-1)/2)-lgamma(n/2)) - 1)
       c(SD, VAR)
     } 
     if(is.null(mean)){
