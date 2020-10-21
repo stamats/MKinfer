@@ -20,7 +20,7 @@ Graphical visualization by volcano plots.
 Package: \tab MKinfer\cr
 Type: \tab Package\cr
 Version: \tab 0.6\cr
-Date: \tab 2020-09-04\cr
+Date: \tab 2020-10-21\cr
 Depends: \tab R(>= 3.5.0)\cr
 Imports: \tab stats, MKdescr, boot, arrangements, nlme, ggplot2\cr
 Suggests: \tab Amelia, knitr, rmarkdown, exactRankTests\cr

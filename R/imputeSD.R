@@ -22,9 +22,9 @@ imputeSD <- function(SD1, SD2, SDchange){
   corr <- (SD1^2 + SD2^2 - SDchange^2)/(2*SD1*SD2)
 
   ## 3. Minimum, mean and maximum correlation are computed
-  corr.min <- min(corr, na.rm = TRUE)
-  corr.mean <- mean(corr, na.rm = TRUE)
-  corr.max <- max(corr, na.rm = TRUE)
+  corr.min <- min(max(-1, min(corr, na.rm = TRUE)), 1)
+  corr.mean <- min(max(-1, mean(corr, na.rm = TRUE)), 1)
+  corr.max <- min(max(-1, max(corr, na.rm = TRUE)), 1)
 
   ## 4. Missing values of SDchange are imputed
   ind.na <- is.na(SDchange)
