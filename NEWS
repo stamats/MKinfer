@@ -3,12 +3,19 @@
 ###############################################################################
 
 ###########################################################
+## Version 0.7
+###########################################################
+- introduced na.rm to volcano
+
+
+###########################################################
 ## Version 0.6
 ###########################################################
 - removed an unnecessary print in function binomDiffCI
 - use lgamma instead of gamma to compute variance of SD (inside normCI)
 - modified imputeSD such that correlations < -1 or > 1, which may occur, are 
   not used for the imputations, but are set to -1 or 1, respectively.
+
 
 ###########################################################
 ## Version 0.5
@@ -17,11 +24,13 @@
   detected by Takuya Yanagida.
 - attribute conf.level was not set in meanCI and sdCI.
 
+
 ###########################################################
 ## Version 0.4
 ###########################################################
 - changed return value of imputeSD
 - added volcano plot
+
 
 ###########################################################
 ## Version 0.3

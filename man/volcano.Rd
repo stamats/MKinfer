@@ -12,7 +12,8 @@ volcano(x, \dots)
                             effect.low = NULL, effect.high = NULL,
                             color.low = "#4575B4", color.high = "#D73027",
                             xlab = "effect size", ylab = "-log10(p value)",
-                            title = "Volcano Plot", alpha = 1, shape = 19, \dots)
+                            title = "Volcano Plot", alpha = 1, shape = 19, 
+                            na.rm = TRUE, \dots)
 }
 \arguments{
   \item{x}{ in case of default method: measure of effect size.}
@@ -30,6 +31,7 @@ volcano(x, \dots)
   \item{title}{ title of plot.}
   \item{alpha}{ bleding factor (default: no blending.}
   \item{shape}{ point shape used.}
+  \item{na.rm}{ logical, remove \code{NA} values before plotting.}
   \item{\dots}{ further arguments that may be passed through).}
 }
 \details{
