@@ -6,12 +6,13 @@
   adopting the approach describe in the Cochrane handbook, Section 16.1.3.2.
 }
 \usage{
-imputeSD(SD1, SD2, SDchange)
+imputeSD(SD1, SD2, SDchange, corr)
 }
 \arguments{
   \item{SD1}{ numeric vector, baseline SD. }
   \item{SD2}{ numeric vector, follow-up SD.}
   \item{SDchange}{ numeric vector, SD for changes from baseline. }
+  \item{corr}{ optional numeric vector of correlations; see details below.}
 }
 \details{
   The function imputes standard deviations for changes from baseline
@@ -20,7 +21,8 @@ imputeSD(SD1, SD2, SDchange)
   1) Missing \code{SD1} are replaced by correspondig values of \code{SD2} and
      vice versa.
 
-  2) Correlations for complete data (rows) are computed.
+  2) Correlations for complete data (rows) are computed. If no complete data
+     is available, correlations can be provided via argument \code{corr}.
 
   3) Minimum, mean and maximum correlation (over rows) are computed.
 

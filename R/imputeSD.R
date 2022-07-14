@@ -1,6 +1,6 @@
 ## Function to impute SD
 ## Cochrane Handbook (2011), Section 16.1.3.2
-imputeSD <- function(SD1, SD2, SDchange){
+imputeSD <- function(SD1, SD2, SDchange, corr){
   ## 0. Check of input
   if(any(SD1[!is.na(SD1)] <= 0)){
     stop("All non NA values of 'SD1' need to be positive")
@@ -18,8 +18,10 @@ imputeSD <- function(SD1, SD2, SDchange){
   SD1[is.na(SD1)] <- SD2[is.na(SD1)]
   SD2[is.na(SD2)] <- SD1[is.na(SD2)]
 
-  ## 2. Correlations for complete data are computed
-  corr <- (SD1^2 + SD2^2 - SDchange^2)/(2*SD1*SD2)
+  ## 2. Correlations for complete data are computed, if not provided
+  if(missing(corr)){
+    corr <- (SD1^2 + SD2^2 - SDchange^2)/(2*SD1*SD2)
+  }
 
   ## 3. Minimum, mean and maximum correlation are computed
   corr.min <- min(max(-1, min(corr, na.rm = TRUE)), 1)
