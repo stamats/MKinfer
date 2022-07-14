@@ -5,7 +5,8 @@ volcano.default <- function(x, pval, effect0 = 0, sig.level = 0.05,
                             effect.low = NULL, effect.high = NULL,
                             color.low = "#4575B4", color.high = "#D73027",
                             xlab = "effect size", ylab = "-log10(p value)",
-                            title = "Volcano Plot", alpha = 1, shape = 19, ...){
+                            title = "Volcano Plot", alpha = 1, shape = 19, 
+                            na.rm = TRUE, ...){
   effect <- x
   stopifnot(is.numeric(effect), is.numeric(pval))
   if(na.rm){
