@@ -25,11 +25,11 @@ Depends: \tab R(>= 3.5.0)\cr
 Imports: \tab stats, MKdescr, boot, arrangements, nlme, ggplot2\cr
 Suggests: \tab Amelia, knitr, rmarkdown, exactRankTests\cr
 License: \tab LGPL-3\cr
-URL: \tab http://www.stamats.de/\cr
+URL: \tab https://www.stamats.de/\cr
 }
 library(MKinfer)
 }
-\author{ Matthias Kohl \url{http://www.stamats.de}
+\author{ Matthias Kohl \url{https://www.stamats.de}
 
 Maintainer: Matthias Kohl  \email{matthias.kohl@stamats.de}}
 %\references{

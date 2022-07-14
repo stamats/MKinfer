@@ -6,6 +6,8 @@
 ## Version 0.7
 ###########################################################
 - introduced na.rm to volcano
+- introduced new parameter corr to imputeSD
+- changed http to https
 
 
 ###########################################################
