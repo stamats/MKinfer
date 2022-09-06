@@ -21,8 +21,9 @@ imputeSD(SD1, SD2, SDchange, corr)
   1) Missing \code{SD1} are replaced by correspondig values of \code{SD2} and
      vice versa.
 
-  2) Correlations for complete data (rows) are computed. If no complete data
-     is available, correlations can be provided via argument \code{corr}.
+  2) Correlations for complete data (rows) are computed. Alternatively, correlations 
+     can be provided via argument \code{corr}. This option may particularly be
+     useful, if no complete data is available.
 
   3) Minimum, mean and maximum correlation (over rows) are computed.
 
@@ -47,5 +48,7 @@ SD1 <- c(0.149, 0.022, 0.036, 0.085, 0.125, NA, 0.139, 0.124, 0.038)
 SD2 <- c(NA, 0.039, 0.038, 0.087, 0.125, NA, 0.135, 0.126, 0.038)
 SDchange <- c(NA, NA, NA, 0.026, 0.058, NA, NA, NA, NA)
 imputeSD(SD1, SD2, SDchange)
+SDchange2 <- rep(NA, 9)
+imputeSD(SD1, SD2, SDchange2, corr = c(0.85, 0.9, 0.95))
 }
 \keyword{univar}

@@ -80,7 +80,7 @@ binomCI(x, n, conf.level = 0.95, method = "wilson", rand = 123,
 \note{
 A first version of this function appeared in R package SLmisc.
 }
-\seealso{\code{\link[stats]{binom.test}}, \code{\link[Hmisc]{binconf}}}
+\seealso{\code{\link[stats]{binom.test}}}
 \examples{
 binomCI(x = 42, n = 43, method = "wald")
 binomCI(x = 42, n = 43, method = "wald-cc")

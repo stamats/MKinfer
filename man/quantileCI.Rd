@@ -61,7 +61,7 @@ madCI(x, conf.level = 0.95, method = "exact", minLength = FALSE,
   \emph{Ann Inst Stat Math}, \bold{68}: 491-539.
 }
 \author{ Matthias Kohl \email{Matthias.Kohl@stamats.de}}
-\seealso{\code{\link[stats]{binom.test}}, \code{\link[Hmisc]{binconf}}}
+\seealso{\code{\link[stats]{quantile}}}
 \examples{
 ## To get a non-trivial exact confidence interval for the median
 ## one needs at least 6 observations

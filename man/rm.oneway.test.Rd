@@ -32,20 +32,20 @@ rm.oneway.test(x, g, id, method = "aov")
 \references{
   Chambers, J. M., Freeny, A and Heiberger, R. M. (1992), 
   \emph{Analysis of variance; designed experiments. Chapter 5 of Statistical Models in S},
-  eds J. M. Chambers and T. J. Hastie, Wadsworth \& Brooks/Cole.
+  eds J. M. Chambers and T. J. Hastie, Wadsworth and Brooks/Cole.
   
   Pinheiro, J.C., and Bates, D.M. (2000), \emph{Mixed-Effects Models in S and S-PLUS}, 
   Springer.
   
   Myles Hollander and Douglas A. Wolfe (1973), \emph{Nonparametric Statistical Methods}. 
-  New York: John Wiley \& Sons. Pages 139-146.
+  New York: John Wiley and Sons. Pages 139-146.
 
   D. Quade (1979), Using weighted rankings in the analysis of complete blocks 
   with additive block effects. \emph{Journal of the American Statistical Association} 
   \bold{74}, 680-683.
 
   William J. Conover (1999), \emph{Practical nonparametric statistics}. 
-  New York: John Wiley \& Sons. Pages 373-380.
+  New York: John Wiley and Sons. Pages 373-380.
 }
 \seealso{
   \code{\link{aov}}, \code{\link[nlme]{lme}}, \code{\link{friedman.test}}, 
