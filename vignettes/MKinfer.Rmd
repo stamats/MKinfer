@@ -228,7 +228,14 @@ perm.t.test(1:10, y = c(7:20, 200)) # without permutation: P = .1245
 ## Traditional interface
 with(sleep, perm.t.test(extra[group == 1], extra[group == 2]))
 ## Formula interface
-perm.t.test(extra ~ group, data = sleep)
+res <- perm.t.test(extra ~ group, data = sleep)
+res
+```
+
+In case of skewed distributions, one may use function p2ses to compute an
+alternative standardized effect size (SES) as proposed by Botta-Dukat [@BottaDukat2018].
+```{r}
+p2ses(res$p.value)
 ```
 
 
@@ -276,6 +283,16 @@ mi.t.test(res$imputations, x = "variable", mu = -1, subset = D$group == "yes",
 ## paired test
 t.test(D$variable, D$pair, paired = TRUE)
 mi.t.test(res$imputations, x = "variable", y = "pair", paired = TRUE)
+```
+
+Function mi.t.test also works with package mice by applying function mids2datlist
+of package miceadds.
+```{r}
+library(mice)
+library(miceadds)
+res.mice <- mice(D, m = 10, print = FALSE)
+res.list <- mids2datlist(res.mice)
+mi.t.test(res.list, x = "variable", y = "group")
 ```
 
 
@@ -332,6 +349,13 @@ SD1 <- c(0.149, 0.022, 0.036, 0.085, 0.125, NA, 0.139, 0.124, 0.038)
 SD2 <- c(NA, 0.039, 0.038, 0.087, 0.125, NA, 0.135, 0.126, 0.038)
 SDchange <- c(NA, NA, NA, 0.026, 0.058, NA, NA, NA, NA)
 imputeSD(SD1, SD2, SDchange)
+```
+
+Correlations can also be provided via argument corr. This option may particularly 
+be useful, if no complete data is available.
+```{r}
+SDchange2 <- rep(NA, 9)
+imputeSD(SD1, SD2, SDchange2, corr = c(0.85, 0.9, 0.95))
 ```
 
 
