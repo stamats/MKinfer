@@ -21,6 +21,9 @@ imputeSD <- function(SD1, SD2, SDchange, corr){
   ## 2. Correlations for complete data are computed, if not provided
   if(missing(corr)){
     corr <- (SD1^2 + SD2^2 - SDchange^2)/(2*SD1*SD2)
+    corrRes <- corr
+  }else{
+    corrRes <- NA
   }
 
   ## 3. Minimum, mean and maximum correlation are computed
@@ -38,6 +41,6 @@ imputeSD <- function(SD1, SD2, SDchange, corr){
   SDchange.max[!ind.na] <- SDchange[!ind.na]
   
   ## 5. Return results
-  data.frame(SD1 = SD1, SD2 = SD2, SDchange = SDchange, Cor=corr,
+  data.frame(SD1 = SD1, SD2 = SD2, SDchange = SDchange, Cor=corrRes,
              SDchange.min, SDchange.mean, SDchange.max)
 }

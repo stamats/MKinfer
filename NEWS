@@ -8,6 +8,9 @@
 - introduced na.rm to volcano
 - introduced new parameter corr to imputeSD
 - changed http to https
+- added some example code for using mice together with mi.t.test to vignette
+- added function p2ses for computing a standardized effect size (SES) for 
+  permutation tests.
 
 
 ###########################################################
