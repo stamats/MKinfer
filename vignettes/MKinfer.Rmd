@@ -165,12 +165,6 @@ medianCI(x = x, method = "asymptotic")
 medianCI(x = x, method = "boot")
 ```
 
-It often happens that quantile confidence intervals are not unique. Here the
-minimum length interval might be of interest.
-```{r}
-medianCI(x = x, minLength = TRUE)
-```
-
 Finally, we take a look at MAD (median absolute deviation) where by default 
 the standardized MAD is used (see function mad).
 ```{r}

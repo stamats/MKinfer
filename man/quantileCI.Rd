@@ -10,13 +10,11 @@
 \usage{
 quantileCI(x, prob = 0.5, conf.level = 0.95, method = "exact",
            R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
-           minLength = FALSE, na.rm = FALSE, 
-           alternative = c("two.sided", "less", "greater"))
+           na.rm = FALSE, alternative = c("two.sided", "less", "greater"))
 medianCI(x, conf.level = 0.95, method = "exact",
          R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
-         minLength = FALSE, na.rm = FALSE, 
-         alternative = c("two.sided", "less", "greater"))
-madCI(x, conf.level = 0.95, method = "exact", minLength = FALSE,
+         na.rm = FALSE, alternative = c("two.sided", "less", "greater"))
+madCI(x, conf.level = 0.95, method = "exact", 
       R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
       na.rm = FALSE, constant = 1.4826, 
       alternative = c("two.sided", "less", "greater"))
@@ -26,7 +24,6 @@ madCI(x, conf.level = 0.95, method = "exact", minLength = FALSE,
   \item{prob}{ quantile }
   \item{conf.level}{ confidence level }
   \item{method}{ character string specifing which method to use; see details. }
-  \item{minLength}{ logical, see details}
   \item{R}{ number of bootstrap replicates. }
   \item{bootci.type}{ type of bootstrap interval; see \code{\link[boot]{boot.ci}}. }
   \item{na.rm}{ logical, remove \code{NA} values. }
@@ -40,8 +37,6 @@ madCI(x, conf.level = 0.95, method = "exact", minLength = FALSE,
   probabilities; see Section 6.8.1 in Sachs and Hedderich (2009). If the result is not
   unique, i.e. there is more than one interval with coverage proability closest to
   \code{conf.level}, then a matrix of confidence intervals is returned.
-  If \code{minLength = TRUE}, an exact confidence interval with minimum length is
-  returned.
 
   The asymptotic confidence interval (\code{method = "asymptotic"}) is based on the
   normal approximation of the binomial distribution; see Section 6.8.1 in Sachs and Hedderich (2009).
@@ -70,10 +65,6 @@ x <- rnorm(8)
 ## exact confidence interval not unique
 medianCI(x)
 madCI(x)
-
-## minimum length exact confidence interval
-medianCI(x, minLength = TRUE)
-madCI(x, minLength = TRUE)
 
 ## asymptotic confidence interval
 medianCI(x, method = "asymptotic")
