@@ -1,8 +1,7 @@
 ## Confidence Intervals for quantiles
 quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
                        R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
-                       minLength = FALSE, na.rm = FALSE,
-                       alternative = c("two.sided", "less", "greater")){
+                       na.rm = FALSE, alternative = c("two.sided", "less", "greater")){
     if(!is.na(pmatch(method, "exact")))
         method <- "exact"
 
@@ -141,8 +140,7 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
 
 medianCI <- function(x, conf.level = 0.95, method = "exact", 
                      R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
-                     minLength = FALSE, na.rm = FALSE,
-                     alternative = c("two.sided", "less", "greater")){
+                     na.rm = FALSE, alternative = c("two.sided", "less", "greater")){
     res <- quantileCI(x, prob = 0.5, conf.level = conf.level, method = method,
                       R = R, bootci.type = bootci.type, minLength = minLength,
                       na.rm = na.rm, alternative = alternative)
@@ -153,7 +151,7 @@ medianCI <- function(x, conf.level = 0.95, method = "exact",
     res
 }
 
-madCI <- function(x, conf.level = 0.95, method = "exact", minLength = FALSE,
+madCI <- function(x, conf.level = 0.95, method = "exact", 
                   R = 9999, bootci.type = c("norm", "basic", "perc", "bca"),
                   na.rm = FALSE, constant = 1.4826,
                   alternative = c("two.sided", "less", "greater")){
