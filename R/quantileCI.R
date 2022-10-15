@@ -142,7 +142,7 @@ medianCI <- function(x, conf.level = 0.95, method = "exact",
                      R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
                      na.rm = FALSE, alternative = c("two.sided", "less", "greater")){
     res <- quantileCI(x, prob = 0.5, conf.level = conf.level, method = method,
-                      R = R, bootci.type = bootci.type, minLength = minLength,
+                      R = R, bootci.type = bootci.type, 
                       na.rm = na.rm, alternative = alternative)
     if(method != "boot"){
       rownames(res$conf.int) <- rep("median", nrow(res$conf.int))
@@ -158,8 +158,7 @@ madCI <- function(x, conf.level = 0.95, method = "exact",
   M <- median(x, na.rm = na.rm)
   res <- medianCI(constant*abs(x-M), conf.level = conf.level,
                   method = method, R = R, bootci.type = bootci.type, 
-                  minLength = minLength, na.rm = na.rm, 
-                  alternative = alternative)
+                  na.rm = na.rm, alternative = alternative)
   if(method != "boot"){
     rownames(res$conf.int) <- rep("MAD", nrow(res$conf.int))
   }
