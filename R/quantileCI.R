@@ -1,7 +1,7 @@
 ## Confidence Intervals for quantiles
 quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
                        R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
-                       na.rm = FALSE, alternative = c("two.sided", "less", "greater")){
+                       na.rm = FALSE, alternative = c("two.sided", "less", "greater"), ...){
     if(!is.na(pmatch(method, "exact")))
         method <- "exact"
 
@@ -80,7 +80,7 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
       boot.quant <- function(x, i){ 
         quantile(x[i], probs = prob) 
       } 
-      boot.out <- boot(x, statistic = boot.quant, R = R)
+      boot.out <- boot(x, statistic = boot.quant, R = R, ...)
       CI <- try(boot.ci(boot.out, type = bootci.type, conf = 1 - alpha),
                 silent = TRUE)
       if(inherits(CI, "try-error"))
@@ -138,12 +138,12 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
                      class = "confint"))
 }
 
-medianCI <- function(x, conf.level = 0.95, method = "exact", 
-                     R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
-                     na.rm = FALSE, alternative = c("two.sided", "less", "greater")){
+medianCI <- function(x, conf.level = 0.95, method = "exact", R = 9999, 
+                     bootci.type = c("norm", "basic", "perc", "bca"), na.rm = FALSE, 
+                     alternative = c("two.sided", "less", "greater"), ...){
     res <- quantileCI(x, prob = 0.5, conf.level = conf.level, method = method,
                       R = R, bootci.type = bootci.type, 
-                      na.rm = na.rm, alternative = alternative)
+                      na.rm = na.rm, alternative = alternative, ...)
     if(method != "boot"){
       rownames(res$conf.int) <- rep("median", nrow(res$conf.int))
     }
@@ -154,11 +154,11 @@ medianCI <- function(x, conf.level = 0.95, method = "exact",
 madCI <- function(x, conf.level = 0.95, method = "exact", 
                   R = 9999, bootci.type = c("norm", "basic", "perc", "bca"),
                   na.rm = FALSE, constant = 1.4826,
-                  alternative = c("two.sided", "less", "greater")){
+                  alternative = c("two.sided", "less", "greater"), ...){
   M <- median(x, na.rm = na.rm)
   res <- medianCI(constant*abs(x-M), conf.level = conf.level,
                   method = method, R = R, bootci.type = bootci.type, 
-                  na.rm = na.rm, alternative = alternative)
+                  na.rm = na.rm, alternative = alternative, ...)
   if(method != "boot"){
     rownames(res$conf.int) <- rep("MAD", nrow(res$conf.int))
   }

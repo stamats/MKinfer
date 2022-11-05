@@ -10,14 +10,14 @@
 \usage{
 quantileCI(x, prob = 0.5, conf.level = 0.95, method = "exact",
            R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
-           na.rm = FALSE, alternative = c("two.sided", "less", "greater"))
+           na.rm = FALSE, alternative = c("two.sided", "less", "greater"), ...)
 medianCI(x, conf.level = 0.95, method = "exact",
          R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
-         na.rm = FALSE, alternative = c("two.sided", "less", "greater"))
+         na.rm = FALSE, alternative = c("two.sided", "less", "greater"), ...)
 madCI(x, conf.level = 0.95, method = "exact", 
       R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
       na.rm = FALSE, constant = 1.4826, 
-      alternative = c("two.sided", "less", "greater"))
+      alternative = c("two.sided", "less", "greater"), ...)
 }
 \arguments{
   \item{x}{ numeric data vector }
@@ -31,6 +31,8 @@ madCI(x, conf.level = 0.95, method = "exact",
   \item{alternative}{ a character string specifying one- or two-sided confidence intervals. 
   Must be one of "two.sided" (default), "greater" or "less" (one-sided intervals). 
   You can specify just the initial letter. }
+  \item{\dots}{ further arguments passed to function \code{\link[boot]{boot}},
+  e.g. for parallel computing. }
 }
 \details{
   The exact confidence interval (\code{method = "exact"}) is computed using binomial

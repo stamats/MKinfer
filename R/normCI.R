@@ -1,7 +1,7 @@
 ## Confidence Intervals for normal mean and standard deviation
 normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95, 
                    boot = FALSE, R = 9999, bootci.type = "all", na.rm = TRUE,
-                   alternative = c("two.sided", "less", "greater")){
+                   alternative = c("two.sided", "less", "greater"), ...){
   if(!is.numeric(x))
     stop("'x' must be a numeric vector")
   if(!is.null(mean))
@@ -58,7 +58,7 @@ normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95,
       c(SD, VAR)
     } 
     if(is.null(mean)){
-      boot.out <- boot(x, statistic = boot.mean, R = R)
+      boot.out <- boot(x, statistic = boot.mean, R = R, ...)
       CI.AM <- try(boot.ci(boot.out, type = bootci.type, conf = 1-alpha),
                    silent = TRUE)
       if(inherits(CI.AM, "try-error"))
@@ -109,7 +109,7 @@ normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95,
       }
     }    
     if(is.null(sd)){
-      boot.out <- boot(x, statistic = boot.sd, R = R)
+      boot.out <- boot(x, statistic = boot.sd, R = R, ...)
       CI.SD <- try(boot.ci(boot.out, type = bootci.type, conf = 1-alpha),
                    silent = TRUE)
       if(inherits(CI.SD, "try-error"))
@@ -213,10 +213,10 @@ normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95,
 }
 meanCI <- function(x, conf.level = 0.95, boot = FALSE, R = 9999, 
                    bootci.type = "all", na.rm = TRUE,
-                   alternative = c("two.sided", "less", "greater")){
+                   alternative = c("two.sided", "less", "greater"), ...){
   res <- normCI(x = x, conf.level = conf.level, boot = boot, R = R,
                 bootci.type = bootci.type, na.rm = na.rm, 
-                alternative = alternative)
+                alternative = alternative, ...)
   if(boot){
     res$conf.int <- res$conf.int[[1]]
   }else{
@@ -227,10 +227,10 @@ meanCI <- function(x, conf.level = 0.95, boot = FALSE, R = 9999,
 }
 sdCI <- function(x, conf.level = 0.95, boot = FALSE, R = 9999, 
                  bootci.type = "all", na.rm = TRUE,
-                 alternative = c("two.sided", "less", "greater")){
+                 alternative = c("two.sided", "less", "greater"), ...){
   res <- normCI(x = x, conf.level = conf.level, boot = boot, R = R,
                 bootci.type = bootci.type, na.rm = na.rm, 
-                alternative = alternative)
+                alternative = alternative, ...)
   if(boot){
     res$conf.int <- res$conf.int[[2]]
   }else{

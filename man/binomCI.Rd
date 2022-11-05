@@ -7,7 +7,7 @@
 \usage{
 binomCI(x, n, conf.level = 0.95, method = "wilson", rand = 123, 
         R = 9999, bootci.type = "all", 
-        alternative = c("two.sided", "less", "greater"))
+        alternative = c("two.sided", "less", "greater"), ...)
 }
 \arguments{
   \item{x}{ number of successes }
@@ -20,6 +20,8 @@ binomCI(x, n, conf.level = 0.95, method = "wilson", rand = 123,
   \item{alternative}{ a character string specifying one- or two-sided confidence intervals. 
   Must be one of "two.sided" (default), "greater" or "less" (one-sided intervals). 
   You can specify just the initial letter. }
+  \item{\dots}{ further arguments passed to function \code{\link[boot]{boot}},
+  e.g. for parallel computing. }
 }
 \details{
   The Wald interval is obtained by inverting the acceptance region of the Wald

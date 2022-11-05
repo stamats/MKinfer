@@ -1,7 +1,7 @@
 ## Confidence Intervals for Binomial Proportions
 binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123, 
                     R = 9999, bootci.type = "all", 
-                    alternative = c("two.sided", "less", "greater")){
+                    alternative = c("two.sided", "less", "greater"), ...){
     if (!is.na(pmatch(method, "wilson")))
         method <- "wilson"
     METHODS <- c("wald", "wilson", "agresti-coull", "jeffreys", "modified wilson",
@@ -172,7 +172,7 @@ binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123,
             n <- length(i)
             c(p, p*(1-p)/n)
         } 
-        boot.out <- boot(DATA, statistic = boot.rf, R = R)
+        boot.out <- boot(DATA, statistic = boot.rf, R = R, ...)
         CI <- try(boot.ci(boot.out, type = bootci.type, conf = 1-alpha), silent = TRUE)
         if(inherits(CI, "try-error"))
             stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")

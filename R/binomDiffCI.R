@@ -15,7 +15,7 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
                         paired = FALSE, 
                         method = ifelse(paired, "wilson-cc", "wilson"),
                         R = 9999, bootci.type = "all",
-                        alternative = c("two.sided", "less", "greater")){
+                        alternative = c("two.sided", "less", "greater"), ...){
   stopifnot(is.numeric(a), is.numeric(b), is.numeric(c), is.numeric(d),
             is.numeric(conf.level))
   stopifnot(length(a) == 1, length(b) == 1, length(c) == 1, 
@@ -144,7 +144,7 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
         VAR <- ((b+c) - (b-c)^2/n)/n^2
         c(D, VAR)
       } 
-      boot.out <- boot(DATA, statistic = boot.diff, R = R)
+      boot.out <- boot(DATA, statistic = boot.diff, R = R, ...)
       CI <- try(boot.ci(boot.out, type = bootci.type, conf = 1-alpha),
                 silent = TRUE)
       if(inherits(CI, "try-error"))

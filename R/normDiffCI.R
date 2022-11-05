@@ -2,7 +2,7 @@
 normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
                        method = "welch",  boot = FALSE, R = 9999, 
                        bootci.type = "all", na.rm = TRUE,
-                       alternative = c("two.sided", "less", "greater")){
+                       alternative = c("two.sided", "less", "greater"), ...){
   if(!is.na(pmatch(method, "welch"))) method <- "welch"
 
   METHODS <- c("classical", "welch", "hsu")
@@ -32,7 +32,7 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
   if(paired){
     CIres <- normCI(x = x-y, conf.level = conf.level, boot = boot, R = R, 
                     bootci.type = bootci.type, na.rm = na.rm, 
-                    alternative = alternative)
+                    alternative = alternative, ...)
     d <- CIres$estimate
     names(d) <- c("mean of differences", "sd of differences")
     if(boot){
@@ -78,11 +78,8 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
           c(d, VAR)
         } 
         boot.out <- boot(DATA, statistic = boot.diff.class, 
-                         strata=DATA$group, R = R)
-        CI <- try(boot.ci(boot.out, type = bootci.type, conf = 1 - alpha),
-                  silent = TRUE)
-        if(inherits(CI, "try-error"))
-          stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
+                         strata=DATA$group, R = R, ...)
+        CI <- suppressWarnings(boot.ci(boot.out, type = bootci.type, conf = 1 - alpha))
         method <- "Bootstrap confidence interval (equal variances, unpaired)"
       }else{
         method <- "Classical confidence interval (unpaired)"
@@ -112,11 +109,8 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
           c(d, VAR)
         } 
         boot.out <- boot(DATA, statistic = boot.diff.welch, 
-                         strata=DATA$group, R = R)
-        CI <- try(boot.ci(boot.out, type = bootci.type, conf = 1 - alpha),
-                  silent = TRUE)
-        if(inherits(CI, "try-error"))
-          stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
+                         strata=DATA$group, R = R, ...)
+        CI <- suppressWarnings(boot.ci(boot.out, type = bootci.type, conf = 1 - alpha))
         method <- "Bootstrap confidence interval (unequal variances, unpaired)"
       }else{
         method <- "Welch confidence interval (unpaired)"
@@ -146,12 +140,9 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
           c(d, VAR)
         } 
         boot.out <- boot(DATA, statistic = boot.diff.welch, 
-                         strata=DATA$group, R = R)
-        CI <- try(boot.ci(boot.out, type = bootci.type, conf = 1 - alpha),
-                  silent = TRUE)
+                         strata=DATA$group, R = R, ...)
+        CI <- suppressWarnings(boot.ci(boot.out, type = bootci.type, conf = 1 - alpha))
         method <- "Bootstrap confidence interval (unequal variances, unpaired)"
-        if(inherits(CI, "try-error"))
-          stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
       }else{
         method <- "Hsu confidence interval (unpaired)"
       }
@@ -236,9 +227,9 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
 meanDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
                        method = "welch",  boot = FALSE, R = 9999, 
                        bootci.type = "all", na.rm = TRUE,
-                       alternative = c("two.sided", "less", "greater")){
+                       alternative = c("two.sided", "less", "greater"), ...){
   normDiffCI(x = x, y = y, conf.level = conf.level, paired = paired, 
              method = method, boot = boot, R = R, 
              bootci.type = bootci.type, na.rm = na.rm, 
-             alternative = alternative)
+             alternative = alternative, ...)
 }
