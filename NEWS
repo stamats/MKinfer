@@ -8,6 +8,7 @@
 - simplified computation of quantileCI for method exact according to 
   Section 6.10.2 of Hedderich and Sachs (2020)
 - enabled parallel computing for bootstrap confidence intervals
+- added pairwise.wilcox.exact and pairwise.ext.t.test
 
 
 ###########################################################
