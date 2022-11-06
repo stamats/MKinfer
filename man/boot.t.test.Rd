@@ -86,11 +86,13 @@ boot.t.test(x, \dots)
     appropriate to the specified alternative hypothesis.}
   \item{estimate}{the estimated mean or difference in means depending on
     whether it was a one-sample test or a two-sample test.}
+  \item{boot.estimate}{ bootstrapped estimate.}
   \item{null.value}{the specified hypothesized value of the mean or mean
     difference depending on whether it was a one-sample test or a
     two-sample test.}
   \item{stderr}{the standard error of the mean (difference), used as
     denominator in the t-statistic formula.}
+  \item{boot.stderr}{ bootstrapped standard error.}
   \item{alternative}{a character string describing the alternative
     hypothesis.}
   \item{method}{a character string indicating what type of t-test was
