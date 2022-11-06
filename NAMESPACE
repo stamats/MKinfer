@@ -25,6 +25,7 @@ export(binomCI,
        quantileCI,
        pairwise.fun,
        pairwise.wilcox.exact,
+       pairwise.ext.t.test,
        rm.oneway.test,
        volcano)
 
