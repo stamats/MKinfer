@@ -47,7 +47,7 @@ g <- factor(sample(1:4, 100, replace = TRUE))
 levels(g) <- c("a", "b", "c", "d")
 pairwise.ext.t.test(x, g)
 ## in contrast to
-pairwise.t.test(x, g)
+pairwise.t.test(x, g, pool.sd = FALSE)
 ## moreover
 pairwise.ext.t.test(x, g, method = "boot.t.test")
 pairwise.ext.t.test(x, g, method = "perm.t.test")
