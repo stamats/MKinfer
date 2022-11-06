@@ -1,4 +1,4 @@
-# <img src="https://github.com/stamats/MKinfer/raw/master/hex-MKinfer.png" alt="MKdescr" width="120"/> &emsp; MKinfer
+# <img src="https://github.com/stamats/MKinfer/raw/master/hex-MKinfer.png" alt="MKinfer" width="120"/> &emsp; MKinfer
 The repository includes the development version of R package MKinfer
 
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
