@@ -72,8 +72,15 @@ perm.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
     MX <- rowMeans(X)
     VX <- rowSums((X-MX)^2)/(nx-1)
     STDERR <- sqrt(VX/nx)
+    perm.stderr <- mean(STDERR)
     TSTAT <- MX/STDERR
     EFF <- MX+mx
+    perm.estimate <- mean(EFF)
+    if(paired){
+      names(perm.estimate) <- "permutation mean of the differences" 
+    }else{
+      names(perm.estimate) <- "permutation mean of x"
+    } 
   }else{
     ny <- length(y)
     if(nx < 1 || (!var.equal && nx < 2)) 
@@ -114,6 +121,9 @@ perm.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
       VY <- rowSums((Y-MY)^2)/(ny-1)
       STDERR <- sqrt(VX/nx + VY/ny)
     }
+    perm.stderr <- mean(STDERR)
+    perm.estimate <- mean(EFF) 
+    names(perm.estimate) <- "permutation difference of means"
     if (stderr < 10 * .Machine$double.eps * max(abs(mx), abs(my))) 
       stop("data are essentially constant")
     tstat <- (mx - my - mu)/stderr
@@ -149,9 +159,9 @@ perm.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
   rval <- list(statistic = tstat, parameter = df, p.value = pval, 
                perm.p.value = perm.pval,
                conf.int = cint, perm.conf.int = perm.cint,
-               estimate = estimate, null.value = mu, 
-               stderr = stderr, alternative = alternative, method = method, 
-               data.name = dname)
+               estimate = estimate, perm.estimate = perm.estimate, 
+               null.value = mu, stderr = stderr, perm.stderr = perm.stderr,
+               alternative = alternative, method = method, data.name = dname)
   class(rval) <- c("perm.htest", "htest")
   rval
 }
@@ -188,7 +198,13 @@ print.perm.htest <- function (x, digits = getOption("digits"), prefix = "\t", ..
     bfp <- format.pval(x$perm.p.value, digits = max(1L, digits - 3L))
     cat("(Monte-Carlo) permutation p-value", if (substr(bfp, 1L, 1L) == "<") bfp else paste("=", bfp), "\n")
   }
-  if (!is.null(x$conf.int)) {
+  if (!is.null(x$perm.estimate)) {
+    cat(paste(names(x$perm.estimate), "(SE) =", 
+              format(x$perm.estimate, digits = digits),
+              paste("(", format(x$perm.stderr, digits = digits), ")", sep = "")), 
+        "\n")
+  }
+  if (!is.null(x$perm.conf.int)) {
     cat(format(100 * attr(x$perm.conf.int, "conf.level")), 
         " percent (Monte-Carlo) permutation percentile confidence interval:\n", 
         " ", paste(format(x$perm.conf.int[1:2], digits = digits), 

@@ -42,15 +42,22 @@ boot.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
     if (stderr < 10 * .Machine$double.eps * abs(mx)) 
       stop("data are essentially constant")
     tstat <- (mx - mu)/stderr
-    method <- if (paired) "Bootstrapped Paired t-test" else "Bootstrapped One Sample t-test"
+    method <- if (paired) "Bootstrap Paired t-test" else "Bootstrap One Sample t-test"
     estimate <- setNames(mx, if (paired) "mean of the differences" else "mean of x")
     x.cent <- x - mx
     X <- matrix(sample(x.cent, size = nx*R, replace = TRUE), nrow = R)
     MX <- rowMeans(X)
     VX <- rowSums((X-MX)^2)/(nx-1)
     STDERR <- sqrt(VX/nx)
+    boot.stderr <- mean(STDERR)
     TSTAT <- MX/STDERR
     EFF <- MX+mx
+    boot.estimate <- mean(EFF)
+    if(paired){
+      names(boot.estimate) <- "bootstrap mean of the differences" 
+    }else{
+      names(boot.estimate) <- "bootstrap mean of x"
+    } 
   }else{
     ny <- length(y)
     if(nx < 1 || (!var.equal && nx < 2)) 
@@ -61,7 +68,7 @@ boot.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
       stop("not enough observations")
     my <- mean(y)
     vy <- var(y)
-    method <- paste("Bootstrapped", paste(if (!var.equal) "Welch", "Two Sample t-test"))
+    method <- paste("Bootstrap", paste(if (!var.equal) "Welch", "Two Sample t-test"))
     estimate <- c(mx, my)
     names(estimate) <- c("mean of x", "mean of y")
     if(var.equal){
@@ -100,6 +107,9 @@ boot.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
       STDERR <- sqrt(VX/nx + VY/ny)
       EFF <- (MX+mx) - (MY+my)
     }
+    boot.stderr <- mean(STDERR)
+    boot.estimate <- mean(EFF) 
+    names(boot.estimate) <- "bootstrap difference of means"
     if (stderr < 10 * .Machine$double.eps * max(abs(mx), abs(my))) 
       stop("data are essentially constant")
     tstat <- (mx - my - mu)/stderr
@@ -135,9 +145,9 @@ boot.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
   rval <- list(statistic = tstat, parameter = df, p.value = pval, 
                boot.p.value = boot.pval,
                conf.int = cint, boot.conf.int = boot.cint,
-               estimate = estimate, null.value = mu, 
-               stderr = stderr, alternative = alternative, method = method, 
-               data.name = dname)
+               estimate = estimate, boot.estimate = boot.estimate, 
+               null.value = mu, stderr = stderr, boot.stderr = boot.stderr,
+               alternative = alternative, method = method, data.name = dname)
   class(rval) <- c("boot.htest", "htest")
   rval
 }
@@ -172,10 +182,16 @@ print.boot.htest <- function (x, digits = getOption("digits"), prefix = "\t", ..
   out <- character()
   if (!is.null(x$boot.p.value)) {
     bfp <- format.pval(x$boot.p.value, digits = max(1L, digits - 3L))
-    cat("bootstrapped p-value", 
+    cat("bootstrap p-value", 
         if (substr(bfp, 1L, 1L) == "<") bfp else paste("=", bfp), "\n")
   }
-  if (!is.null(x$conf.int)) {
+  if (!is.null(x$boot.estimate)) {
+    cat(paste(names(x$boot.estimate), "(SE) =", 
+              format(x$boot.estimate, digits = digits),
+              paste("(", format(x$boot.stderr, digits = digits), ")", sep = "")), 
+        "\n")
+  }
+  if (!is.null(x$boot.conf.int)) {
     cat(format(100 * attr(x$boot.conf.int, "conf.level")), 
         " percent bootstrap percentile confidence interval:\n", 
         " ", paste(format(x$boot.conf.int[1:2], digits = digits), 
