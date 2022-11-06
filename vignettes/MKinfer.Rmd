@@ -18,6 +18,7 @@ Package MKinfer includes a collection of functions for the computation of
 various confidence intervals [@Altman2000; @Hedderich2018] including bootstrapped 
 versions [@Davison1997] as well as Hsu [@Hedderich2018], permutation [@Janssen1997], 
 bootstrap [@Davison1997] and multiple imputation [@Barnard1999] t-test.
+Graphical visualization by volcano plots.
 
 We first load the package.
 ```{r}
@@ -363,6 +364,29 @@ pairwise.wilcox.test(airquality$Ozone, airquality$Month,
 library(exactRankTests)
 pairwise.fun(airquality$Ozone, airquality$Month, 
              fun = function(x, y) wilcox.exact(x, y)$p.value)
+```
+
+The function is also the basis for our functions pairwise.wilcox.exact and
+pairwise.ext.t.test, which in contrast to the standard functions pairwise.wilcox.test
+and pairwise.t.test generate a much more detailed output. In addition, 
+pairwise.wilcox.exact is based on wilcox.exact instead of wilcox.test.
+
+```{r}
+pairwise.wilcox.exact(airquality$Ozone, airquality$Month)
+```
+
+Furthermore, function pairwise.ext.t.test also enables pairwise Student, Welch,
+Hsu, bootstrap and permutation t tests.
+
+```{r}
+pairwise.t.test(airquality$Ozone, airquality$Month, pool.sd = FALSE)
+pairwise.ext.t.test(airquality$Ozone, airquality$Month)
+pairwise.ext.t.test(airquality$Ozone, airquality$Month,
+                    method = "hsu.t.test")
+pairwise.ext.t.test(airquality$Ozone, airquality$Month, 
+                    method = "boot.t.test")
+pairwise.ext.t.test(airquality$Ozone, airquality$Month, 
+                    method = "perm.t.test")
 ```
 
 
