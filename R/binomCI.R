@@ -241,7 +241,7 @@ binomCI <- function(x, n, conf.level = 0.95, method = "wilson", rand = 123,
     }
     names(est) <- "prob"
     
-    return(structure(list("estimate" = est, "conf.int" = CI, "Infos" = Infos,
-                          "method" = paste(METHODS[method], "confidence interval")),
-                     class = "confint"))
+    structure(list("estimate" = est, "conf.int" = CI, "Infos" = Infos,
+                   "method" = paste(METHODS[method], "confidence interval")),
+              class = "confint")
 }

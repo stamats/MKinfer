@@ -1,7 +1,7 @@
 cvCI <- function(x, conf.level = 0.95, method = "miller", 
                  R = 9999, bootci.type = c("norm", "basic", "perc", "bca"), 
                  na.rm = FALSE, 
-                 alternative = c("two.sided", "less", "greater")){
+                 alternative = c("two.sided", "less", "greater"), ...){
     stopifnot(is.numeric(x))
     if (!is.na(pmatch(method, "miller")))
         method <- "miller"
@@ -119,7 +119,7 @@ cvCI <- function(x, conf.level = 0.95, method = "miller",
     }
     if(method == 12){ # boot
       boot.cv <- function(x, i){ CV(x[i]) } 
-      boot.out <- boot(x, statistic = boot.cv, R = R)
+      boot.out <- boot(x, statistic = boot.cv, R = R, ...)
       CI <- try(boot.ci(boot.out, type = bootci.type, conf = 1-alpha),
                 silent = TRUE)
       if(inherits(CI, "try-error"))

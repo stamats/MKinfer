@@ -207,9 +207,9 @@ normCI <- function(x, mean = NULL, sd = NULL, conf.level = 0.95,
     METHOD <- "Exact confidence interval(s)"
   }
 
-  return(structure(list("estimate" = est, "conf.int" = CI, "Infos" = Infos,
+  structure(list("estimate" = est, "conf.int" = CI, "Infos" = Infos,
                         method = METHOD),
-                   class = "confint"))
+            class = "confint")
 }
 meanCI <- function(x, conf.level = 0.95, boot = FALSE, R = 9999, 
                    bootci.type = "all", na.rm = TRUE,

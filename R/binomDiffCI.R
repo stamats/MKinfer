@@ -295,7 +295,7 @@ binomDiffCI <- function(a, b, c, d, conf.level = 0.95,
     attr(CI, "conf.level") <- conf.level
   }
   
-  return(structure(list("estimate" = D, "conf.int" = CI, "Infos" = Infos,
-                        method = nameMethod),
-                   class = "confint"))
+  structure(list("estimate" = D, "conf.int" = CI, "Infos" = Infos,
+                 method = nameMethod),
+            class = "confint")
 }

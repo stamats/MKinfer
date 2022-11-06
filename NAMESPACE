@@ -5,6 +5,7 @@ importFrom("arrangements", "permutations", "npermutations")
 importFrom("nlme", "lme", "anova.lme")
 importFrom("ggplot2", "ggplot", "aes", "geom_point", "geom_vline", "geom_hline",
            "labs", "ggtitle", "scale_color_manual")
+importFrom("exactRankTests", "wilcox.exact")
 export(binomCI,
        binomDiffCI,
        boot.t.test,
