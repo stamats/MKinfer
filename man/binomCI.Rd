@@ -109,5 +109,11 @@ binomCI(x = 10, n = 43, alternative = "less", method = "boot",
         bootci.type = "bca", R = 999)
 binomCI(x = 10, n = 43, alternative = "greater", method = "boot", 
         bootci.type = "perc", R = 999)
+        
+\donttest{
+## parallel computing for bootstrap
+binomCI(x = 10, n = 43, method = "boot", R = 9999, 
+        parallel = "multicore", ncpus = 2)
+}
 }
 \keyword{univar}

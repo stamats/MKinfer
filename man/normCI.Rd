@@ -83,5 +83,10 @@ normCI(x, mean = 0)
 ## bootstrap intervals only for sd (mean is ignored)
 ## (R = 999 to reduce computation time for R checks)
 normCI(x, mean = 0, boot = TRUE, R = 999)
+
+\donttest{
+## parallel computing for bootstrap
+normCI(x, boot = TRUE, R = 9999, parallel = "multicore", ncpus = 2)
+}
 }
 \keyword{univar}

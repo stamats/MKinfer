@@ -66,5 +66,10 @@ cvCI(x, method = "boot", R = 999) # R = 999 to reduce computation time for R che
 cvCI(x, alternative = "less")
 cvCI(x, alternative = "greater")
 cvCI(x, method = "boot", bootci.type = "bca", alternative = "less", R = 999)
+
+\donttest{
+## parallel computing for bootstrap
+cvCI(x, method = "boot", R = 9999, parallel = "multicore", ncpus = 2)
+}
 }
 \keyword{univar}

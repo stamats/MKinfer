@@ -91,6 +91,12 @@ normDiffCI(x, y, alternative = "less")
 normDiffCI(x, y, boot = TRUE, R = 999, alternative = "greater")
 
 \donttest{
+## parallel computing for bootstrap
+normDiffCI(x, y, method = "welch", boot = TRUE, R = 9999, 
+           parallel = "multicore", ncpus = 2)
+}
+
+\donttest{
 ## Monte-Carlo simulation: coverage probability
 M <- 100 # increase for more stable/realistic results!
 CIhsu <- CIwelch <- CIclass <- matrix(NA, nrow = M, ncol = 2)

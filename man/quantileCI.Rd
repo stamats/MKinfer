@@ -96,5 +96,11 @@ quantileCI(x, prob = 0.75, method = "boot", R = 999)
 quantileCI(x, prob = 0.75, alternative = "greater")
 medianCI(x, alternative = "less", method = "asymptotic")
 madCI(x, alternative = "greater", method = "boot", R = 999)
+
+\donttest{
+## parallel computing for bootstrap
+medianCI(x, method = "boot", R = 9999, parallel = "multicore", 
+         ncpus = 2)
+}
 }
 \keyword{univar}

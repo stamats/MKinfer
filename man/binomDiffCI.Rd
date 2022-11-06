@@ -123,5 +123,10 @@ binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE)
 ## bootstrap intervals (R = 999 to reduce computation time for R checks)
 binomDiffCI(a = 212, b = 144, c = 256, d = 707, paired = TRUE, method = "boot",
             bootci.type = c("norm", "basic", "stud", "perc"), R = 999) ## type = "bca" gives error
+
+\donttest{
+binomDiffCI(a = 63, b = 38, c = 30, d = 54, method = "boot", R = 9999, 
+        parallel = "multicore", ncpus = 2)
+}
 }
 \keyword{univar}
