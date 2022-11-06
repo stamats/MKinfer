@@ -1,7 +1,7 @@
 pairwise.wilcox.exact <- function(x, g, p.adjust.method = "holm", paired = FALSE, ...){
   DNAME <- paste(deparse1(substitute(x)), "and", deparse1(substitute(g)))
   wfun <- function(x, y, paired, ...){ 
-    wilcox.exact(x,y, conf.int = TRUE, paired = paired, ...)
+    wilcox.exact(x, y, conf.int = TRUE, paired = paired, ...)
   }
   wtests <- pairwise.fun(x = x, g = g, fun = wfun, paired = paired, ...)
 
