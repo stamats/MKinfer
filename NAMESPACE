@@ -24,6 +24,7 @@ export(binomCI,
        meanDiffCI,
        quantileCI,
        pairwise.fun,
+       pairwise.wilcox.exact,
        rm.oneway.test,
        volcano)
 
@@ -37,4 +38,5 @@ S3method(perm.t.test, formula)
 S3method(print, confint)
 S3method(print, boot.htest)
 S3method(print, perm.htest)
+S3method(print, pw.htest)
 S3method(volcano, default)
