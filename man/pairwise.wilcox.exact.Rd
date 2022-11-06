@@ -31,8 +31,7 @@ pairwise.wilcox.exact(x, g, p.adjust.method = "holm", paired = FALSE, ...)
   \item{alternative}{ a character string describing the alternative hypothesis.}
   \item{conf.level}{ confidence level of the confidence interval.}
   \item{results}{ a data.frame containing the results of function 
-  \code{\link[exactRankTests]{wilcox.exact}}}
-  }
+                  \code{\link[exactRankTests]{wilcox.exact}}}
 }
 \author{ Matthias Kohl \email{Matthias.Kohl@stamats.de}}
 \seealso{ \code{\link[exactRankTests]{wilcox.exact}}, 
