@@ -19,11 +19,11 @@ Graphical visualization by volcano plots.
 \tabular{ll}{
 Package: \tab MKinfer\cr
 Type: \tab Package\cr
-Version: \tab 0.8\cr
-Date: \tab 2022-11-09\cr
+Version: \tab 0.9\cr
+Date: \tab 2022-11-13\cr
 Depends: \tab R(>= 3.5.0)\cr
-Imports: \tab stats, MKdescr, boot, arrangements, nlme, ggplot2\cr
-Suggests: \tab Amelia, knitr, rmarkdown, exactRankTests, mice, miceadds\cr
+Imports: \tab stats, MKdescr, boot, arrangements, nlme, ggplot2, exactRankTests\cr
+Suggests: \tab Amelia, knitr, rmarkdown, mice, miceadds\cr
 License: \tab LGPL-3\cr
 URL: \tab https://github.com/stamats/MKinfer\cr
 }
