@@ -5,24 +5,24 @@ pairwise.wilcox.exact <- function(x, g, p.adjust.method = "holm", paired = FALSE
   }
   wtests <- pairwise.fun(x = x, g = g, fun = wfun, paired = paired, ...)
 
-  method <- unlist(sapply(wtests, "[", 6))[1]
+  method <- unlist(sapply(wtests, "[", "method"))[1]
   names(method) <- NULL
-  null.value <- unlist(sapply(wtests, "[", 4))[1]
+  null.value <- unlist(sapply(wtests, "[", "null.value"))[1]
   names(null.value) <- "location shift"
-  alternative <- unlist(sapply(wtests, "[", 5))[1]
+  alternative <- unlist(sapply(wtests, "[", "alternative"))[1]
   names(alternative) <- NULL
-  statistic <- unlist(sapply(wtests, "[", 1))
+  statistic <- unlist(sapply(wtests, "[", "statistic"))
   names(statistic) <- NULL
-  estimate <- unlist(sapply(wtests, "[", 9))
+  estimate <- unlist(sapply(wtests, "[", "estimate"))
   estimate.name <- names(estimate)[1]
   names(estimate) <- NULL
-  CI.low <- sapply(sapply(wtests, "[", 8), "[", 1)
+  CI.low <- sapply(sapply(wtests, "[", "conf.int"), "[", 1)
   names(CI.low) <- NULL
-  CI.upp <- sapply(sapply(wtests, "[", 8), "[", 2)
+  CI.upp <- sapply(sapply(wtests, "[", "conf.int"), "[", 2)
   names(CI.upp) <- NULL
   conf.level <- attr(wtests[[1]]$conf.int, which="conf.level")
   names(conf.level) <- NULL
-  p.value <- unlist(sapply(wtests, "[", 3))
+  p.value <- unlist(sapply(wtests, "[", "p.value"))
   names(p.value) <- NULL
   
   res <- list(data.name = DNAME,
