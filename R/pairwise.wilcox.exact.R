@@ -41,7 +41,7 @@ pairwise.wilcox.exact <- function(x, g, p.adjust.method = "holm", paired = FALSE
   if(!paired)
     names(res$results)[3] <- "diff. in location"
   else
-    names(res$resulte)[3] <- "(pseudo)median"
+    names(res$results)[3] <- "(pseudo)median"
   
   res$results$adj.p.value <- p.adjust(res$results$p.value, 
                                       method = p.adjust.method)

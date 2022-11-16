@@ -123,13 +123,13 @@ pairwise.ext.t.test <- function(x, g, method = "t.test", p.adjust.method = "holm
     if(!paired){
       names(res$results)[4] <- "diff. in means"
     } else {
-      names(res$resulte)[4] <- "mean of diffs"
+      names(res$results)[4] <- "mean of diffs"
     }
   }else{
     if(!paired){
       names(res$results)[2] <- "diff. in means"
     } else {
-      names(res$resulte)[2] <- "mean of diffs"
+      names(res$results)[2] <- "mean of diffs"
     }
   }
   res$results$adj.p.value <- p.adjust(res$results$p.value, 
