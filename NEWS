@@ -5,7 +5,8 @@
 ###########################################################
 ## Version 0.9
 ###########################################################
-- modified code of pairwise.wilcox.exact to avoid errors in certain cases.
+- corrected bug in pairwise.wilcox.exact and pairwise.ext.t.test.
+
 
 ###########################################################
 ## Version 0.8
