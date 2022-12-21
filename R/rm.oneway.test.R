@@ -7,7 +7,8 @@ rm.oneway.test <- function (x, g, id, method = "aov") {
   stopifnot(is.numeric(x))
   if(length(x) != length(g) || length(x) != length(id)) 
     stop("'x', 'g' and 'id' must have the same length")
-  DNAME <- paste(deparse1(substitute(x)), ",", deparse1(substitute(g)), "and", 
+  DNAME <- paste(paste(deparse1(substitute(x)), ", ", deparse1(substitute(g)),
+                 sep = ""), "and", 
                  deparse1(substitute(id)))
   OK <- complete.cases(x, g, id)
   x <- x[OK]
@@ -48,9 +49,11 @@ rm.oneway.test <- function (x, g, id, method = "aov") {
   }
   if(method == 3){ ## friedman
     RVAL <- friedman.test(y = x, groups = g, blocks = id)
+    RVAL$data.name <- DNAME
   }
   if(method == 4){ ## quade
     RVAL <- quade.test(y = x, groups = g, blocks = id)
+    RVAL$data.name <- DNAME
   }
   RVAL
 }

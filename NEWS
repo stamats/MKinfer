@@ -10,6 +10,7 @@
   use of function deparse1, which was added in R 4.0.0.
 - now uses deparse1 instead of deparse also in hsu.t.test, perm.t.test, 
   boot.t.test and rm.oneway.test.
+- corrected a minor bug regarding data names in rm.oneway.test.
 
 
 ###########################################################
