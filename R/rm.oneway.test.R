@@ -7,8 +7,8 @@ rm.oneway.test <- function (x, g, id, method = "aov") {
   stopifnot(is.numeric(x))
   if(length(x) != length(g) || length(x) != length(id)) 
     stop("'x', 'g' and 'id' must have the same length")
-  DNAME <- paste(deparse(substitute(x)), ",", deparse(substitute(g)), "and", 
-                 deparse(substitute(id)))
+  DNAME <- paste(deparse1(substitute(x)), ",", deparse1(substitute(g)), "and", 
+                 deparse1(substitute(id)))
   OK <- complete.cases(x, g, id)
   x <- x[OK]
   g <- g[OK]

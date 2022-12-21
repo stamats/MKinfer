@@ -8,6 +8,8 @@
 - changed depends from R(>= 3.5.0) to R(>= 4.0.0). As detected by GitHub user
   PaulCristina, functions pairwise.ext.t.test and pairwise.wilcox.exact make
   use of function deparse1, which was added in R 4.0.0.
+- now uses deparse1 instead of deparse also in hsu.t.test, perm.t.test, 
+  boot.t.test and rm.oneway.test.
 
 
 ###########################################################
