@@ -1,13 +1,13 @@
 Package: MKinfer
-Version: 0.9
-Date: 2022-11-16
+Version: 1.0
+Date: 2022-12-21
 Title: Inferential Statistics
 Authors@R: person("Matthias", "Kohl", role = c("aut", "cre"),
                   email = "Matthias.Kohl@stamats.de", 
                   comment = c(ORCID = "0000-0001-9514-8910"))
 Author: Matthias Kohl [aut, cre] (0000-0001-9514-8910)
 Maintainer: Matthias Kohl <Matthias.Kohl@stamats.de>
-Depends: R(>= 3.5.0)
+Depends: R(>= 4.0.0)
 Imports: stats, MKdescr, boot, arrangements, nlme, ggplot2, exactRankTests
 Suggests: knitr, rmarkdown, Amelia, mice, miceadds
 VignetteBuilder: knitr
