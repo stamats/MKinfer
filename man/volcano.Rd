@@ -29,15 +29,13 @@ volcano(x, \dots)
   \item{xlab}{ label of x-axis.}
   \item{ylab}{ label of y-axis.}
   \item{title}{ title of plot.}
-  \item{alpha}{ bleding factor (default: no blending.}
+  \item{alpha}{ blending factor (default: no blending.}
   \item{shape}{ point shape used.}
-  \item{na.rm}{ logical, remove \code{NA} values before plotting.}
-  \item{\dots}{ further arguments that may be passed through).}
+  \item{na.rm}{ single logical, remove \code{NA} values before plotting.}
+  \item{\dots}{ further arguments that may be passed through.}
 }
 \details{
   The plot generates a \code{ggplot2} object that is shown. 
-
-  Missing values are handled by the \code{ggplot2} functions.
 }
 \value{
   Object of class \code{gg} and \code{ggplot}.
