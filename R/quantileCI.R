@@ -46,6 +46,8 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
           lower <- lower - 1
           plev <- pbinom(upper-1, size = n, prob = prob) - pbinom(lower-1, size = n, prob = prob) 
         }
+        lower <- max(lower, 1)
+        upper <- min(upper, n)
         CI.lower <- ifelse(alternative == "less", -Inf, xs[lower])
         CI.upper <- ifelse(alternative == "greater", Inf, xs[upper])
         CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
