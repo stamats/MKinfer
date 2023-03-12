@@ -17,6 +17,8 @@
   exact and bootstrap confidence intervals.
 - added dataset of systolic blood pressure (mm Hg) measurements made using 
   a standard arm cuff and a finger monitor used in Bland and Altman (1995).
+- switched back to exhaustive search in the case of quantileCI now using 
+  outer instead of a double for loop.
 
 
 ###########################################################

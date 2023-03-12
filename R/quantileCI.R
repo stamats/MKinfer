@@ -38,27 +38,70 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
     xs <- sort(x)
 
     if(method == 1){ # exact
-        plev <- 0
-        upper <- ceiling((n+1)*prob)
-        lower <- floor((n+1)*prob)
-        while(plev < conf.level){
-          upper <- upper + 1
-          lower <- lower - 1
-          plev <- pbinom(upper-1, size = n, prob = prob) - pbinom(lower-1, size = n, prob = prob) 
+        if(alternative == "two.sided" && prob^n + (1-prob)^n > 1-conf.level){
+          fun.n <- function(n, prob, conf.level){
+            prob^n + (1-prob)^n - 1 + conf.level
+          }
+          n.min <- ceiling(uniroot(f = fun.n, lower = 1, upper = 5e4, prob = prob, 
+                                   conf.level = conf.level, extendInt = "yes")$root)
+          warning("There is no exact two-sided confidence interval that achieves the requested confidence level ", conf.level, 
+                  "\n", "A sample size of at least ", n.min, " would be required!")
         }
-        lower <- max(lower, 1)
-        upper <- min(upper, n)
+        fun.cover <- function(l, u, n, prob){
+          pbinom(u-1, size = n, prob = prob) - pbinom(l-1, size = n, prob = prob) 
+        }
+        res <- outer(1:n, 1:n, fun.cover, n = n, prob = prob)
+        res[lower.tri(res, diag = TRUE)] <- NA
+        res <- as.vector(res)
+        names.res <- outer(1:n, 1:n, function(x, y) paste(x, y, sep = " | "))
+        names(res) <- names.res
+        
+        if(any(res > conf.level, na.rm = TRUE)){
+          res <- res[res > conf.level]
+          ind.min <- which.min(res - conf.level)
+        }else{
+          ind.min <- which.min(abs(res-conf.level))
+        }
+        conf.level.exact <- res[ind.min]
+        res.sel <- res[which(res == conf.level.exact)]
+        if(length(res.sel) > 1){
+          bounds.all <- do.call("rbind", strsplit(names(res.sel), " \\| "))
+          CI.length <- numeric(nrow(bounds.all))
+          for(i in 1:nrow(bounds.all)){
+            ind <- as.numeric(bounds.all[i,])
+            CI.length[i] <- diff(xs[ind])
+          }
+          ind.min <- which.min(CI.length)
+          bounds <- as.numeric(bounds.all[ind.min,])
+        }else{
+          bounds <- as.numeric(strsplit(names(res.sel), " \\| ")[[1]])
+        }
+        lower <- bounds[1]
+        upper <- bounds[2]
+
+        # plev <- 0
+        # upper <- ceiling((n+1)*prob)
+        # lower <- floor((n+1)*prob)
+        # while(plev < conf.level){
+        #   upper <- upper + 1
+        #   lower <- lower - 1
+        #   plev <- pbinom(upper-1, size = n, prob = prob) - pbinom(lower-1, size = n, prob = prob) 
+        # }
+        # lower <- max(lower, 1)
+        # upper <- min(upper, n)
+        
         CI.lower <- ifelse(alternative == "less", -Inf, xs[lower])
         CI.upper <- ifelse(alternative == "greater", Inf, xs[upper])
         CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
-        attr(CI, "conf.level") <- conf.level
-        rownames(CI) <- rep(paste(100*prob, "% quantile"), nrow(CI))
+        alpha.exact <- 1 - round(conf.level.exact, 3)
+        attr(CI, "conf.level") <- round(conf.level.exact, 3)
+        rownames(CI) <- paste(100*prob, "% quantile")
         if(alternative == "two.sided")
-          colnames(CI) <- c(paste(alpha/2*100, "%"), paste((1-alpha/2)*100, "%"))
+          colnames(CI) <- c(paste(alpha.exact/2*100, "%"), paste((1-alpha.exact/2)*100, "%"))
         if(alternative == "less")
-          colnames(CI) <- c("0 %", paste((1-alpha/2)*100, "%"))
+          colnames(CI) <- c("0 %", paste((1-alpha.exact/2)*100, "%"))
         if(alternative == "greater")
-          colnames(CI) <- c(paste(alpha/2*100, "%"), "100 %")
+          colnames(CI) <- c(paste(alpha.exact/2*100, "%"), "100 %")
         meth <- "exact confidence interval"
     }
     if(method == 2){ # approx

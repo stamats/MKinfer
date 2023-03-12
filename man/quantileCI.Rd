@@ -38,7 +38,7 @@ madCI(x, conf.level = 0.95, method = "exact",
   The exact confidence interval (\code{method = "exact"}) is computed using binomial
   probabilities; see Section 6.8.1 in Sachs and Hedderich (2009). If the result is not
   unique, i.e. there is more than one interval with coverage proability closest to
-  \code{conf.level}, then a matrix of confidence intervals is returned.
+  \code{conf.level}, the shortest confidence interval is returned.
 
   The asymptotic confidence interval (\code{method = "asymptotic"}) is based on the
   normal approximation of the binomial distribution; see Section 6.8.1 in Sachs and Hedderich (2009).
@@ -62,11 +62,8 @@ madCI(x, conf.level = 0.95, method = "exact",
 \examples{
 ## To get a non-trivial exact confidence interval for the median
 ## one needs at least 6 observations
-set.seed(123)
-x <- rnorm(8)
-## exact confidence interval not unique
+x <- rnorm(5)
 medianCI(x)
-madCI(x)
 
 ## asymptotic confidence interval
 medianCI(x, method = "asymptotic")
