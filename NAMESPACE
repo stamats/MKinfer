@@ -4,7 +4,7 @@ importFrom("boot", "boot", "boot.ci")
 importFrom("arrangements", "permutations", "npermutations")
 importFrom("nlme", "lme", "anova.lme")
 importFrom("ggplot2", "ggplot", "aes", "geom_point", "geom_vline", "geom_hline",
-           "labs", "ggtitle", "scale_color_manual")
+           "labs", "ggtitle", "scale_color_manual", "xlab", "ylab", "xlim", "ylim")
 importFrom("exactRankTests", "wilcox.exact")
 export(binomCI,
        binomDiffCI,
@@ -27,7 +27,8 @@ export(binomCI,
        pairwise.wilcox.exact,
        pairwise.ext.t.test,
        rm.oneway.test,
-       volcano)
+       volcano,
+       baplot)
 
 S3method(hsu.t.test, default)
 S3method(hsu.t.test, formula)

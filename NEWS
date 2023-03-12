@@ -11,6 +11,12 @@
 - now uses deparse1 instead of deparse also in hsu.t.test, perm.t.test, 
   boot.t.test and rm.oneway.test.
 - corrected a minor bug regarding data names in rm.oneway.test.
+- minor modification of quantileCI for exact confidence intervals and small 
+  or high quantiles.
+- added parametric and nonparametric Bland-Altman plots including approximative,
+  exact and bootstrap confidence intervals.
+- added dataset of systolic blood pressure (mm Hg) measurements made using 
+  a standard arm cuff and a finger monitor used in Bland and Altman (1995).
 
 
 ###########################################################
