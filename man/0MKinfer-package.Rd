@@ -21,7 +21,7 @@ Graphical visualization by volcano and Bland-Altman plots (Bland and Altman (198
 Package: \tab MKinfer\cr
 Type: \tab Package\cr
 Version: \tab 1.0\cr
-Date: \tab 2023-03-12\cr
+Date: \tab 2023-03-13\cr
 Depends: \tab R(>= 4.0.0)\cr
 Imports: \tab stats, MKdescr, boot, arrangements, nlme, ggplot2, exactRankTests\cr
 Suggests: \tab Amelia, knitr, rmarkdown, mice, miceadds\cr

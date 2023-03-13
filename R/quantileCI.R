@@ -38,13 +38,13 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
     xs <- sort(x)
 
     if(method == 1){ # exact
-        if(alternative == "two.sided" && prob^n + (1-prob)^n > 1-conf.level){
-          fun.n <- function(n, prob, conf.level){
-            prob^n + (1-prob)^n - 1 + conf.level
+        if(prob^n + (1-prob)^n > alpha){
+          fun.n <- function(n, prob, alpha){
+            prob^n + (1-prob)^n - alpha
           }
           n.min <- ceiling(uniroot(f = fun.n, lower = 1, upper = 5e4, prob = prob, 
-                                   conf.level = conf.level, extendInt = "yes")$root)
-          warning("There is no exact two-sided confidence interval that achieves the requested confidence level ", conf.level, 
+                                   alpha = alpha, extendInt = "yes")$root)
+          warning("There is no exact confidence interval that achieves the requested confidence level of ", conf.level, 
                   "\n", "A sample size of at least ", n.min, " would be required!")
         }
         fun.cover <- function(l, u, n, prob){
@@ -57,10 +57,10 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
         names(res) <- names.res
         
         if(any(res > conf.level, na.rm = TRUE)){
-          res <- res[res > conf.level]
-          ind.min <- which.min(res - conf.level)
+          res <- res[res > 1-alpha]
+          ind.min <- which.min(res - (1-alpha))
         }else{
-          ind.min <- which.min(abs(res-conf.level))
+          ind.min <- which.min(abs(res-(1-alpha)))
         }
         conf.level.exact <- res[ind.min]
         res.sel <- res[which(res == conf.level.exact)]
@@ -93,15 +93,16 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
         CI.lower <- ifelse(alternative == "less", -Inf, xs[lower])
         CI.upper <- ifelse(alternative == "greater", Inf, xs[upper])
         CI <- matrix(c(CI.lower, CI.upper), nrow = 1)
+        if(alternative != "two.sided") conf.level.exact <- 1-(1-conf.level.exact)/2
         alpha.exact <- 1 - round(conf.level.exact, 3)
         attr(CI, "conf.level") <- round(conf.level.exact, 3)
         rownames(CI) <- paste(100*prob, "% quantile")
         if(alternative == "two.sided")
           colnames(CI) <- c(paste(alpha.exact/2*100, "%"), paste((1-alpha.exact/2)*100, "%"))
         if(alternative == "less")
-          colnames(CI) <- c("0 %", paste((1-alpha.exact/2)*100, "%"))
+          colnames(CI) <- c("0 %", paste((1-alpha.exact)*100, "%"))
         if(alternative == "greater")
-          colnames(CI) <- c(paste(alpha.exact/2*100, "%"), "100 %")
+          colnames(CI) <- c(paste(alpha.exact*100, "%"), "100 %")
         meth <- "exact confidence interval"
     }
     if(method == 2){ # approx
