@@ -5,7 +5,7 @@
 \title{ Confidence Intervals for Quantiles }
 \description{
   These functions can be used to compute confidence intervals for quantiles
-  (including median).
+  (including median and MAD).
 }
 \usage{
 quantileCI(x, prob = 0.5, conf.level = 0.95, method = "exact",
@@ -45,6 +45,10 @@ madCI(x, conf.level = 0.95, method = "exact",
   
   In case of discrete data, there are alternative bootstrap approaches that might 
   give better results; see Jentsch and Leucht (2016).
+  
+  Since \code{madCI} is computed as the median confidence interval of the 
+  absolut deviations from the sample median and ignores the variablity of the 
+  sample median, the confidence intervals might be too short.
 }
 \value{
   A list with components
