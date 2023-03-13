@@ -18,7 +18,7 @@ Package MKinfer includes a collection of functions for the computation of
 various confidence intervals [@Altman2000; @Hedderich2018] including bootstrapped 
 versions [@Davison1997] as well as Hsu [@Hedderich2018], permutation [@Janssen1997], 
 bootstrap [@Davison1997] and multiple imputation [@Barnard1999] t-test.
-Graphical visualization by volcano plots.
+Graphical visualization by volcano and Bland-Altman plots [@Bland1986; @Shieh2018].
 
 We first load the package.
 ```{r}
@@ -332,6 +332,41 @@ lfcs <- apply(Data, 2, logfc, group = group)
 volcano(lfcs, p.adjust(pvals, method = "fdr"), 
         effect.low = -0.25, effect.high = 0.25, 
         xlab = "log-fold change", ylab = "-log10(adj. p value)")
+```
+
+
+## Bland-Altman plots
+Bland-Altman plots are used to visually compare two methods of measurement. We
+can generate classical Bland-Altman plots [@Bland1986; @Shieh2018].
+
+```{r, fig.width=7, fig.height=7}
+data("fingsys")
+baplot(fingsys$fingsys, fingsys$armsys, 
+       title = "Approximative Confidence Intervals", 
+       type = "parametric", ci.type = "approximate")
+baplot(fingsys$fingsys, fingsys$armsys, 
+       title = "Exact Confidence Intervals", 
+       type = "parametric", ci.type = "exact")
+baplot(fingsys$fingsys, fingsys$armsys, 
+       title = "Bootstrap Confidence Intervals", 
+       type = "parametric", ci.type = "boot", R = 999)
+```
+
+In the following nonparametric Bland-Altman plots, the median is used instead
+of the mean in combination with empirical quantiles for the lower and upper
+limit of agreement.
+
+```{r, fig.width=7, fig.height=7}
+data("fingsys")
+baplot(fingsys$fingsys, fingsys$armsys, 
+       title = "Approximative Confidence Intervals", 
+       type = "nonparametric", ci.type = "approximate")
+baplot(fingsys$fingsys, fingsys$armsys, 
+       title = "Exact Confidence Intervals", 
+       type = "nonparametric", ci.type = "exact")
+baplot(fingsys$fingsys, fingsys$armsys, 
+       title = "Bootstrap Confidence Intervals", 
+       type = "nonparametric", ci.type = "boot", R = 999)
 ```
 
 
