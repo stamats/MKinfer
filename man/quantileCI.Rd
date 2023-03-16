@@ -48,7 +48,8 @@ madCI(x, conf.level = 0.95, method = "exact",
   
   Since \code{madCI} is computed as the median confidence interval of the 
   absolut deviations from the sample median and ignores the variablity of the 
-  sample median, the confidence intervals might be too short.
+  sample median, the exact and asymptotic confidence intervals might be too short.
+  We recommend to use bootstrap confidence intervals.
 }
 \value{
   A list with components

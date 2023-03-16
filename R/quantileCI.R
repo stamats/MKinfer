@@ -44,7 +44,7 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
           }
           n.min <- ceiling(uniroot(f = fun.n, lower = 1, upper = 5e4, prob = prob, 
                                    alpha = alpha, extendInt = "yes")$root)
-          warning("There is no exact confidence interval that achieves the requested confidence level of ", conf.level, 
+          warning("There is no exact confidence interval that achieves the requested confidence level of at least ", conf.level, 
                   "\n", "A sample size of at least ", n.min, " would be required!")
         }
         fun.cover <- function(l, u, n, prob){
@@ -63,6 +63,7 @@ quantileCI <- function(x, prob = 0.5, conf.level = 0.95, method = "exact",
           ind.min <- which.min(abs(res-(1-alpha)))
         }
         conf.level.exact <- res[ind.min]
+        names(conf.level.exact) <- NULL
         res.sel <- res[which(res == conf.level.exact)]
         if(length(res.sel) > 1){
           bounds.all <- do.call("rbind", strsplit(names(res.sel), " \\| "))
@@ -201,13 +202,82 @@ madCI <- function(x, conf.level = 0.95, method = "exact",
                   R = 9999, bootci.type = c("norm", "basic", "perc", "bca"),
                   na.rm = FALSE, constant = 1.4826,
                   alternative = c("two.sided", "less", "greater"), ...){
-  M <- median(x, na.rm = na.rm)
-  res <- medianCI(constant*abs(x-M), conf.level = conf.level,
-                  method = method, R = R, bootci.type = bootci.type, 
-                  na.rm = na.rm, alternative = alternative, ...)
-  if(method != "boot"){
-    rownames(res$conf.int) <- rep("MAD", nrow(res$conf.int))
+  alternative <- match.arg(alternative)
+  if(method %in% c("exact", "asymptotic")){
+    M <- median(x, na.rm = na.rm)
+    res <- medianCI(constant*abs(x-M), conf.level = conf.level,
+                    method = method, R = R, bootci.type = bootci.type, 
+                    na.rm = na.rm, alternative = alternative, ...)
+    if(method != "boot"){
+      rownames(res$conf.int) <- rep("MAD", nrow(res$conf.int))
+    }
+    names(res$estimate) <- "MAD"
+  }else{
+    if(method == "boot"){ # boot
+      if(na.rm) x <- x[!is.na(x)]
+      alpha <- 1 - conf.level
+      if(alternative != "two.sided") alpha <- 2*alpha
+      
+      est <- mad(x, constant = constant)
+      boot.mad <- function(x, i, constant){ 
+        mad(x[i], constant = constant) 
+      } 
+      boot.out <- boot(x, statistic = boot.mad, R = R, constant = constant, ...)
+      CI <- try(boot.ci(boot.out, type = bootci.type, conf = 1 - alpha),
+                silent = TRUE)
+      
+      if(inherits(CI, "try-error"))
+        stop("Function 'boot.ci' returned an error. Please try a different 'bootci.type'.")
+      if(alternative == "less"){
+        if("normal" %in% names(CI)){ 
+          CI$normal[1,1] <- conf.level
+          CI$normal[1,2] <- -Inf
+        }
+        if("basic" %in% names(CI)){ 
+          CI$basic[1,1] <- conf.level
+          CI$basic[1,4] <- -Inf
+        }
+        if("student" %in% names(CI)){ 
+          CI$student[1,1] <- conf.level
+          CI$student[1,4] <- -Inf
+        }
+        if("percent" %in% names(CI)){ 
+          CI$percent[1,1] <- conf.level
+          CI$percent[1,4] <- -Inf
+        }
+        if("bca" %in% names(CI)){ 
+          CI$bca[1,1] <- conf.level
+          CI$bca[1,4] <- -Inf
+        }
+      }
+      if(alternative == "greater"){
+        if("normal" %in% names(CI)){ 
+          CI$normal[1,1] <- conf.level
+          CI$normal[1,3] <- Inf
+        }
+        if("basic" %in% names(CI)){ 
+          CI$basic[1,1] <- conf.level
+          CI$basic[1,5] <- Inf
+        }
+        if("student" %in% names(CI)){ 
+          CI$student[1,1] <- conf.level
+          CI$student[1,5] <- Inf
+        }
+        if("percent" %in% names(CI)){ 
+          CI$percent[1,1] <- conf.level
+          CI$percent[1,5] <- Inf
+        }
+        if("bca" %in% names(CI)){ 
+          CI$bca[1,1] <- conf.level
+          CI$bca[1,5] <- Inf
+        }
+      }
+      meth <- "bootstrap confidence interval"
+    }
+    names(est) <- "MAD"
+    res <- structure(list("estimate" = est, "conf.int" = CI,
+                          "method" = meth),
+                     class = "confint")
   }
-  names(res$estimate) <- "MAD"
   res
 }

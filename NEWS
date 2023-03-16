@@ -3,6 +3,14 @@
 ###############################################################################
 
 ###########################################################
+## Version 1.1
+###########################################################
+- madCI was modified for method = "boot" and is now no longer based on 
+  quantileCI, but directly on function mad. It should now give better 
+  confidence coverages.
+
+
+###########################################################
 ## Version 1.0
 ###########################################################
 - changed depends from R(>= 3.5.0) to R(>= 4.0.0). As detected by GitHub user
