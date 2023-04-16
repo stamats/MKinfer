@@ -8,6 +8,9 @@
 - madCI was modified for method = "boot" and is now no longer based on 
   quantileCI, but directly on function mad. It should now give better 
   confidence coverages.
+- minor modifications in mi.t.test: number of imputations is printed
+- added method for S3 class amelia to mi.t.test (from package Amelia)
+- added method for S3 class mids to mi.t.test (from package mice)
 
 
 ###########################################################

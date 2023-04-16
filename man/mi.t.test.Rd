@@ -1,6 +1,8 @@
 \name{mi.t.test}
 \alias{mi.t.test}
 \alias{mi.t.test.default}
+\alias{mi.t.test.amelia}
+\alias{mi.t.test.mids}
 \title{Multiple Imputation Student's t-Test}
 \description{
   Performs one and two sample t-tests on multiple imputed datasets.
@@ -9,6 +11,16 @@
 mi.t.test(miData, \dots)
 
 \method{mi.t.test}{default}(miData, x, y = NULL,
+        alternative = c("two.sided", "less", "greater"), mu = 0,
+        paired = FALSE, var.equal = FALSE, conf.level = 0.95,
+        subset = NULL, \dots)
+
+\method{mi.t.test}{amelia}(miData, x, y = NULL,
+        alternative = c("two.sided", "less", "greater"), mu = 0,
+        paired = FALSE, var.equal = FALSE, conf.level = 0.95,
+        subset = NULL, \dots)
+
+\method{mi.t.test}{mids}(miData, x, y = NULL,
         alternative = c("two.sided", "less", "greater"), mu = 0,
         paired = FALSE, var.equal = FALSE, conf.level = 0.95,
         subset = NULL, \dots)
@@ -89,36 +101,41 @@ y <- rnorm(20, mean = -1)
 y[sample(1:20, 4)] <- NA
 pair <- c(rnorm(25, mean = 1), rnorm(20, mean = -1))
 g <- factor(c(rep("yes", 25), rep("no", 20)))
-D <- data.frame(ID = 1:45, variable = c(x, y), pair = pair, group = g)
+D <- data.frame(ID = 1:45, response = c(x, y), pair = pair, group = g)
 
 ## Use Amelia to impute missing values
 library(Amelia)
 res <- amelia(D, m = 10, p2s = 0, idvars = "ID", noms = "group")
 
 ## Per protocol analysis (Welch two-sample t-test)
-t.test(variable ~ group, data = D)
+t.test(response ~ group, data = D)
 ## Intention to treat analysis (Multiple Imputation Welch two-sample t-test)
-mi.t.test(res$imputations, x = "variable", y = "group")
+mi.t.test(res, x = "response", y = "group")
 
 ## Per protocol analysis (Two-sample t-test)
-t.test(variable ~ group, data = D, var.equal = TRUE)
+t.test(response ~ group, data = D, var.equal = TRUE)
 ## Intention to treat analysis (Multiple Imputation two-sample t-test)
-mi.t.test(res$imputations, x = "variable", y = "group", var.equal = TRUE)
+mi.t.test(res, x = "response", y = "group", var.equal = TRUE)
 
 ## Specifying alternatives
-mi.t.test(res$imputations, x = "variable", y = "group", alternative = "less")
-mi.t.test(res$imputations, x = "variable", y = "group", alternative = "greater")
+mi.t.test(res, x = "response", y = "group", alternative = "less")
+mi.t.test(res, x = "response", y = "group", alternative = "greater")
 
 ## One sample test
-t.test(D$variable[D$group == "yes"])
-mi.t.test(res$imputations, x = "variable", subset = D$group == "yes")
-mi.t.test(res$imputations, x = "variable", mu = -1, subset = D$group == "yes",
+t.test(D$response[D$group == "yes"])
+mi.t.test(res, x = "response", subset = D$group == "yes")
+mi.t.test(res, x = "response", mu = -1, subset = D$group == "yes",
           alternative = "less")
-mi.t.test(res$imputations, x = "variable", mu = -1, subset = D$group == "yes",
+mi.t.test(res, x = "response", mu = -1, subset = D$group == "yes",
           alternative = "greater")
 
 ## paired test
-t.test(D$variable, D$pair, paired = TRUE)
-mi.t.test(res$imputations, x = "variable", y = "pair", paired = TRUE)
+t.test(D$response, D$pair, paired = TRUE)
+mi.t.test(res, x = "response", y = "pair", paired = TRUE)
+
+## Use mice to impute missing values
+library(mice)
+res.mice <- mice(D, m = 10, print = FALSE)
+mi.t.test(res.mice, x = "response", y = "group")
 }
 \keyword{htest}

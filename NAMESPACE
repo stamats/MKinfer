@@ -6,6 +6,7 @@ importFrom("nlme", "lme", "anova.lme")
 importFrom("ggplot2", "ggplot", "aes", "geom_point", "geom_vline", "geom_hline",
            "labs", "ggtitle", "scale_color_manual", "xlab", "ylab", "xlim", "ylim")
 importFrom("exactRankTests", "wilcox.exact")
+importFrom("miceadds", "mids2datlist")
 export(binomCI,
        binomDiffCI,
        boot.t.test,
@@ -35,6 +36,8 @@ S3method(hsu.t.test, formula)
 S3method(boot.t.test, default)
 S3method(boot.t.test, formula)
 S3method(mi.t.test, default)
+S3method(mi.t.test, amelia)
+S3method(mi.t.test, mids)
 S3method(perm.t.test, default)
 S3method(perm.t.test, formula)
 S3method(print, confint)
