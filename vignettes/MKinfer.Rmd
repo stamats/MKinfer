@@ -7,7 +7,7 @@ output:
     toc: true
 bibliography: MKinfer.bib
 vignette: >
-  %\VignetteIndexEntry{MKinfer}
+  %\VignetteIndexEntry{Package MKinfer}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{utf8}
 ---
@@ -17,8 +17,9 @@ vignette: >
 Package MKinfer includes a collection of functions for the computation of 
 various confidence intervals [@Altman2000; @Hedderich2018] including bootstrapped 
 versions [@Davison1997] as well as Hsu [@Hedderich2018], permutation [@Janssen1997], 
-bootstrap [@Davison1997] and multiple imputation [@Barnard1999] t-test.
-Graphical visualization by volcano and Bland-Altman plots [@Bland1986; @Shieh2018].
+bootstrap [@Davison1997] and multiple imputation [@Barnard1999] t-test and 
+Wilcoxon tests. Graphical visualization by volcano and Bland-Altman plots 
+[@Bland1986; @Shieh2018].
 
 We first load the package.
 ```{r}
@@ -288,6 +289,39 @@ mi.t.test(res.mice, x = "response", y = "group")
 ```
 
 
+## Multiple Imputation Wilcoxon Tests
+Function mi.wilcox.test can be used to compute multiple imputation Wilcoxon tests 
+by applying the median p rule (MPR) approach; see Section 13.3 in [@Heymans2019].
+```{r}
+## Per protocol analysis (Exact Wilcoxon rank sum test)
+library(exactRankTests)
+wilcox.exact(response ~ group, data = D, conf.int = TRUE)
+## Intention to treat analysis (Multiple Imputation Exact Wilcoxon rank sum test)
+mi.wilcox.test(res, x = "response", y = "group")
+
+## Specifying alternatives
+mi.wilcox.test(res, x = "response", y = "group", alternative = "less")
+mi.wilcox.test(res, x = "response", y = "group", alternative = "greater")
+
+## One sample test
+wilcox.exact(D$response[D$group == "yes"], conf.int = TRUE)
+mi.wilcox.test(res, x = "response", subset = D$group == "yes")
+mi.wilcox.test(res, x = "response", mu = -1, subset = D$group == "yes",
+               alternative = "less")
+mi.wilcox.test(res, x = "response", mu = -1, subset = D$group == "yes",
+               alternative = "greater")
+
+## paired test
+wilcox.exact(D$response, D$pair, paired = TRUE, conf.int = TRUE)
+mi.wilcox.test(res, x = "response", y = "pair", paired = TRUE)
+```
+
+Function mi.wilcox.test also works with package mice.
+```{r}
+mi.wilcox.test(res.mice, x = "response", y = "group")
+```
+
+
 ## Repeated Measures One-Way ANOVA
 We provide a simple wrapper function that allows to compute a classical
 repeated measures one-way ANOVA as well as a respective mixed effects model.
@@ -393,7 +427,6 @@ for pairwise comparisons.
 pairwise.wilcox.test(airquality$Ozone, airquality$Month, 
                      p.adjust.method = "none")
 ## To avoid the warnings
-library(exactRankTests)
 pairwise.fun(airquality$Ozone, airquality$Month, 
              fun = function(x, y) wilcox.exact(x, y)$p.value)
 ```

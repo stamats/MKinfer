@@ -16,6 +16,7 @@ export(binomCI,
        madCI,
        medianCI,
        mi.t.test,
+       mi.wilcox.test,
        normCI,
        meanCI,
        perm.t.test,
@@ -38,6 +39,9 @@ S3method(boot.t.test, formula)
 S3method(mi.t.test, default)
 S3method(mi.t.test, amelia)
 S3method(mi.t.test, mids)
+S3method(mi.wilcox.test, default)
+S3method(mi.wilcox.test, amelia)
+S3method(mi.wilcox.test, mids)
 S3method(perm.t.test, default)
 S3method(perm.t.test, formula)
 S3method(print, confint)

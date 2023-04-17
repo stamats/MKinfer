@@ -104,11 +104,13 @@ mi.t.test.default <- function(miData, x, y = NULL, alternative = c("two.sided", 
     est <- c(Q, sqrt(T)*sqrt(length(xi)))
     if(paired){
       method <- "Multiple Imputation Paired t-test"
-      dname <- paste("Variables ", x, "and", y)
+      dname <- paste("Variables ", x, " and ", y, "\n", 
+                     "number of imputations: ", nrImp, sep = "")
       names(est) <- c("mean of difference", "SD of difference")
     }else{
       method <- "Multiple Imputation One Sample t-test"
-      dname <- paste("Variable ", x, sep = "")
+      dname <- paste("Variable ", x, "\n", 
+                     "number of imputations: ", nrImp, sep = "")
       names(est) <- c("mean", "SD")
     }
     rval <- list(statistic = tstat, parameter = df.mod, p.value = pval,
