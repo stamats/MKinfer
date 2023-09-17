@@ -117,20 +117,20 @@ boot.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
   }
   if (alternative == "less") {
     pval <- pt(tstat, df)
-    boot.pval <- mean(TSTAT < tstat)
+    boot.pval <- max(mean(TSTAT < tstat), 1/R)
     cint <- c(-Inf, tstat + qt(conf.level, df))
     boot.cint <- c(-Inf, quantile(EFF, conf.level))
   }else if(alternative == "greater") {
-    boot.pval <- mean(TSTAT > tstat)
+    boot.pval <- max(mean(TSTAT > tstat), 1/R)
     pval <- pt(tstat, df, lower.tail = FALSE)
     cint <- c(tstat - qt(conf.level, df), Inf)
     boot.cint <- c(quantile(EFF, 1-conf.level), Inf)
   }else{
     pval <- 2 * pt(-abs(tstat), df)
     if(symmetric)
-      boot.pval <- mean(abs(TSTAT) > abs(tstat))
+      boot.pval <- max(mean(abs(TSTAT) > abs(tstat)), 1/R)
     else
-      boot.pval <- 2*min(mean(TSTAT <= tstat), mean(TSTAT > tstat))
+      boot.pval <- max(2*min(mean(TSTAT <= tstat), mean(TSTAT > tstat)), 1/R)
     alpha <- 1 - conf.level
     cint <- qt(1 - alpha/2, df)
     cint <- tstat + c(-cint, cint)
@@ -143,7 +143,7 @@ boot.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
   attr(cint, "conf.level") <- conf.level
   attr(boot.cint, "conf.level") <- conf.level
   rval <- list(statistic = tstat, parameter = df, p.value = pval, 
-               boot.p.value = boot.pval,
+               boot.p.value = boot.pval, R = R, p.min = boot.pval == 1/R,
                conf.int = cint, boot.conf.int = boot.cint,
                estimate = estimate, boot.estimate = boot.estimate, 
                null.value = mu, stderr = stderr, boot.stderr = boot.stderr,
@@ -179,11 +179,17 @@ print.boot.htest <- function (x, digits = getOption("digits"), prefix = "\t", ..
   cat(strwrap(x$method, prefix = prefix), sep = "\n")
   cat("\n")
   cat("data:  ", x$data.name, "\n", sep = "")
+  cat("number of bootstrap samples:  ", x$R, "\n", sep = "")
   out <- character()
   if (!is.null(x$boot.p.value)) {
     bfp <- format.pval(x$boot.p.value, digits = max(1L, digits - 3L))
-    cat("bootstrap p-value", 
-        if (substr(bfp, 1L, 1L) == "<") bfp else paste("=", bfp), "\n")
+    if(x$p.min){
+      cat("bootstrap p-value", 
+          if (substr(bfp, 1L, 1L) == "<") bfp else paste("<", bfp), "\n")
+    }else{
+      cat("bootstrap p-value", 
+          if (substr(bfp, 1L, 1L) == "<") bfp else paste("=", bfp), "\n")
+    }
   }
   if (!is.null(x$boot.estimate)) {
     cat(paste(names(x$boot.estimate), "(SE) =", 

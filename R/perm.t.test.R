@@ -3,8 +3,8 @@ sample.perm <- function(x, k = NULL, R = 1000, replace = FALSE){
   max.R <- try(npermutations(x, k = k, replace = replace), silent = TRUE)
   if(inherits(max.R, "try-error")) max.R <- Inf
   if(max.R < R){
-    warning("The requested number of permutations is larger than ",
-            "the total number of possible permutations.\n",
+    warning("The requested number of permutations (", R, ") is larger than ",
+            "the total number of possible permutations (", max.R, ").\n",
             "Hence all possible permutations are computed.")
     res <- permutations(x, k = k, replace = replace)
   }else{
@@ -69,6 +69,7 @@ perm.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
     estimate <- setNames(mx, if (paired) "mean of the differences" else "mean of x")
     x.cent <- x - mx
     X <- abs(x.cent)*sample.perm(c(-1,1), k = nx, R = R, replace = TRUE)
+    R.true <- nrow(X)
     MX <- rowMeans(X)
     VX <- rowSums((X-MX)^2)/(nx-1)
     STDERR <- sqrt(VX/nx)
@@ -96,6 +97,7 @@ perm.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
     names(estimate) <- c("mean of x", "mean of y")
     z <- c(x, y)
     Z <- sample.perm(z, k = nx+ny, R = R)
+    R.true <- nrow(Z)
     X <- Z[,1:nx]
     Y <- Z[,(nx+1):(nx+ny)]
     MX <- rowMeans(X)
@@ -131,20 +133,20 @@ perm.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
   }
   if (alternative == "less") {
     pval <- pt(tstat, df)
-    perm.pval <- mean(TSTAT < tstat)
+    perm.pval <- max(mean(TSTAT < tstat), 1/R.true)
     cint <- c(-Inf, tstat + qt(conf.level, df))
     perm.cint <- c(-Inf, quantile(EFF, conf.level))
   }else if(alternative == "greater") {
-    perm.pval <- mean(TSTAT > tstat)
+    perm.pval <- max(mean(TSTAT > tstat), 1/R.true)
     pval <- pt(tstat, df, lower.tail = FALSE)
     cint <- c(tstat - qt(conf.level, df), Inf)
     perm.cint <- c(quantile(EFF, 1-conf.level), Inf)
   }else{
     pval <- 2 * pt(-abs(tstat), df)
     if(symmetric)
-      perm.pval <- mean(abs(TSTAT) > abs(tstat))
+      perm.pval <- max(mean(abs(TSTAT) > abs(tstat)), 1/R.true)
     else
-      perm.pval <- 2*min(mean(TSTAT <= tstat), mean(TSTAT > tstat))
+      perm.pval <- max(2*min(mean(TSTAT <= tstat), mean(TSTAT > tstat)), 1/R.true)
     alpha <- 1 - conf.level
     cint <- qt(1 - alpha/2, df)
     cint <- tstat + c(-cint, cint)
@@ -157,7 +159,8 @@ perm.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
   attr(cint, "conf.level") <- conf.level
   attr(perm.cint, "conf.level") <- conf.level
   rval <- list(statistic = tstat, parameter = df, p.value = pval, 
-               perm.p.value = perm.pval,
+               perm.p.value = perm.pval, R = R, R.true = R.true, 
+               p.min = perm.pval == 1/R.true,
                conf.int = cint, perm.conf.int = perm.cint,
                estimate = estimate, perm.estimate = perm.estimate, 
                null.value = mu, stderr = stderr, perm.stderr = perm.stderr,
@@ -193,10 +196,23 @@ print.perm.htest <- function (x, digits = getOption("digits"), prefix = "\t", ..
   cat(strwrap(x$method, prefix = prefix), sep = "\n")
   cat("\n")
   cat("data:  ", x$data.name, "\n", sep = "")
+  cat("number of permutations:  ", x$R.true, "\n", sep = "")
   out <- character()
   if (!is.null(x$perm.p.value)) {
     bfp <- format.pval(x$perm.p.value, digits = max(1L, digits - 3L))
-    cat("(Monte-Carlo) permutation p-value", if (substr(bfp, 1L, 1L) == "<") bfp else paste("=", bfp), "\n")
+    if(x$R.true < x$R){
+      if(x$p.min){
+        cat("(Exact) permutation p-value", if (substr(bfp, 1L, 1L) == "<") bfp else paste("<", bfp), "\n")
+      }else{
+        cat("(Exact) permutation p-value", if (substr(bfp, 1L, 1L) == "<") bfp else paste("=", bfp), "\n")
+      }
+    }else{
+      if(x$p.min){
+        cat("(Monte-Carlo) permutation p-value", if (substr(bfp, 1L, 1L) == "<") bfp else paste("<", bfp), "\n")
+      }else{
+        cat("(Monte-Carlo) permutation p-value", if (substr(bfp, 1L, 1L) == "<") bfp else paste("=", bfp), "\n")
+      }
+    }
   }
   if (!is.null(x$perm.estimate)) {
     cat(paste(names(x$perm.estimate), "(SE) =", 
@@ -205,10 +221,17 @@ print.perm.htest <- function (x, digits = getOption("digits"), prefix = "\t", ..
         "\n")
   }
   if (!is.null(x$perm.conf.int)) {
-    cat(format(100 * attr(x$perm.conf.int, "conf.level")), 
-        " percent (Monte-Carlo) permutation percentile confidence interval:\n", 
-        " ", paste(format(x$perm.conf.int[1:2], digits = digits), 
-                   collapse = " "), "\n", sep = "")
+    if(x$R.true < x$R){
+      cat(format(100 * attr(x$perm.conf.int, "conf.level")), 
+          " percent (exact) permutation percentile confidence interval:\n", 
+          " ", paste(format(x$perm.conf.int[1:2], digits = digits), 
+                     collapse = " "), "\n", sep = "")
+    }else{
+      cat(format(100 * attr(x$perm.conf.int, "conf.level")), 
+          " percent (Monte-Carlo) permutation percentile confidence interval:\n", 
+          " ", paste(format(x$perm.conf.int[1:2], digits = digits), 
+                     collapse = " "), "\n", sep = "")
+    }
   }
   cat("\nResults without permutation:\n")
   if (!is.null(x$statistic)) 

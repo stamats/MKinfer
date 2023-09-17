@@ -17,18 +17,6 @@ and Wilcoxon tests. Graphical visualization by volcano and Bland-Altman plots
 (Bland and Altman (1986), <doi:10.1016/S0140-6736(86)90837-8>; Shieh (2018), <doi:10.1186/s12874-018-0505-y>).
 }
 \details{
-\tabular{ll}{
-Package: \tab MKinfer\cr
-Type: \tab Package\cr
-Version: \tab 1.1\cr
-Date: \tab 2023-04-17\cr
-Depends: \tab R(>= 4.0.0)\cr
-Imports: \tab stats, MKdescr, boot, arrangements, nlme, ggplot2, exactRankTests\cr
-Suggests: \tab Amelia, knitr, rmarkdown, mice, miceadds\cr
-LazyData: \tab yes\cr
-License: \tab LGPL-3\cr
-URL: \tab https://github.com/stamats/MKinfer\cr
-}
 library(MKinfer)
 }
 \author{ Matthias Kohl \url{https://www.stamats.de}

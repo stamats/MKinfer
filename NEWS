@@ -3,6 +3,15 @@
 ###############################################################################
 
 ###########################################################
+## Version 1.2
+###########################################################
+- changed print functions for perm.htest and boot.htest
+- modified computation of p values for perm.t.test and boot.t.test for extreme
+  cases
+- removed DESCRIPTION table from package Rd file.
+
+
+###########################################################
 ## Version 1.1
 ###########################################################
 - madCI was modified for method = "boot" and is no longer based on function
