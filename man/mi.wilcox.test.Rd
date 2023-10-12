@@ -3,7 +3,7 @@
 \alias{mi.wilcox.test.default}
 \alias{mi.wilcox.test.amelia}
 \alias{mi.wilcox.test.mids}
-\title{Multiple Wilcoxon Rank Sum and Signed Rank Tests}
+\title{Multiple Imputation Wilcoxon Rank Sum and Signed Rank Tests}
 \description{
   Performs one and two sample Wilcoxon tests on multiple imputed datasets.
 }
