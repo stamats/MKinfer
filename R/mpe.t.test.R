@@ -21,7 +21,7 @@ mpe.t.test <- function(X, Y, conf.level = 0.975){
     pvals[i] <- temp$p.value
     statistic[i] <- temp$statistic
     parameter[i] <- temp$parameter
-    conf[i,] <- temp$conf.int
+    conf[i,] <- c(temp$conf.int[1], Inf)
     estimate[i,] <- temp$estimate
   }
   colnames(estimate) <- c("X", "Y")
