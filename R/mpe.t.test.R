@@ -27,7 +27,7 @@ mpe.t.test <- function(X, Y, conf.level = 0.975){
   colnames(estimate) <- c("X", "Y")
   rownames(estimate) <- paste("EDP", 1:ncols, sep = ".")
   colnames(conf) <- c(paste(1-conf.level), 1)
-  rownames(conf) <- paste("EDP", 1:ncols, sep = ".")
+  rownames(conf) <- paste("EP", 1:ncols, sep = ".")
   alternative <- "true difference in means is larger than 0 for all endpoints"
   attr(conf, "conf.level") <- conf.level
   method <- "Intersection-union t-test"
