@@ -20,6 +20,8 @@ export(binomCI,
        normCI,
        meanCI,
        perm.t.test,
+       mpe.z.test,
+       mpe.t.test,
        p2ses,
        sdCI,
        normDiffCI,
@@ -48,4 +50,5 @@ S3method(print, confint)
 S3method(print, boot.htest)
 S3method(print, perm.htest)
 S3method(print, pw.htest)
+S3method(print, mpe.test)
 S3method(volcano, default)

@@ -8,7 +8,7 @@
 }
 \usage{
 baplot(x, y, loa.level = 0.95, conf.level = 0.95, 
-       xlab = "Difference", ylab = "Mean", 
+       xlab = "Mean", ylab = "Difference", 
        title = "Bland-Altman Plot", xlim = NULL, ylim = NULL,
        type = c("parametric", "nonparametric"), 
        loa.type = c("unbiased", "biased"), ci.diff = TRUE, ci.loa = TRUE, 

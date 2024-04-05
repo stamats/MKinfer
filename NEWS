@@ -9,6 +9,7 @@
 - modified computation of p values for perm.t.test and boot.t.test for extreme
   cases
 - removed DESCRIPTION table from package Rd file.
+- added functions to compute (multivariate) intersection-union z- and t-test
 
 
 ###########################################################

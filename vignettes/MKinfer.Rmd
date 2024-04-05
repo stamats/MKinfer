@@ -234,6 +234,26 @@ alternative standardized effect size (SES) as proposed by Botta-Dukat [@BottaDuk
 p2ses(res$p.value)
 ```
 
+## Intersection-Union z- and t-Test
+We compute the multivariate intersection-union z- and t-test.
+
+```{r}
+library(mvtnorm)
+## effect size
+delta <- c(0.25, 0.5)
+## covariance matrix
+Sigma <- matrix(c(1, 0.75, 0.75, 1), ncol = 2)
+## sample size
+n <- 50
+## generate random data from multivariate normal distributions
+X <- rmvnorm(n=n, mean = delta, sigma = Sigma)
+Y <- rmvnorm(n=n, mean = rep(0, length(delta)), sigma = Sigma)
+## perform multivariate z-test
+mpe.z.test(X = X, Y = Y, Sigma = Sigma)
+## perform multivariate t-test
+mpe.t.test(X = X, Y = Y)
+```
+
 
 ## Multiple Imputation t-Test
 Function mi.t.test can be used to compute a multiple imputation t-test by applying
