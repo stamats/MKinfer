@@ -17,9 +17,10 @@ vignette: >
 Package MKinfer includes a collection of functions for the computation of 
 various confidence intervals [@Altman2000; @Hedderich2018] including bootstrapped 
 versions [@Davison1997] as well as Hsu [@Hedderich2018], permutation [@Janssen1997], 
-bootstrap [@Davison1997] and multiple imputation [@Barnard1999] t-test and 
-Wilcoxon tests. Graphical visualization by volcano and Bland-Altman plots 
-[@Bland1986; @Shieh2018].
+bootstrap [@Davison1997], intersection-union [@Sozu2015] and multiple imputation 
+[@Barnard1999] t-test; furthermore, computation of intersection-union z-test 
+as well as multiple imputation Wilcoxon tests. Graphical visualization by volcano 
+and Bland-Altman plots [@Bland1986; @Shieh2018].
 
 We first load the package.
 ```{r}
