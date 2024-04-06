@@ -20,7 +20,9 @@ mpe.z.test <- function(X, Y, Sigma, conf.level = 0.975){
     stop("'conf.level' must be a single number between 0 and 1")
 
   dname <- paste(deparse(substitute(x)), "and", deparse(substitute(y)))
-  diff <- colMeans(X) - colMeans(Y)
+  M.X <- colMeans(X)
+  M.Y <- colMeans(Y)
+  diff <-  M.X - M.Y
   names(diff) <- paste("EP", 1:ncol(X), sep = ".")
   n <- nrow(X)
   m <- nrow(Y)
@@ -35,12 +37,17 @@ mpe.z.test <- function(X, Y, Sigma, conf.level = 0.975){
 
   colnames(cint) <- c(paste(1-conf.level), 1)
   rownames(cint) <- paste("EP", 1:ncol(X), sep = ".")
+  
+  estimate <- cbind(M.X, M.Y)
+  ncols <- ncol(estimate)
+  colnames(estimate) <- c("X", "Y")
+  rownames(estimate) <- paste("EP", 1:ncols, sep = ".")
 
   alternative <- "true difference in means is larger than 0 for all endpoints"
   attr(cint, "conf.level") <- conf.level
   method <- "Intersection-union z-test"
   rval <- list(method = method, statistic = statistic, p.value = pval,
-               conf.int = cint, estimate = diff,
+               conf.int = cint, estimate = estimate,
                alternative = alternative, data.name = dname)
   class(rval) <- "mpe.test"
   rval

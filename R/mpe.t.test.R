@@ -25,7 +25,7 @@ mpe.t.test <- function(X, Y, conf.level = 0.975){
     estimate[i,] <- temp$estimate
   }
   colnames(estimate) <- c("X", "Y")
-  rownames(estimate) <- paste("EDP", 1:ncols, sep = ".")
+  rownames(estimate) <- paste("EP", 1:ncols, sep = ".")
   colnames(conf) <- c(paste(1-conf.level), 1)
   rownames(conf) <- paste("EP", 1:ncols, sep = ".")
   alternative <- "true difference in means is larger than 0 for all endpoints"
@@ -37,7 +37,8 @@ mpe.t.test <- function(X, Y, conf.level = 0.975){
   para <- parameter[1]
   names(para) <- "df"
   rval <- list(method = method, statistic = stat, parameter = para, p.value = pval,
-               conf.int = conf, estimate = estimate, alternative= alternative, data.name = dname)
+               conf.int = conf, estimate = estimate, alternative = alternative, 
+               data.name = dname)
   class(rval) <- "mpe.test"
   rval
 }
