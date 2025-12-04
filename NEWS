@@ -3,6 +3,16 @@
 ###############################################################################
 
 ###########################################################
+## Version 1.3
+###########################################################
+- added functions mdplot and md2plot to plot mean difference of two groups
+  with equal (mdplot) or unequal (md2plot) variances assuming normal 
+  distributions
+- added function md2sens to compute sensitivity and specificity based on 
+  the optimal cutoff (Youden's J statistic)
+
+
+###########################################################
 ## Version 1.2
 ###########################################################
 - changed print functions for perm.htest and boot.htest
@@ -10,6 +20,7 @@
   cases
 - removed DESCRIPTION table from package Rd file.
 - added functions to compute (multivariate) intersection-union z- and t-test
+
 
 
 ###########################################################

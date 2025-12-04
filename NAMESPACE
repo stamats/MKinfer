@@ -4,7 +4,9 @@ importFrom("boot", "boot", "boot.ci")
 importFrom("arrangements", "permutations", "npermutations")
 importFrom("nlme", "lme", "anova.lme")
 importFrom("ggplot2", "ggplot", "aes", "geom_point", "geom_vline", "geom_hline",
-           "labs", "ggtitle", "scale_color_manual", "xlab", "ylab", "xlim", "ylim")
+           "geom_area", "stat_function", "labs", "ggtitle", 
+           "scale_x_continuous", "scale_color_manual", 
+           "xlab", "ylab", "xlim", "ylim", "annotate")
 importFrom("exactRankTests", "wilcox.exact")
 importFrom("miceadds", "mids2datlist")
 export(binomCI,
@@ -32,7 +34,10 @@ export(binomCI,
        pairwise.ext.t.test,
        rm.oneway.test,
        volcano,
-       baplot)
+       baplot,
+       mdplot,
+       mdplot2,
+       md2sens)
 
 S3method(hsu.t.test, default)
 S3method(hsu.t.test, formula)
