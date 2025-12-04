@@ -10,6 +10,9 @@
   distributions
 - added function md2sens to compute sensitivity and specificity based on 
   the optimal cutoff (Youden's J statistic)
+- boot.t.test now can return the bootstrap distribution
+- perm.t.test now can return the permutation distribution
+- new diagnostic plot, to visualize bootstrap and permutation distribution
 
 
 ###########################################################

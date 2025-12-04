@@ -2,12 +2,12 @@
 \alias{mdplot}
 \alias{mdplot2}
 \alias{md2sens}
-\title{ Plot MD. }
+\title{ Visualize MD. }
 \description{
-  The functions plot the mean difference (MD) of two groups, assuming two normal 
-  distributions, either with identical standard deviation (SD) or two (different) 
-  SDs. In addition, the sensitivity and specificity based on the optimal cutoff 
-  (Youden's J statistic) are computed.
+  The functions visualize the mean difference (MD) of two groups, assuming two 
+  normal distributions, either with identical standard deviation (SD) or two 
+  (different) SDs. In addition, the sensitivity and specificity based on the 
+  optimal cutoff (Youden's J statistic) are computed.
 }
 \usage{
 mdplot(delta, sd = 1, constant = 3, n = 501, alpha = 0.25, lwd = 1, 
@@ -46,7 +46,7 @@ Function \code{md2sens} returns a numeric vector with sensitivity and
 specificity.
 }
 \references{
-  Böhning D, Böhning W, Holling H (2008). Revisiting Youden's index as a useful 
+  B\"ohning D, B\"ohning W, Holling H (2008). Revisiting Youden's index as a useful 
   measure of the misclassification error in meta-analysis of diagnostic studies. 
   Stat Methods Med Res. 17(6), 543-54.
   
@@ -73,12 +73,13 @@ mdplot2(delta = 0.8, sd1 = 2, sd2 = 1)
 
 ## (standardized) mean difference to sensitivity/specificity
 ## equal variances
+library(ggplot2)
 delta <- seq(from = 0.0, to = 6, by = 0.05)
 res <- sapply(delta, md2sens, sd = 1)
 DF <- data.frame(SMD = delta, sensitivity = res[1,], 
                  specificity = res[2,])
 ggplot(DF, aes(x = SMD, y = sensitivity)) +
-  geom_line() + ylim(0.5, 1.0) + xlab("standardized mean difference") +
+  geom_line() + ylim(0.5, 1.0) + xlab("(standardized) mean difference") +
   ylab("sensitivity = specificity")
 
 ## unequal variances

@@ -36,7 +36,7 @@ mdplot2 <- function(delta, sd1 = 1, sd2 = 1, constant = 3, n = 501, alpha = 0.25
   }
   if(missing(xlim)) xlim <- c(Min, Max)
   DF <- data.frame(x = seq(from = Min, to = Max, length = n))
-  gg <- ggplot(data = DF, aes(x = x)) + 
+  gg <- ggplot(data = DF, aes(x = .data$x)) + 
     stat_function(fun = dnorm, n = n, args = list(mean = 0, sd = sd1), 
                   color = col1, lwd = lwd) +
     geom_area(stat = "function", fun = dnorm, args = list(mean = 0, sd = sd1),
