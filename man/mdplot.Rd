@@ -46,15 +46,15 @@ mdplot(delta, sd1 = 1, sd2 = 1, constant = 3, n = 501, alpha = 0.25,
 \author{ Matthias Kohl \email{Matthias.Kohl@stamats.de}}
 \examples{
 ## small effect size
-mdplot(delta = 0.2, sd1 = 1, sd2 = 1)
+mdplot(delta = 0.2)
 ## medium effect size
-mdplot(delta = 0.5, sd1 = 1, sd2 = 1)
+mdplot(delta = 0.5)
 ## large effect size
-mdplot(delta = 0.8, sd1 = 1, sd2 = 1)
+mdplot(delta = 0.8)
 ## z-factor = 0  (z-factor = 1 - 3*2*sd/delta); see Zhang et al. (1999)
-mdplot(delta = 6, sd1 = 1, sd2 = 1)
+mdplot(delta = 6)
 ## z-factor = 0.5  (z-factor = 1 - 3*2*sd/delta); see Zhang et al. (1999)
-mdplot(delta = 12, sd1 = 1, sd2 = 1)
+mdplot(delta = 12)
 
 ## unequal variances
 mdplot(delta = 0.8, sd1 = 1, sd2 = 2)
