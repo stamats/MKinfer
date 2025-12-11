@@ -29,6 +29,9 @@ mdplot(delta, sd1 = 1, sd2 = 1, constant = 3, n = 501, alpha = 0.25,
 \details{
   The function can be used to demonstrate (standardized) effect sizes and how 
   these effect sizes transform into sensitivities and specificities.
+  
+  The two standard diviations are assumed to be equal if their difference is
+  smaller than \code{1e-08}.
 }
 \value{\code{ggplot} object}
 \references{
@@ -54,7 +57,7 @@ mdplot(delta = 6, sd1 = 1, sd2 = 1)
 mdplot(delta = 12, sd1 = 1, sd2 = 1)
 
 ## unequal variances
-mdplot2(delta = 0.8, sd1 = 1, sd2 = 2)
-mdplot2(delta = 0.8, sd1 = 2, sd2 = 1)
+mdplot(delta = 0.8, sd1 = 1, sd2 = 2)
+mdplot(delta = 0.8, sd1 = 2, sd2 = 1)
 }
 \keyword{univar}

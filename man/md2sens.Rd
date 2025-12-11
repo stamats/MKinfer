@@ -18,6 +18,9 @@ md2sens(delta, sd1 = NULL, sd2 = NULL)
 \details{
   This function can be used to demonstrate how (standardized) effect sizes 
   translate into sensitivity and specifity, based on two normal distributions.
+  
+  The two standard diviations are assumed to be equal if their difference is
+  smaller than \code{1e-08}.
 }
 \value{Numeric vector with sensitivity and specificity.
 }
