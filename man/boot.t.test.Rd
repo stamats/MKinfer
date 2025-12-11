@@ -12,7 +12,8 @@ boot.t.test(x, \dots)
 \method{boot.t.test}{default}(x, y = NULL,
        alternative = c("two.sided", "less", "greater"),
        mu = 0, paired = FALSE, var.equal = FALSE,
-       conf.level = 0.95, R = 9999, symmetric = FALSE, \dots)
+       conf.level = 0.95, R = 9999, symmetric = FALSE, 
+       bootDist = FALSE, \dots)
 
 \method{boot.t.test}{formula}(formula, data, subset, na.action, \dots)
 }
@@ -36,6 +37,8 @@ boot.t.test(x, \dots)
   \item{symmetric}{a logical variable indicating whether to assume symmetry
     in the two-sided test. If \code{TRUE} then the symmetric bootstrap p value 
     otherwise the equal-tail boostrap p value is computed.}
+  \item{bootDist}{a logical variable that specifies whether the bootstrap
+    distribution should be returned. }
   \item{formula}{a formula of the form \code{lhs ~ rhs} where \code{lhs}
     is a numeric variable giving the data values and \code{rhs} a factor
     with two levels giving the corresponding groups.}
@@ -48,6 +51,9 @@ boot.t.test(x, \dots)
   \item{na.action}{a function which indicates what should happen when
     the data contain \code{NA}s.  Defaults to
     \code{getOption("na.action")}.}
+  \item{bootDist}{ logical; should the bootstrap results be returned. If 
+    \code{TRUE}, function \code{h0plot} can be used to plot the distribution 
+    of the results. }
   \item{\dots}{further arguments to be passed to or from methods.}
 }
 \details{

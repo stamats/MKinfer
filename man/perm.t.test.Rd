@@ -12,7 +12,8 @@ perm.t.test(x, \dots)
 \method{perm.t.test}{default}(x, y = NULL,
        alternative = c("two.sided", "less", "greater"),
        mu = 0, paired = FALSE, var.equal = FALSE,
-       conf.level = 0.95, R = 9999, symmetric = TRUE, \dots)
+       conf.level = 0.95, R = 9999, symmetric = TRUE, 
+       permDist = FALSE, \dots)
 
 \method{perm.t.test}{formula}(formula, data, subset, na.action, \dots)
 }
@@ -36,6 +37,8 @@ perm.t.test(x, \dots)
   \item{symmetric}{a logical variable indicating whether to assume symmetry
     in the two-sided test. If \code{TRUE} then the symmetric permutation p value 
     otherwise the equal-tail permutation p value is computed.}
+  \item{permDist}{a logical variable that specifies whether the permutation 
+    distribution should be returned. }
   \item{formula}{a formula of the form \code{lhs ~ rhs} where \code{lhs}
     is a numeric variable giving the data values and \code{rhs} a factor
     with two levels giving the corresponding groups.}
@@ -48,6 +51,9 @@ perm.t.test(x, \dots)
   \item{na.action}{a function which indicates what should happen when
     the data contain \code{NA}s.  Defaults to
     \code{getOption("na.action")}.}
+  \item{permDist}{ logical; should the permutation results be returned. If 
+    \code{TRUE}, function \code{h0plot} can be used to plot the distribution 
+    of the results. }
   \item{\dots}{further arguments to be passed to or from methods.}
 }
 \details{

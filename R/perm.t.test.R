@@ -26,7 +26,8 @@ perm.t.test <- function (x, ...){
 }
 perm.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less", "greater"), 
                         mu = 0, paired = FALSE, var.equal = FALSE, 
-                        conf.level = 0.95, R = 9999, symmetric = TRUE, ...){
+                        conf.level = 0.95, R = 9999, symmetric = TRUE, 
+                        permDist = FALSE, ...){
   alternative <- match.arg(alternative)
   if(!missing(mu) && (length(mu) != 1 || is.na(mu))) 
     stop("'mu' must be a single number")
@@ -158,13 +159,19 @@ perm.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
   names(mu) <- if (paired || !is.null(y)) "difference in means" else "mean"
   attr(cint, "conf.level") <- conf.level
   attr(perm.cint, "conf.level") <- conf.level
+  if(permDist){ 
+    perm.dist <- EFF
+  }else{
+    perm.dist <- NULL
+  }
   rval <- list(statistic = tstat, parameter = df, p.value = pval, 
                perm.p.value = perm.pval, R = R, R.true = R.true, 
                p.min = perm.pval == 1/R.true,
                conf.int = cint, perm.conf.int = perm.cint,
                estimate = estimate, perm.estimate = perm.estimate, 
                null.value = mu, stderr = stderr, perm.stderr = perm.stderr,
-               alternative = alternative, method = method, data.name = dname)
+               alternative = alternative, method = method, data.name = dname,
+               perm.dist = perm.dist)
   class(rval) <- c("perm.htest", "htest")
   rval
 }

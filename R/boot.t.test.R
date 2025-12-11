@@ -3,7 +3,8 @@ boot.t.test <- function(x, ...){
 }
 boot.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less", "greater"), 
                         mu = 0, paired = FALSE, var.equal = FALSE, 
-                        conf.level = 0.95, R = 9999, symmetric = FALSE, ...){
+                        conf.level = 0.95, R = 9999, symmetric = FALSE, 
+                        bootDist = FALSE, ...){
   alternative <- match.arg(alternative)
   if(!missing(mu) && (length(mu) != 1 || is.na(mu))) 
     stop("'mu' must be a single number")
@@ -142,12 +143,18 @@ boot.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
   names(mu) <- if (paired || !is.null(y)) "difference in means" else "mean"
   attr(cint, "conf.level") <- conf.level
   attr(boot.cint, "conf.level") <- conf.level
+  if(bootDist){
+    boot.dist <- EFF
+  }else{
+    boot.dist <- NULL
+  }
   rval <- list(statistic = tstat, parameter = df, p.value = pval, 
                boot.p.value = boot.pval, R = R, p.min = boot.pval == 1/R,
                conf.int = cint, boot.conf.int = boot.cint,
                estimate = estimate, boot.estimate = boot.estimate, 
                null.value = mu, stderr = stderr, boot.stderr = boot.stderr,
-               alternative = alternative, method = method, data.name = dname)
+               alternative = alternative, method = method, data.name = dname,
+               boot.dist = boot.dist)
   class(rval) <- c("boot.htest", "htest")
   rval
 }
