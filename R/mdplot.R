@@ -42,7 +42,7 @@ mdplot <- function(delta, sd1 = 1, sd2 = 1, constant = 3, n = 501, alpha = 0.25,
       geom_vline(xintercept = delta, color = col2, lwd = lwd) +
       ylab("") + xlab("") + scale_y_continuous(breaks = NULL) +
       annotate(x = -Inf, y = Inf, geom = "text", 
-               label = paste0("MD = ", delta, ", SD = ", sd),
+               label = paste0("MD = ", delta, ", SD1 = SD2 = ", sd),
                hjust = -0.15, vjust = 1.5, fontface = "bold") +
       ggtitle("Mean Difference (MD)")
     if(addSens){
