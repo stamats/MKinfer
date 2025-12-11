@@ -1,6 +1,8 @@
-md2sens <- function(delta, sd = NULL, sd1 = NULL, sd2 = NULL, var.equal = TRUE){
+md2sens <- function(delta, sd1 = NULL, sd2 = NULL){
   stopifnot(!missing(delta))
   stopifnot(is.numeric(delta))
+  stopifnot(is.numeric(sd1))
+  stopifnot(is.numeric(sd2))
   if(length(delta) != 1){
     stop("'delta' must be single number (vector of length 1)!")
   }
@@ -8,8 +10,10 @@ md2sens <- function(delta, sd = NULL, sd1 = NULL, sd2 = NULL, var.equal = TRUE){
     stop("'delta' must be a non-negative real number!")
   } 
   
+  var.equal <- ifelse(abs(sd1-sd2) < 1e-8, TRUE, FALSE)
+  
   if(var.equal){
-    stopifnot(is.numeric(sd))
+    sd <- sd1
     if(length(sd) != 1){
       stop("'sd' must be single number (vector of length 1)!")
     }
@@ -18,8 +22,6 @@ md2sens <- function(delta, sd = NULL, sd1 = NULL, sd2 = NULL, var.equal = TRUE){
     }
     spec <- sens <- pnorm(delta/2, mean = 0, sd = sd)
   }else{
-    stopifnot(is.numeric(sd1))
-    stopifnot(is.numeric(sd2))
     if(length(sd1) != 1 || length(sd2) != 1){
       stop("'sd1' and 'sd2' must single numbers (vectors of length 1)!")
     }
