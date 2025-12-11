@@ -8,7 +8,7 @@
   statistic.
 }
 \usage{
-md2sens(delta, sd1 = NULL, sd2 = NULL)
+md2sens(delta, sd1 = 1, sd2 = 1)
 }
 \arguments{
   \item{delta}{ (absolute) mean difference of the two groups. }
@@ -39,7 +39,7 @@ md2sens(delta, sd1 = NULL, sd2 = NULL)
 ## equal variances
 library(ggplot2)
 delta <- seq(from = 0.0, to = 6, by = 0.05)
-res <- sapply(delta, md2sens, sd1 = 1, sd2 = 1)
+res <- sapply(delta, md2sens)
 DF <- data.frame(SMD = delta, sensitivity = res[1,], 
                  specificity = res[2,])
 ggplot(DF, aes(x = SMD, y = sensitivity)) +

@@ -1,4 +1,4 @@
-md2sens <- function(delta, sd1 = NULL, sd2 = NULL){
+md2sens <- function(delta, sd1 = 1, sd2 = 1){
   stopifnot(!missing(delta))
   stopifnot(is.numeric(delta))
   stopifnot(is.numeric(sd1))
@@ -9,6 +9,9 @@ md2sens <- function(delta, sd1 = NULL, sd2 = NULL){
   if(delta < 0){
     stop("'delta' must be a non-negative real number!")
   } 
+  if(sd1 <= 0 || sd2 <= 0){
+    stop("The values of 'sd1' and 'sd2' must be positive real numbers!")
+  }
   
   var.equal <- ifelse(abs(sd1-sd2) < 1e-8, TRUE, FALSE)
   
