@@ -44,7 +44,7 @@ DF <- data.frame(SMD = delta, sensitivity = res[1,],
                  specificity = res[2,])
 ggplot(DF, aes(x = SMD, y = sensitivity)) +
   geom_line() + ylim(0.5, 1.0) + xlab("(standardized) mean difference") +
-  ylab("sensitivity = specificity")
+  ylab("sensitivity = specificity") + ggtitle("SD1 = SD2 = 1")
 
 ## unequal variances
 delta <- seq(from = 0.0, to = 6, by = 0.05)
