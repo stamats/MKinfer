@@ -402,7 +402,7 @@ DF <- data.frame(SMD = delta, sensitivity = res[1,],
                  specificity = res[2,])
 ggplot(DF, aes(x = SMD, y = sensitivity)) +
   geom_line() + ylim(0.5, 1.0) + xlab("(standardized) mean difference") +
-  ylab("sensitivity = specificity")
+  ylab("sensitivity = specificity") + ggtitle("SD1 = SD2 = 1")
 
 ## unequal variances
 delta <- seq(from = 0.0, to = 6, by = 0.05)
@@ -415,6 +415,32 @@ ggplot(DF, aes(x = MD, y = performance, color = measure)) +
   scale_color_manual(values = c("darkblue", "darkred")) +
   ggtitle("SD1 = 1, SD2 = 2")
 ```
+
+Function md2zfactor can be used to compute the z-factor [@Zhang1999] for given 
+MD and SDs.
+
+```{r, fig.width=7, fig.height=7}
+## (standardized) mean difference to sensitivity/specificity
+## equal variances
+library(ggplot2)
+delta <- seq(from = 2, to = 18, by = 0.05)
+res <- sapply(delta, md2zfactor)
+DF <- data.frame(SMD = delta, zfactor = res)
+ggplot(DF, aes(x = SMD, y = zfactor)) +
+  geom_line() + xlab("(standardized) mean difference") +
+  ylab("z-factor") + ggtitle("SD1 = SD2 = 1") + 
+  geom_hline(yintercept = 1, linetype = "dotted")
+
+## unequal variances
+delta <- seq(from = 2.5, to = 20, by = 0.05)
+res <- sapply(delta, md2zfactor, sd1 = 1, sd2 = 2)
+DF <- data.frame(MD = delta, zfactor = res)
+ggplot(DF, aes(x = MD, y = zfactor)) +
+  geom_line() + xlab("mean difference") +
+  ylab("z-factor") + ggtitle("SD1 = 1, SD2 = 2") +
+  geom_hline(yintercept = 1, linetype = "dotted")
+```
+
 
 
 ## Repeated Measures One-Way ANOVA
