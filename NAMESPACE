@@ -37,7 +37,8 @@ export(binomCI,
        volcano,
        baplot,
        mdplot,
-       md2sens)
+       md2sens,
+       md2zfactor)
 
 S3method(hsu.t.test, default)
 S3method(hsu.t.test, formula)
