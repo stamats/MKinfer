@@ -37,8 +37,6 @@ boot.t.test(x, \dots)
   \item{symmetric}{a logical variable indicating whether to assume symmetry
     in the two-sided test. If \code{TRUE} then the symmetric bootstrap p value 
     otherwise the equal-tail boostrap p value is computed.}
-  \item{bootDist}{a logical variable that specifies whether the bootstrap
-    distribution should be returned. }
   \item{formula}{a formula of the form \code{lhs ~ rhs} where \code{lhs}
     is a numeric variable giving the data values and \code{rhs} a factor
     with two levels giving the corresponding groups.}

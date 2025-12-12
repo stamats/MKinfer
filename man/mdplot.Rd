@@ -60,4 +60,4 @@ mdplot(delta = 12)
 mdplot(delta = 0.8, sd1 = 1, sd2 = 2)
 mdplot(delta = 0.8, sd1 = 2, sd2 = 1)
 }
-\keyword{univar}
+\keyword{hplot}
