@@ -229,6 +229,15 @@ with(sleep, boot.t.test(extra[group == 1], extra[group == 2]))
 boot.t.test(extra ~ group, data = sleep)
 ```
 
+Using function h0plot the distribution of the bootstrap results of the test
+statistic can be plotted.
+
+```{r, fig.width=7, fig.height=7}
+h0plot(boot.t.test(extra ~ group, data = sleep, bootStat = TRUE))
+h0plot(boot.t.test(extra ~ group, data = sleep, bootStat = TRUE, 
+                   alternative = "less"))
+```
+
 
 ## Permutation t-Test
 One and two sample permutation t-tests with equal [@Efron1993] or unequal 
@@ -246,10 +255,20 @@ res <- perm.t.test(extra ~ group, data = sleep)
 res
 ```
 
+Using function h0plot the distribution of the permutation results of the test
+statistic can be plotted.
+
+```{r, fig.width=7, fig.height=7}
+h0plot(perm.t.test(extra ~ group, data = sleep, permStat = TRUE))
+h0plot(perm.t.test(extra ~ group, data = sleep, permStat = TRUE, 
+                   alternative = "less"))
+```
+
 In case of skewed distributions, one may use function p2ses to compute an
 alternative standardized effect size (SES) as proposed by Botta-Dukat [@BottaDukat2018].
 
 ```{r}
+res <- perm.t.test(extra ~ group, data = sleep)
 p2ses(res$p.value)
 ```
 
