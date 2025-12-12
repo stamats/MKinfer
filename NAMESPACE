@@ -5,9 +5,10 @@ importFrom("boot", "boot", "boot.ci")
 importFrom("arrangements", "permutations", "npermutations")
 importFrom("nlme", "lme", "anova.lme")
 importFrom("ggplot2", "ggplot", "aes", "geom_point", "geom_vline", "geom_hline",
-           "geom_area", "stat_function", "labs", "ggtitle", "scale_x_continuous",
-           "scale_y_continuous", "scale_color_manual", 
-           "xlab", "ylab", "xlim", "ylim", "annotate")
+           "geom_area", "geom_histogram", "geom_density", "stat_function", 
+           "after_stat", "labs", "ggtitle", "scale_x_continuous", 
+           "scale_y_continuous", "scale_color_manual", "xlab", "ylab", 
+           "xlim", "ylim", "annotate")
 importFrom("exactRankTests", "wilcox.exact")
 importFrom("miceadds", "mids2datlist")
 export(binomCI,
@@ -38,7 +39,8 @@ export(binomCI,
        baplot,
        mdplot,
        md2sens,
-       md2zfactor)
+       md2zfactor,
+       h0plot)
 
 S3method(hsu.t.test, default)
 S3method(hsu.t.test, formula)
@@ -58,3 +60,6 @@ S3method(print, perm.htest)
 S3method(print, pw.htest)
 S3method(print, mpe.test)
 S3method(volcano, default)
+S3method(h0plot, default)
+S3method(h0plot, perm.htest)
+S3method(h0plot, boot.htest)

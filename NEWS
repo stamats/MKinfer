@@ -5,14 +5,16 @@
 ###########################################################
 ## Version 1.3
 ###########################################################
-- added functions mdplot and md2plot to plot mean difference of two groups
-  with equal (mdplot) or unequal (md2plot) variances assuming normal 
+- added function mdplot to plot mean difference of two groups assuming normal 
   distributions
 - added function md2sens to compute sensitivity and specificity based on 
-  the optimal cutoff (Youden's J statistic)
-- boot.t.test now can return the bootstrap distribution
-- perm.t.test now can return the permutation distribution
-- new diagnostic plot, to visualize bootstrap and permutation distribution
+  the optimal cutoff (Youden's J statistic) assuming two normal distributions
+- added function md2zfactor to compute the z-factor assuming two normal 
+  distributions
+- boot.t.test now can return the bootstrap results of the test statistic
+- perm.t.test now can return the permutation results of the test statistic
+- new diagnostic plot, to visualize the results of a bootstrap or 
+  permutation test
 
 
 ###########################################################
