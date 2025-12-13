@@ -25,7 +25,7 @@ pairwise.fun <- function (x, g, fun, ...) {
     for(i in seq_len(nr-1))
     for(j in (i+1):nr){
         count <- count + 1
-        Names[count] <- paste(Levels[i], Levels[j], sep = " vs ")
+        Names[count] <- paste(Levels[j], Levels[i], sep = " - ")
     }
 
     names(pp) <- Names
