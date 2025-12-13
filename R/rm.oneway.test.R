@@ -50,10 +50,12 @@ rm.oneway.test <- function (x, g, id, method = "aov") {
   if(method == 3){ ## friedman
     RVAL <- friedman.test(y = x, groups = g, blocks = id)
     RVAL$data.name <- DNAME
+    names(RVAL$statistic) <- "X-squared"
   }
   if(method == 4){ ## quade
     RVAL <- quade.test(y = x, groups = g, blocks = id)
     RVAL$data.name <- DNAME
+    names(RVAL$statistic) <- "F"
   }
   RVAL
 }

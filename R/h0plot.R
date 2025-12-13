@@ -118,7 +118,26 @@ h0plot.htest <- function(x, sig.level = 0.05, hist.alpha = 0.2,
                                     df2 = x$parameter["denom df"]))
     xlim <- c(MIN, MAX)
   }
-  if(!names(x$statistic) %in% c("t", "F")){
+  if(names(x$statistic) == "X-squared"){
+    dfun <- function(x){ }
+    body(dfun) <- substitute({ dchisq(x, df = para) },
+                             list(para = x$parameter))
+    if("alternative" %in% names(x)){
+      if(x$alternative == "two.sided"){
+        cval <- qchisq(p = c(sig.level/2, 1-sig.level/2), df = x$parameter)
+      }else if(x$alternative == "less"){
+        cval <- qchisq(p = sig.level, df = x$parameter)
+      }else{
+        cval <- qchisq(p = 1-sig.level, df = x$parameter)
+      }
+    }else{
+      cval <- qchisq(p = 1-sig.level, df = x$parameter)
+    }
+    MIN <- ifelse(x$parameter == 1, qchisq(qtail, df = x$parameter), 0)
+    MAX <- max(abs(x$statistic), qchisq(1-qtail, df = x$parameter))
+    xlim <- c(MIN, MAX)
+  }
+  if(!names(x$statistic) %in% c("t", "F", "X-squared")){
     stop("Not yet implemented!")
   }
   gg <- ggplot(data = data.frame(x = xlim), aes(x)) +
