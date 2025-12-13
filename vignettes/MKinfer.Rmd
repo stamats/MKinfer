@@ -214,6 +214,13 @@ t.test(extra ~ group, data = sleep)
 hsu.t.test(extra ~ group, data = sleep)
 ```
 
+We compare the result of the Welch t-test and Hsu t-test using function h0plot.
+
+```{r, fig.width=7, fig.height=7}
+h0plot(t.test(extra ~ group, data = sleep))
+h0plot(hsu.t.test(extra ~ group, data = sleep))
+```
+
 
 ## Bootstrap t-Test
 One and two sample bootstrap t-tests with equal or unequal variances in the
@@ -234,8 +241,6 @@ statistic can be plotted.
 
 ```{r, fig.width=7, fig.height=7}
 h0plot(boot.t.test(extra ~ group, data = sleep, bootStat = TRUE))
-h0plot(boot.t.test(extra ~ group, data = sleep, bootStat = TRUE, 
-                   alternative = "less"))
 ```
 
 
@@ -260,8 +265,6 @@ statistic can be plotted.
 
 ```{r, fig.width=7, fig.height=7}
 h0plot(perm.t.test(extra ~ group, data = sleep, permStat = TRUE))
-h0plot(perm.t.test(extra ~ group, data = sleep, permStat = TRUE, 
-                   alternative = "less"))
 ```
 
 In case of skewed distributions, one may use function p2ses to compute an
