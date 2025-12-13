@@ -13,8 +13,8 @@
   distributions
 - boot.t.test now can return the bootstrap results of the test statistic
 - perm.t.test now can return the permutation results of the test statistic
-- new diagnostic plot, to visualize the results of a bootstrap or 
-  permutation test
+- new diagnostic plot h0plot, to visualize the distribution of the test 
+  statistic under H0 with methods for htest, boot.htest, and perm.htest
 
 
 ###########################################################
