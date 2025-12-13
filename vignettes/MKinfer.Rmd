@@ -20,9 +20,10 @@ various confidence intervals [@Altman2000; @Hedderich2018] including bootstrappe
 versions [@Davison1997] as well as Hsu [@Hedderich2018], permutation [@Janssen1997], 
 bootstrap [@Davison1997], intersection-union [@Sozu2015] and multiple imputation 
 [@Barnard1999] t-test; furthermore, computation of intersection-union z-test 
-as well as multiple imputation Wilcoxon tests. Graphical visualizations by volcano 
-and Bland-Altman plots [@Bland1986; @Shieh2018] as well as mean difference plot 
-[@Boehning2008].
+as well as multiple imputation Wilcoxon tests. Graphical visualizations: volcano plot, 
+Bland-Altman plots [@Bland1986; @Shieh2018], mean difference plot [@Boehning2008], 
+plot of test statistic for permutation and bootstrap tests as well as objects 
+of class htest.
 
 We first load the package.
 
