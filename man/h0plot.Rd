@@ -1,9 +1,10 @@
 \name{h0plot}
 \alias{h0plot}
 \alias{h0plot.default}
+\alias{h0plot.htest}
 \alias{h0plot.perm.htest}
 \alias{h0plot.boot.htest}
-\title{ Visualize MD. }
+\title{ Visualize Distribution of Test Statistic. }
 \description{
   The function visualizes the distribution of the test statistic.
 }
@@ -14,6 +15,11 @@ h0plot(x, \dots)
                            hist.alpha = 0.2, stat.col = "darkgreen", dens.col = "black",
                            dens.alpha = 0.5, cval.col = "darkred", lwd = 1, 
                            breaks = NULL, digits = 3, \dots)
+
+\S3method{h0plot}{htest}(x, sig.level = 0.05, hist.alpha = 0.2, 
+                         stat.col = "darkgreen", dens.col = "black",
+                         dens.alpha = 0.5, cval.col = "darkred", lwd = 1, 
+                         breaks = NULL, digits = 3, qtail = 1e-3, n = 501, \dots)
 
 \S3method{h0plot}{perm.htest}(x, sig.level = 0.05, hist.alpha = 0.2, stat.col = "darkgreen", 
                               dens.col = "black", dens.alpha = 0.5, 
@@ -26,7 +32,7 @@ h0plot(x, \dots)
 }
 \arguments{
   \item{x}{ bootstrap/permuation results of the test statistic or result of
-  class \code{perm.htest} or \code{boot.htest}. }
+  class \code{htest}, \code{perm.htest}, or \code{boot.htest}. }
   \item{statistic}{ test statistic of the test on the original data. }
   \item{pval}{ p value of the test. }
   \item{alternative}{a character string specifying the alternative
@@ -45,11 +51,17 @@ h0plot(x, \dots)
     as well ase for \code{geom_density}. }
   \item{breaks}{ argument \code{breaks} of \code{geom_histogram}. }
   \item{digits}{ number of significant digits used for p values. }
+  \item{qtail}{ tail quantile to determine plot limits of x-axis. }
+  \item{n}{ integer; the number of x values at which to evaluate. }
   \item{\dots}{ further arguments that may be passed through.}
 }
 \details{
-  The function can be used to plot the result of a permutation or bootstrap 
-  test.
+  The function can be used to plot the distribution of the test statistic under 
+  H0. 
+  
+  In case of class \code{htest} the implementation so far covers \code{t.test},
+  \code{oneway.test}, and \code{var.test}. In principle, the function should 
+  work for all tests of class \code{htest} returning a t or F statistic.
 }
 \value{\code{ggplot} object}
 \references{
@@ -65,6 +77,20 @@ h0plot(x, \dots)
 }
 \author{ Matthias Kohl \email{Matthias.Kohl@stamats.de}}
 \examples{
+## Welch t-Test
+h0plot(t.test(extra ~ group, data = sleep))
+h0plot(t.test(extra ~ group, data = sleep, alternative = "less"))
+
+## Hsu t-Test
+h0plot(hsu.t.test(extra ~ group, data = sleep))
+h0plot(hsu.t.test(extra ~ group, data = sleep, alternative = "less"))
+
+## Welch 1-Way ANOVA
+h0plot(oneway.test(extra ~ group, data = sleep))
+
+## F test to compare two variances 
+h0plot(var.test(extra ~ group, data = sleep))
+
 ## Bootstrap based Welch t-Test
 h0plot(boot.t.test(extra ~ group, data = sleep, bootStat = TRUE))
 h0plot(boot.t.test(extra ~ group, data = sleep, bootStat = TRUE, 
