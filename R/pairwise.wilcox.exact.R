@@ -29,7 +29,8 @@ pairwise.wilcox.exact <- function(x, g, p.adjust.method = "holm", paired = FALSE
               method = paste0("Pairwise ", method, "s"),
               null.value = null.value,
               alternative = alternative,
-              conf.level = conf.level)
+              conf.level = conf.level,
+              p.adjust.method = p.adjust.method)
   
   res$results <- data.frame(groups = names(wtests),
                             W = statistic,
@@ -78,6 +79,7 @@ print.pw.htest <- function(x, digits = getOption("digits"), prefix = "\t", ...){
   nc <- ncol(x$results)
   x$results[,(nc-4):nc] <- signif(x$results[,(nc-4):nc], digits = digits)
   print(x$results)
+  cat("\nP value adjustment method:", x$p.adjust.method, "\n")
   cat("\n")
   invisible(x)
 }
