@@ -79,7 +79,7 @@ print.pw.htest <- function(x, digits = getOption("digits"), prefix = "\t", ...){
   nc <- ncol(x$results)
   x$results[,(nc-4):nc] <- signif(x$results[,(nc-4):nc], digits = digits)
   print(x$results)
-  cat("\nP value adjustment method:", x$p.adjust.method, "\n")
+  cat("\np value adjustment method:", x$p.adjust.method, "\n")
   cat("\n")
   invisible(x)
 }

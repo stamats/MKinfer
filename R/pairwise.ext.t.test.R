@@ -101,7 +101,7 @@ pairwise.ext.t.test <- function(x, g, method = "t.test", p.adjust.method = "holm
               method = paste0("Pairwise ", METH, "s"),
               null.value = null.value,
               alternative = alternative,
-              conf.level = conf.level
+              conf.level = conf.level,
               p.adjust.method = p.adjust.method)
   if(method == 1 || method == 4)
     res$results <- data.frame(groups = names(ttests),
