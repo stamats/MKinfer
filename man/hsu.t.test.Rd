@@ -48,8 +48,13 @@ hsu.t.test(x, \dots)
   If the input data are effectively constant (compared to the larger of the
   two means) an error is generated.
 
-  One should at least have six observations per group to apply the test; see
-  Section 6.8.3 and 7.4.4.2 of Hedderich and Sachs (2018).
+  Following the recommendation of Section 6.8.3 and 7.4.4.2 of Hedderich and 
+  Sachs (2018), one should at least have six observations per group to apply 
+  the test.
+  
+  The test is conservative, but is a valid alternative when the sample sizes
+  are very small in one group and larger in the second group as considered 
+  in Adusah and Brooks (2011).
 }
 \value{
   A list with class \code{"htest"} containing the following components:
@@ -71,10 +76,15 @@ hsu.t.test(x, \dots)
   \item{data.name}{a character string giving the name(s) of the data.}
 }
 \references{
+  A.K. Adusah, G.P. Brooks (2011). Type I Error Inflation of the Separate-Variances 
+  Welch t test with Very Small Sample Sizes when Assumptions Are Met. 
+  \emph{Journal of Modern Applied Statistical Methods} \bold{10}, 
+  362-372.
+
   J. Hedderich, L. Sachs. \emph{Angewandte Statistik: Methodensammlung mit R}.
   Springer 2018.
   
-  Hsu, P. (1938). Contribution to the theory of ``student's'' t-test as 
+  P. Hsu (1938). Contribution to the theory of ``student's'' t-test as 
   applied to the problem of two samples. \emph{Statistical Research Memoirs} \bold{2}, 
   1-24.
 }
