@@ -130,7 +130,7 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
           DATA <- data.frame(vals = c(x, y), 
                              group = factor(rep(c(1,2), c(nx, ny))))
         }
-        boot.diff.welch <- function(x, i){
+        boot.diff.hsu <- function(x, i){
           xi <- x[i,]
           AMs <- tapply(xi$vals, xi$group, mean)
           d <- -diff(AMs)
@@ -139,7 +139,7 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
           VAR <- Vs[1]/Ns[1] + Vs[2]/Ns[2]
           c(d, VAR)
         } 
-        boot.out <- boot(DATA, statistic = boot.diff.welch, 
+        boot.out <- boot(DATA, statistic = boot.diff.hsu, 
                          strata=DATA$group, R = R, ...)
         CI <- suppressWarnings(boot.ci(boot.out, type = bootci.type, conf = 1 - alpha))
         method <- "Bootstrap confidence interval (unequal variances, unpaired)"
