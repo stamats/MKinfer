@@ -223,6 +223,41 @@ h0plot(hsu.t.test(extra ~ group, data = sleep))
 ```
 
 
+## Xiao Two-Sample t-Test
+The Xiao two-sample t-test is based on the solution of a generalized Behrens-Fisher 
+problem [@Xiao2018] and corresponds to the two-sample test derived in Section 5.3 
+(ibid.). The test is based on a generalized t-distribution.
+
+```{r}
+## Examples taken and adapted from function t.test
+t.test(1:10, y = c(7:20))      # P = .00001855
+t.test(1:10, y = c(7:20, 200)) # P = .1245    -- NOT significant anymore
+xiao.t.test(1:10, y = c(7:20))
+xiao.t.test(1:10, y = c(7:20, 200))
+
+## Traditional interface
+with(sleep, t.test(extra[group == 1], extra[group == 2]))
+with(sleep, xiao.t.test(extra[group == 1], extra[group == 2]))
+## Formula interface
+t.test(extra ~ group, data = sleep)
+xiao.t.test(extra ~ group, data = sleep)
+
+## Example 6.1 in Xiao (2018)
+x <- c(134, 146, 104, 119, 124, 161, 107, 83, 113, 129, 97, 123)
+y <- c(70, 118, 101, 85, 107, 132, 94)
+xiao.t.test(x, y, alternative = "greater")
+t.test(x, y, var.equal = TRUE, alternative = "greater")
+t.test(x, y, alternative = "greater")
+```
+
+We compare the result of the Welch t-test and Xiao t-test using function h0plot.
+
+```{r, fig.width=7, fig.height=7}
+h0plot(t.test(extra ~ group, data = sleep))
+h0plot(xiao.t.test(extra ~ group, data = sleep))
+```
+
+
 ## Bootstrap t-Test
 One and two sample bootstrap t-tests with equal or unequal variances in the
 two sample case [@Efron1993].

@@ -1,6 +1,7 @@
 import("stats")
 importFrom("MKdescr", "CV", "scale_y_neglog10")
 importFrom("rlang", ".data")
+importFrom("hypergeo", "hypergeo")
 importFrom("boot", "boot", "boot.ci")
 importFrom("arrangements", "permutations", "npermutations")
 importFrom("nlme", "lme", "anova.lme")
@@ -16,6 +17,7 @@ export(binomCI,
        boot.t.test,
        cvCI,
        hsu.t.test,
+       xiao.t.test,
        imputeSD,
        madCI,
        medianCI,
@@ -44,6 +46,8 @@ export(binomCI,
 
 S3method(hsu.t.test, default)
 S3method(hsu.t.test, formula)
+S3method(xiao.t.test, default)
+S3method(xiao.t.test, formula)
 S3method(boot.t.test, default)
 S3method(boot.t.test, formula)
 S3method(mi.t.test, default)
