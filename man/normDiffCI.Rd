@@ -35,11 +35,13 @@ meanDiffCI(x, y, conf.level = 0.95, paired = FALSE, method = "welch",
   computed that can be found in many textbooks, e.g. Chapter 4 in Altman et al. (2000).
 
   The method \code{"classical"} assumes equal variances whereas methods
-  \code{"welch"} and \code{"hsu"} allow for unequal variances. The latter two
-  methods use different formulas for computing the degrees of freedom of the
-  respective t-distribution providing the quantiles in the confidence interval.
-  Instead of the Welch-Satterhwaite equation the method of Hsu uses the minimum
-  of the group sample sizes minus 1; see Section 6.8.3 of Hedderich and Sachs (2018).
+  \code{"welch"}, \code{"hsu"} and \code{"xiao"} allow for unequal variances. 
+  \code{"welch"} and \code{"hsu"} use different formulas for computing the degrees 
+  of freedom of the respective t-distribution providing the quantiles in the 
+  confidence interval. Instead of the Welch-Satterhwaite equation the method of Hsu 
+  uses the minimum of the group sample sizes minus 1; see Section 6.8.3 of 
+  Hedderich and Sachs (2018). Method \code{"xiao"} is based on the quantiles of
+  the generalized t-distribution introduced in Section 5.2 of Xiao (2018).
 }
 \value{
   A list with class \code{"confint"} containing the following components:
@@ -54,6 +56,9 @@ meanDiffCI(x, y, conf.level = 0.95, paired = FALSE, method = "welch",
 
   J. Hedderich, L. Sachs. \emph{Angewandte Statistik: Methodensammlung mit R}.
   Springer 2018.
+  
+  Y. Xiao (2018). On the Solution of a Generalized Behrens-Fisher Problem. 
+  \emph{Far East Journal of Theoretical Statistics}, \bold{54} (1), 21-140.
 }
 \author{ Matthias Kohl \email{Matthias.Kohl@stamats.de}}
 %\note{}
@@ -82,7 +87,9 @@ normDiffCI(x, y, method = "welch")
 normDiffCI(x, y, method = "welch", boot = TRUE, R = 999)
 ## Hsu
 normDiffCI(x, y, method = "hsu")
-## In case of bootstrap there is no difference between welch and hsu
+## Xiao
+normDiffCI(x, y, method = "xiao")
+## In case of bootstrap there is no difference between welch, hsu and xiao
 ## (R = 999 to reduce computation time for R checks)
 normDiffCI(x, y, method = "hsu", boot = TRUE, R = 999)
 
@@ -99,13 +106,14 @@ normDiffCI(x, y, method = "welch", boot = TRUE, R = 9999,
 \donttest{
 ## Monte-Carlo simulation: coverage probability
 M <- 100 # increase for more stable/realistic results!
-CIhsu <- CIwelch <- CIclass <- matrix(NA, nrow = M, ncol = 2)
+CIxiao <- CIhsu <- CIwelch <- CIclass <- matrix(NA, nrow = M, ncol = 2)
 for(i in 1:M){
   x <- rnorm(10)
   y <- rnorm(30, sd = 0.1)
   CIclass[i,] <- normDiffCI(x, y, method = "classical")$conf.int
   CIwelch[i,] <- normDiffCI(x, y, method = "welch")$conf.int
   CIhsu[i,] <- normDiffCI(x, y, method = "hsu")$conf.int
+  CIxiao[i,] <- normDiffCI(x, y, method = "xiao")$conf.int
 }
 ## coverage probabilies
 ## classical
@@ -114,6 +122,8 @@ sum(CIclass[,1] < 0 & 0 < CIclass[,2])/M
 sum(CIwelch[,1] < 0 & 0 < CIwelch[,2])/M
 ## Hsu
 sum(CIhsu[,1] < 0 & 0 < CIhsu[,2])/M
+## Xiao
+sum(CIxiao[,1] < 0 & 0 < CIxiao[,2])/M
 }
 }
 \keyword{univar}

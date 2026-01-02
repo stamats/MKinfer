@@ -5,7 +5,7 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
                        alternative = c("two.sided", "less", "greater"), ...){
   if(!is.na(pmatch(method, "welch"))) method <- "welch"
 
-  METHODS <- c("classical", "welch", "hsu")
+  METHODS <- c("classical", "welch", "hsu", "xiao")
   method <- pmatch(method, METHODS)
   
   if (is.na(method))
@@ -130,6 +130,7 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
           DATA <- data.frame(vals = c(x, y), 
                              group = factor(rep(c(1,2), c(nx, ny))))
         }
+        ## same function as in case of welch
         boot.diff.hsu <- function(x, i){
           xi <- x[i,]
           AMs <- tapply(xi$vals, xi$group, mean)
@@ -147,8 +148,46 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
         method <- "Hsu confidence interval (unpaired)"
       }
     }
+    if(method == 4){
+      s <- sqrt(vx + vy)
+      se <- sqrt(vx/nx + vy/ny)
+      if(nx*(nx-1)/vx <= ny*(ny-1)/vy){
+        df <- (ny-1)*(1 + ny/nx*vx/vy)
+      }else{
+        df <- (nx-1)*(1 + nx/ny*vy/vx) 
+      }
+      if(boot){
+        if(na.rm){
+          DATA <- data.frame(vals = c(x[!is.na(x)], y[!is.na(y)]), 
+                             group = factor(rep(c(1,2), c(nx, ny))))
+        }else{
+          DATA <- data.frame(vals = c(x, y), 
+                             group = factor(rep(c(1,2), c(nx, ny))))
+        }
+        ## same function as in case of welch
+        boot.diff.xiao <- function(x, i){
+          xi <- x[i,]
+          AMs <- tapply(xi$vals, xi$group, mean)
+          d <- -diff(AMs)
+          Vs <- tapply(xi$vals, xi$group, mean)
+          Ns <- table(xi$group)
+          VAR <- Vs[1]/Ns[1] + Vs[2]/Ns[2]
+          c(d, VAR)
+        } 
+        boot.out <- boot(DATA, statistic = boot.diff.xiao, 
+                         strata=DATA$group, R = R, ...)
+        CI <- suppressWarnings(boot.ci(boot.out, type = bootci.type, conf = 1 - alpha))
+        method <- "Bootstrap confidence interval (unequal variances, unpaired)"
+      }else{
+        method <- "Xiao confidence interval (unpaired)"
+      }
+    }
     if(!boot){
-      t.alpha <- qt(1-alpha/2, df = df)
+      if(method == 4){
+        t.alpha <- qgt(1-alpha/2, n1 = nx, n2 = ny, sd1 = sqrt(vx), sd2 = sqrt(vy))
+      }else{
+        t.alpha <- qt(1-alpha/2, df = df)
+      }
       ## confidence bounds
       CI.lower <- ifelse(alternative == "less", -Inf, d - t.alpha*se)
       CI.upper <- ifelse(alternative == "greater", Inf, d + t.alpha*se)

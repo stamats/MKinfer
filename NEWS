@@ -8,6 +8,8 @@
 - added name of p adjust method to print method of class pw.htest
 - added function xiao.t.test to compute the Xiao t-test derived from the 
   solution to a generalized Behrens-Fisher problem
+- added Xiao method to normDiffCI
+- added xiao.t.test to pairwise.ext.t.test
 
 
 ###########################################################
