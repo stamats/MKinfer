@@ -6,6 +6,8 @@
 ## Version 1.4
 ###########################################################
 - added name of p adjust method to print method of class pw.htest
+- added functions to compute the generalized central t-distribution 
+  defined in Section 5.3 of Xiao (2018).
 - added function xiao.t.test to compute the Xiao t-test derived from the 
   solution to a generalized Behrens-Fisher problem
 - added Xiao method to normDiffCI

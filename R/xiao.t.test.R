@@ -1,21 +1,3 @@
-## generalized central t distribution as defined in Section 5.2 in Xiao (2018)
-dgt <- function(x, n1, n2, sd1, sd2){
-  T1 <- (n2-1)*(1 + n2/n1*sd1^2/sd2^2)
-  T2 <- (n1-1)*n1*sd2^2/((n2-1)*n2*sd1^2)
-  T3 <- Re(hypergeo((n1+n2-1)/2, (n1-1)/2, (n1+n2-2)/2, 1 - (T2+x^2/T1)/(1+x^2/T1)))
-  1/sqrt(pi*T1)*gamma((n1+n2-1)/2)/gamma((n1+n2-2)/2)*
-    (1+x^2/T1)^(-(n1+n2-1)/2)*T2^((n1-1)/2)*T3
-}
-pgt <- function(q, n1, n2, sd1, sd2, lower.tail = TRUE){
-  ifelse(lower.tail, 
-         integrate(f = dgt, lower = -Inf, upper = q, n1 = n1, n2 = n2, sd1 = sd1, sd2 = sd2)$value,
-         integrate(f = dgt, lower = q, upper = Inf, n1 = n1, n2 = n2, sd1 = sd1, sd2 = sd2)$value)
-}
-qgt <- function(p, n1, n2, sd1, sd2, tol = .Machine$double.eps^0.5){
-  uniroot(f = function(q, p, n1, n2, sd1, sd2){ pgt(q, n1 = n1, n2 = n2, sd1 = sd1, sd2 = sd2) - p },
-          lower = -5, upper = 5, extendInt = "yes", 
-          n1 = n1, n2 = n2, sd1 = sd1, sd2 = sd2, p = p, tol = tol)$root
-}
 xiao.t.test <- function(x, ...){
     UseMethod("xiao.t.test")
 }

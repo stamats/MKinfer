@@ -233,6 +233,48 @@ The Xiao two-sample t-test is based on the solution of a generalized Behrens-Fis
 problem [@Xiao2018] and corresponds to the two-sample test derived in Section 5.3 
 (ibid.). The test is based on a generalized t-distribution.
 
+```{r, fig.height = 7, fig.width = 7}
+## equal variances
+dgt(0, n1 = 5, n2 = 10, sd1 = 1, sd2 = 1)
+dt(0, df = 5+10-2)
+
+pgt(2, n1 = 5, n2 = 10, sd1 = 1, sd2 = 1)
+pt(2, df = 5+10-2)
+
+qgt(0.975, n1 = 5, n2 = 10, sd1 = 1, sd2 = 1)
+qt(0.975, df = 5+10-2)
+
+library(ggplot2)
+ggplot(data = data.frame(x = c(-4, 4)), aes(x)) +
+    stat_function(fun = function(x) dgt(x, n1 = 5, n2 = 10, sd1 = 1, sd2 = 1), 
+                  n = 101, col = "darkblue", lwd = 1) + 
+    stat_function(fun = function(x) dt(x, df = 5+10-2), 
+                  n = 101, col = "darkgreen", lwd = 1) + ylab("density") +
+    ggtitle("Generalized central (blue) t vs. Student t Distribution (green)")
+                  
+
+## unequal variances
+nu <- (1^2/5+5^2/10)^2/(1^4/(5^2*(5-1)) + 5^4/(10^2*(10-1)))
+dgt(0, n1 = 5, n2 = 10, sd1 = 1, sd2 = 5)
+dt(0, df = nu)
+
+pgt(2, n1 = 5, n2 = 10, sd1 = 1, sd2 = 1)
+pt(2, df = nu)
+
+qgt(0.975, n1 = 5, n2 = 10, sd1 = 1, sd2 = 1)
+qt(0.975, df = nu)
+
+ggplot(data = data.frame(x = c(-4, 4)), aes(x)) +
+    stat_function(fun = function(x) dgt(x, n1 = 5, n2 = 10, sd1 = 1, sd2 = 5), 
+                  n = 101, col = "darkblue", lwd = 1) + 
+    stat_function(fun = function(x) dt(x, df = nu), 
+                  n = 101, col = "darkred", linetype = "dashed", lwd = 1) + 
+    ylab("density") +
+    ggtitle("Generalized central t (blue) vs. Welch t Distribution (red)")
+```
+
+We compute the Xiao t-test.
+
 ```{r}
 ## Examples taken and adapted from function t.test
 t.test(1:10, y = c(7:20))      # P = .00001855

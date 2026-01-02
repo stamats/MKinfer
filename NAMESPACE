@@ -42,7 +42,10 @@ export(binomCI,
        mdplot,
        md2sens,
        md2zfactor,
-       h0plot)
+       h0plot,
+       dgt,
+       pgt,
+       qgt)
 
 S3method(hsu.t.test, default)
 S3method(hsu.t.test, formula)
