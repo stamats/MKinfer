@@ -43,8 +43,6 @@ xiao.t.test.default <- function (x, y, alternative = c("two.sided", "less", "gre
   vy <- var(y)
   estimate <- c(mx, my, sqrt(vx), sqrt(vy))
   names(estimate) <- c("mean of x", "mean of y", "SD of x", "SD of y")
-  if(nx < 6 || ny < 6)
-    warning("For xiao t-test the sample size per group should be > 5.")
   s <- sqrt(vx + vy)
   se <- sqrt(vx/nx + vy/ny)
   if(nx*(nx-1)/vx <= ny*(ny-1)/vy){
