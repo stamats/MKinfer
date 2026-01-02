@@ -3,7 +3,7 @@ pairwise.ext.t.test <- function(x, g, method = "t.test", p.adjust.method = "holm
   DNAME <- paste(deparse1(substitute(x)), "and", deparse1(substitute(g)))
   if (!is.na(pmatch(method, "t.test")))
     method <- "t.test"
-  METHODS <- c("t.test", "boot.t.test", "perm.t.test", "hsu.t.test")
+  METHODS <- c("t.test", "boot.t.test", "perm.t.test", "hsu.t.test", "xiao.t.test")
   method <- pmatch(method, METHODS)
   
   if (is.na(method))
@@ -27,8 +27,25 @@ pairwise.ext.t.test <- function(x, g, method = "t.test", p.adjust.method = "holm
     }
   }
   if(method == 4){ # hsu.t.test
-    tfun <- function(x, y, paired, ...){ 
-      hsu.t.test(x, y, paired = paired, ...)
+    if(paired){
+      tfun <- function(x, y, paired, ...){ 
+        t.test(x, y, paired = paired, ...)
+      }
+    }else{
+      tfun <- function(x, y, paired, ...){ 
+        hsu.t.test(x, y, ...)
+      }
+    }
+  }
+  if(method == 5){ # xiao.t.test
+    if(paired){
+      tfun <- function(x, y, paired, ...){ 
+        t.test(x, y, paired = paired, ...)
+      }
+    }else{
+      tfun <- function(x, y, paired, ...){ 
+        xiao.t.test(x, y, ...)
+      }
     }
   }
   ttests <- pairwise.fun(x = x, g = g, fun = tfun, paired = paired, ...)
@@ -46,7 +63,7 @@ pairwise.ext.t.test <- function(x, g, method = "t.test", p.adjust.method = "holm
   names(statistic) <- NULL
   parameter <- unlist(sapply(ttests, "[", "parameter"))
   names(parameter) <- NULL
-  if(method == 1 || method == 4){
+  if(method == 1 || method == 4 || method == 5){
     if(!paired){
       estimate <- (sapply(sapply(ttests, "[", "estimate"), "[", 1) - 
                      sapply(sapply(ttests, "[", "estimate"), "[", 2))
@@ -59,14 +76,14 @@ pairwise.ext.t.test <- function(x, g, method = "t.test", p.adjust.method = "holm
   if(method == 3)
     estimate <- unlist(sapply(ttests, "[", "perm.estimate"))
   names(estimate) <- NULL
-  if(method == 1 || method == 4)
+  if(method == 1 || method == 4 || method == 5)
     stderr <- unlist(sapply(ttests, "[", "stderr"))
   if(method == 2)
     stderr <- unlist(sapply(ttests, "[", "boot.stderr"))
   if(method == 3)
     stderr <- unlist(sapply(ttests, "[", "perm.stderr"))
   names(stderr) <- NULL
-  if(method == 1 || method == 4){
+  if(method == 1 || method == 4 || method == 5){
     CI.low <- sapply(sapply(ttests, "[", "conf.int"), "[", 1)
     names(CI.low) <- NULL
     CI.upp <- sapply(sapply(ttests, "[", "conf.int"), "[", 2)
@@ -86,7 +103,7 @@ pairwise.ext.t.test <- function(x, g, method = "t.test", p.adjust.method = "holm
   }
   conf.level <- attr(ttests[[1]]$conf.int, which="conf.level")
   names(conf.level) <- NULL
-  if(method == 1 || method == 4){
+  if(method == 1 || method == 4 || method == 5){
     p.value <- unlist(sapply(ttests, "[", "p.value"))
   }
   if(method == 2){
@@ -103,7 +120,7 @@ pairwise.ext.t.test <- function(x, g, method = "t.test", p.adjust.method = "holm
               alternative = alternative,
               conf.level = conf.level,
               p.adjust.method = p.adjust.method)
-  if(method == 1 || method == 4)
+  if(method == 1 || method == 4 || method == 5)
     res$results <- data.frame(groups = names(ttests),
                               t = statistic,
                               df = parameter,
@@ -120,7 +137,7 @@ pairwise.ext.t.test <- function(x, g, method = "t.test", p.adjust.method = "holm
                               CI.upp = CI.upp,
                               p.value = p.value)
   
-  if(method == 1 || method == 4){
+  if(method == 1 || method == 4 || method == 5){
     if(!paired){
       names(res$results)[4] <- "diff. in means"
     } else {
@@ -135,7 +152,7 @@ pairwise.ext.t.test <- function(x, g, method = "t.test", p.adjust.method = "holm
   }
   res$results$adj.p.value <- p.adjust(res$results$p.value, 
                                       method = p.adjust.method)
-  if(method == 1 || method == 4){
+  if(method == 1 || method == 4 || method == 5){
     names(res$results)[5] <- "SE"
     names(res$results)[6] <- paste0(100*(1-conf.level)/2, "%")
     names(res$results)[7] <- paste0(100*(1-(1-conf.level)/2), "%")
