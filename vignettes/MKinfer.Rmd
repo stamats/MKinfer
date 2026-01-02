@@ -17,13 +17,13 @@ vignette: >
 
 Package MKinfer includes a collection of functions for the computation of 
 various confidence intervals [@Altman2000; @Hedderich2018] including bootstrapped 
-versions [@Davison1997] as well as Hsu [@Hedderich2018], permutation [@Janssen1997], 
-bootstrap [@Davison1997], intersection-union [@Sozu2015] and multiple imputation 
-[@Barnard1999] t-test; furthermore, computation of intersection-union z-test 
-as well as multiple imputation Wilcoxon tests. Graphical visualizations: volcano plot, 
-Bland-Altman plots [@Bland1986; @Shieh2018], mean difference plot [@Boehning2008], 
-plot of test statistic for permutation and bootstrap tests as well as objects 
-of class htest.
+versions [@Davison1997] as well as Xiao [@Xiao2018], Hsu [@Hedderich2018], 
+permutation [@Janssen1997], bootstrap [@Davison1997], intersection-union [@Sozu2015] 
+and multiple imputation [@Barnard1999] t-test; furthermore, computation of 
+intersection-union z-test as well as multiple imputation Wilcoxon tests. 
+Graphical visualizations: volcano plot, Bland-Altman plots [@Bland1986; @Shieh2018], 
+mean difference plot [@Boehning2008], plot of test statistic for permutation and 
+bootstrap tests as well as objects of class htest.
 
 We first load the package.
 
@@ -89,7 +89,7 @@ meanCI(x, boot = TRUE)
 
 ### Difference in Means
 We can compute confidence interval for the difference of means [@Altman2000; 
-@Hedderich2018; @Davison1997].
+@Hedderich2018; @Davison1997; @Xiao2018].
 
 ```{r}
 x <- rnorm(20)
@@ -109,6 +109,8 @@ normDiffCI(x, y, method = "classical")
 normDiffCI(x, y, method = "welch")
 ## Hsu
 normDiffCI(x, y, method = "hsu")
+## Xiao
+normDiffCI(x, y, method = "xiao")
 ## bootstrap: assuming equal variances
 normDiffCI(x, y, method = "classical", boot = TRUE, bootci.type = "bca")
 ## bootstrap: assuming unequal variances
@@ -121,13 +123,14 @@ indicated by the small Monte-Carlo simulation study below.
 
 ```{r}
 M <- 100
-CIhsu <- CIwelch <- CIclass <- matrix(NA, nrow = M, ncol = 2)
+CIxiao <- CIhsu <- CIwelch <- CIclass <- matrix(NA, nrow = M, ncol = 2)
 for(i in 1:M){
   x <- rnorm(10)
   y <- rnorm(30, sd = 0.1)
   CIclass[i,] <- normDiffCI(x, y, method = "classical")$conf.int
   CIwelch[i,] <- normDiffCI(x, y, method = "welch")$conf.int
   CIhsu[i,] <- normDiffCI(x, y, method = "hsu")$conf.int
+  CIxiao[i,] <- normDiffCI(x, y, method = "xiao")$conf.int
 }
 ## coverage probabilies
 ## classical
@@ -136,6 +139,8 @@ sum(CIclass[,1] < 0 & 0 < CIclass[,2])/M
 sum(CIwelch[,1] < 0 & 0 < CIwelch[,2])/M
 ## Hsu
 sum(CIhsu[,1] < 0 & 0 < CIhsu[,2])/M
+## Xiao
+sum(CIxiao[,1] < 0 & 0 < CIxiao[,2])/M
 ```
 
 
@@ -542,8 +547,8 @@ y2 <- matrix(rnorm(500, mean = 9.75, sd = 3), nrow = 10)
 g2 <- rep("treatment", 10)
 group <- factor(c(g1, g2))
 Data <- rbind(x, cbind(y1, y2))
-## compute Hsu t-test
-pvals <- apply(Data, 2, function(x, group) hsu.t.test(x ~ group)$p.value,
+## compute Xiao t-test
+pvals <- apply(Data, 2, function(x, group) xiao.t.test(x ~ group)$p.value,
                group = group)
 ## compute log-fold change
 logfc <- function(x, group){
@@ -635,13 +640,15 @@ pairwise.wilcox.exact(airquality$Ozone, airquality$Month)
 ```
 
 Furthermore, function pairwise.ext.t.test also enables pairwise Student, Welch,
-Hsu, bootstrap and permutation t tests.
+Hsu, Xiao, bootstrap and permutation t tests.
 
 ```{r}
 pairwise.t.test(airquality$Ozone, airquality$Month, pool.sd = FALSE)
 pairwise.ext.t.test(airquality$Ozone, airquality$Month)
 pairwise.ext.t.test(airquality$Ozone, airquality$Month,
                     method = "hsu.t.test")
+pairwise.ext.t.test(airquality$Ozone, airquality$Month,
+                    method = "xiao.t.test")
 pairwise.ext.t.test(airquality$Ozone, airquality$Month, 
                     method = "boot.t.test")
 pairwise.ext.t.test(airquality$Ozone, airquality$Month, 
