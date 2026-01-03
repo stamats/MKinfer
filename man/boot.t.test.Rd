@@ -58,6 +58,10 @@ boot.t.test(x, \dots)
   The implemented test corresponds to the proposal of Chapter 16 of
   Efron and Tibshirani (1993).
   
+  Janssen and Pauls (2003) state in Example 5 (c) about Bootstrap two-sample tests:
+  "From the previous comments it is clear that permutation tests should always be 
+  preferred for two-sample problems."
+
   The function returns bootstrapped p values and confidence intervals
   as well as the results ot the t-test without bootstrap.
 
@@ -106,6 +110,9 @@ boot.t.test(x, \dots)
 \references{
   B. Efron, R.J. Tibshirani. \emph{An Introduction to the Bootstrap}.
   Chapman and Hall/CRC 1993.
+  
+  A. Janssen, T. Pauls. How do bootstrap and permutation tests work?. 
+  \emph{Ann. Statist.}, \bold{31}(3), 768-806.
 }
 \seealso{
   \code{\link{t.test}}, \code{\link{meanCI}}, \code{\link{meanDiffCI}},
