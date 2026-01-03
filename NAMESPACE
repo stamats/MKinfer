@@ -12,7 +12,7 @@ importFrom("ggplot2", "ggplot", "aes", "geom_point", "geom_vline", "geom_hline",
                       "xlim", "ylim", "annotate")
 importFrom("exactRankTests", "wilcox.exact")
 importFrom("miceadds", "mids2datlist")
-importFrom("parallel", "detectCores", "makeCluster", "clusterExport", 
+importFrom("parallel", "detectCores", "makePSOCKcluster", "clusterExport", 
                        "parRapply", "stopCluster")
 export(binomCI,
        binomDiffCI,

@@ -47,13 +47,19 @@ pgt <- function(q, n1, n2, sd1, sd2, lower.tail = TRUE, log.p = FALSE,
     }
     if(parallel){
       if(is.null(cl)){
-        ncores <- detectCores()
-        cl <- makeCluster(ncores[1]-1)
+        ncores <- detectCores()-1
+        cl <- makePSOCKcluster(rep("localhost", ncores))
+        clusterExport(cl, list("dgt"), 
+                      envir = as.environment("package:MKinfer"))
+        res <- parRapply(cl = cl, x = ARGS, FUN = dfun, lower.tail = lower.tail, 
+                         rel.tol = rel.tol)
+        stopCluster(cl)
+      }else{
+        clusterExport(cl, list("dgt"), 
+                      envir = as.environment("package:MKinfer"))
+        res <- parRapply(cl = cl, x = ARGS, FUN = dfun, lower.tail = lower.tail, 
+                         rel.tol = rel.tol)
       }
-      clusterExport(cl, list("dgt", "hypergeo"))
-      res <- parRapply(cl = cl, x = ARGS, FUN = dfun, lower.tail = lower.tail, 
-                       rel.tol = rel.tol)
-      stopCluster(cl)
     }else{
       res <- apply(ARGS, 1, dfun, lower.tail = lower.tail, rel.tol = rel.tol)
     }
@@ -83,13 +89,19 @@ qgt <- function(p, n1, n2, sd1, sd2, lower.tail = TRUE, log.p = FALSE,
     }
     if(parallel){
       if(is.null(cl)){
-        ncores <- detectCores()
-        cl <- makeCluster(ncores[1]-1)
+        ncores <- detectCores()-1
+        cl <- makePSOCKcluster(rep("localhost", ncores))
+        clusterExport(cl, list("pgt"), 
+                      envir = as.environment("package:MKinfer"))
+        res <- parRapply(cl = cl, x = ARGS, FUN = qfun, lower.tail = lower.tail, 
+                         tol = tol, MIN = MIN, MAX = MAX)
+        stopCluster(cl)
+      }else{
+        clusterExport(cl, list("pgt"), 
+                      envir = as.environment("package:MKinfer"))
+        res <- parRapply(cl = cl, x = ARGS, FUN = qfun, lower.tail = lower.tail, 
+                         tol = tol, MIN = MIN, MAX = MAX)
       }
-      clusterExport(cl, list("pgt", "dgt", "hypergeo"))
-      res <- parRapply(cl = cl, x = ARGS, FUN = qfun, lower.tail = lower.tail, 
-                       tol = tol, MIN = MIN, MAX = MAX)
-      stopCluster(cl)
     }else{
       res <- apply(ARGS, 1, qfun, lower.tail = lower.tail, tol = tol, MIN = MIN, MAX = MAX)
     }

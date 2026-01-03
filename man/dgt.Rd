@@ -94,5 +94,13 @@ qgt(p, n1, n2, sd1, sd2, lower.tail = TRUE, log.p = FALSE,
                     n = 101, col = "darkred", linetype = "dashed", lwd = 1) + 
       ylab("density") +
       ggtitle("Generalized Central t (blue) vs. Welch t Distribution (red)")
+  
+  \dontrun{
+    ## parallel computing
+    pgt(seq(from = -2, to = 2, length = 30), n1 = 5, n2 = 10, sd1 = 1, sd2 = 5, 
+        parallel = TRUE)
+    qgt(seq(from = 0.1, to = 0.9, length = 30), n1 = 5, n2 = 10, sd1 = 1, sd2 = 5, 
+  +     parallel = TRUE)
+  }    
 }
 \keyword{distribution}
