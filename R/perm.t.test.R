@@ -1,12 +1,23 @@
-sample.perm <- function(x, k = NULL, R = 1000, replace = FALSE){
+sample.perm <- function(x, k, nx = NULL, R, replace = FALSE, useCombn = FALSE){
   if(is.null(k)) k <- length(x)
-  max.R <- try(npermutations(x, k = k, replace = replace), silent = TRUE)
+  
+  if(useCombn){
+    max.R <- choose(k, nx)
+  }else{
+    max.R <- try(npermutations(x, k = k, replace = replace), silent = TRUE)
+  }
   if(inherits(max.R, "try-error")) max.R <- Inf
   if(max.R < R){
-    warning("The requested number of permutations (", R, ") is larger than ",
+    message("The requested number of permutations (", R, ") is larger than ",
             "the total number of possible permutations (", max.R, ").\n",
             "Hence all possible permutations are computed.")
-    res <- permutations(x, k = k, replace = replace)
+    if(useCombn){
+      res1 <- combinations(x, k = nx, replace = replace)
+      res2 <- combinations(x, k = k-nx, replace = replace)
+      res <- cbind(res1, res2[nrow(res2):1,])
+    }else{
+      res <- permutations(x, k = k, replace = replace)
+    }
   }else{
     res <- NULL
     iter <- R
@@ -27,7 +38,7 @@ perm.t.test <- function (x, ...){
 perm.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less", "greater"), 
                         mu = 0, paired = FALSE, var.equal = FALSE, 
                         conf.level = 0.95, R = 9999, symmetric = TRUE, 
-                        permStat = FALSE, ...){
+                        permStat = FALSE, useCombn = FALSE, ...){
   alternative <- match.arg(alternative)
   if(!missing(mu) && (length(mu) != 1 || is.na(mu))) 
     stop("'mu' must be a single number")
@@ -97,7 +108,7 @@ perm.t.test.default <- function(x, y = NULL, alternative = c("two.sided", "less"
     estimate <- c(mx, my)
     names(estimate) <- c("mean of x", "mean of y")
     z <- c(x, y)
-    Z <- sample.perm(z, k = nx+ny, R = R)
+    Z <- sample.perm(z, k = nx+ny, nx = nx, R = R, useCombn = useCombn)
     R.true <- nrow(Z)
     X <- Z[,1:nx]
     Y <- Z[,(nx+1):(nx+ny)]

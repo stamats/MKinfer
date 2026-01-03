@@ -13,7 +13,7 @@ perm.t.test(x, \dots)
        alternative = c("two.sided", "less", "greater"),
        mu = 0, paired = FALSE, var.equal = FALSE,
        conf.level = 0.95, R = 9999, symmetric = TRUE, 
-       permStat = FALSE, \dots)
+       permStat = FALSE, useCombn = FALSE, \dots)
 
 \method{perm.t.test}{formula}(formula, data, subset, na.action, \dots)
 }
@@ -52,6 +52,8 @@ perm.t.test(x, \dots)
   \item{permStat}{ logical; should the permutation results for the test statistic 
     be returned. If \code{TRUE}, function \code{h0plot} can be used to plot the 
     distribution of the results. }
+  \item{useCombn}{ logical; use all combinations instead of permutations in the
+    case of the two-sample t-test; see Details. }
   \item{\dots}{further arguments to be passed to or from methods.}
 }
 \details{
@@ -59,8 +61,19 @@ perm.t.test(x, \dots)
   Efron and Tibshirani (1993) for equal variances as well as Janssen (1997)
   respectively Chung and Romano (2013) for unequal variances.
   
+  Janssen and Pauls (2003) state in Example 5 (c) about Bootstrap two-sample tests:
+  "From the previous comments it is clear that permutation tests should always be 
+  preferred for two-sample problems."
+  
   The function returns permutation p values and confidence intervals
   as well as the results ot the t-test without permutations.
+  If \code{useCombn} in \code{TRUE} in the two-sample case, then all combinations
+  instead of all permutations are used. This option only has an effect for 
+  small sample sizes when the number of all combinations/permutations is smaller
+  than \code{R}. In principle, the results should be identical in this case.
+  However, the difference in the number of permutations/combinations can have a 
+  minor effect on p values, confidence intervals as well as the distribution of 
+  the test statistic.
 
   The formula interface is only applicable for the 2-sample tests.
 
@@ -103,6 +116,7 @@ perm.t.test(x, \dots)
   \item{method}{a character string indicating what type of t-test was
     performed.}
   \item{data.name}{a character string giving the name(s) of the data.}
+  \item{perm.statistic}{ \code{NULL} or numeric vector with permutation results.}
 }
 \references{
   B. Efron, R.J. Tibshirani. \emph{An Introduction to the Bootstrap}.
@@ -111,6 +125,9 @@ perm.t.test(x, \dots)
   A. Janssen (1997). Studentized permutation tests for non-i.i.d, hypotheses 
   and the generalized Behrens-Fisher problem. 
   \emph{Statistics and Probability Letters}, \bold{36}, 9-21.
+  
+  A. Janssen, T. Pauls. How do bootstrap and permutation tests work?. 
+  \emph{Ann. Statist.}, \bold{31}(3), 768-806.
   
   E. Chung, J.P. Romano (2013). Exact and asymptotically robust permutation
   tests. \emph{The Annals of Statistics}, \bold{41}(2), 484-507.
@@ -141,5 +158,9 @@ with(sleep, perm.t.test(extra[group == 1], extra[group == 2]))
 ## Formula interface
 t.test(extra ~ group, data = sleep)
 perm.t.test(extra ~ group, data = sleep)
+
+## all permutations vs combinations
+perm.t.test(1:3, y = 2:5, useCombn = TRUE)
+perm.t.test(1:3, y = 2:5, useCombn = FALSE)
 }
 \keyword{htest}

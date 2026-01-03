@@ -3,7 +3,7 @@ importFrom("MKdescr", "CV", "scale_y_neglog10")
 importFrom("rlang", ".data")
 importFrom("hypergeo", "hypergeo")
 importFrom("boot", "boot", "boot.ci")
-importFrom("arrangements", "permutations", "npermutations")
+importFrom("arrangements", "permutations", "npermutations", "combinations")
 importFrom("nlme", "lme", "anova.lme")
 importFrom("ggplot2", "ggplot", "aes", "geom_point", "geom_vline", "geom_hline",
            "geom_area", "geom_histogram", "geom_density", "stat_function", 
