@@ -6,12 +6,14 @@ importFrom("boot", "boot", "boot.ci")
 importFrom("arrangements", "permutations", "npermutations", "combinations")
 importFrom("nlme", "lme", "anova.lme")
 importFrom("ggplot2", "ggplot", "aes", "geom_point", "geom_vline", "geom_hline",
-           "geom_area", "geom_histogram", "geom_density", "stat_function", 
-           "after_stat", "labs", "ggtitle", "scale_x_continuous", 
-           "scale_y_continuous", "scale_color_manual", "xlab", "ylab", 
-           "xlim", "ylim", "annotate")
+                      "geom_area", "geom_histogram", "geom_density", "stat_function", 
+                      "after_stat", "labs", "ggtitle", "scale_x_continuous", 
+                      "scale_y_continuous", "scale_color_manual", "xlab", "ylab", 
+                      "xlim", "ylim", "annotate")
 importFrom("exactRankTests", "wilcox.exact")
 importFrom("miceadds", "mids2datlist")
+importFrom("parallel", "detectCores", "makeCluster", "clusterExport", 
+                       "parRapply", "stopCluster")
 export(binomCI,
        binomDiffCI,
        boot.t.test,

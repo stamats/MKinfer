@@ -24,7 +24,8 @@ dgt <- function(x, n1, n2, sd1, sd2, log = FALSE, MAX = 1e4){
 }
 
 pgt <- function(q, n1, n2, sd1, sd2, lower.tail = TRUE, log.p = FALSE, 
-                rel.tol = .Machine$double.eps^0.25){
+                rel.tol = .Machine$double.eps^0.25, parallel = FALSE, 
+                cl = NULL){
   if(max(c(length(q), length(n1), length(n2), length(sd1), length(sd2))) == 1){
     if(lower.tail){
       res <- integrate(f = dgt, lower = -Inf, upper = q, n1 = n1, n2 = n2, 
@@ -44,13 +45,25 @@ pgt <- function(q, n1, n2, sd1, sd2, lower.tail = TRUE, log.p = FALSE,
                          n2 = args[3], sd1 = args[4], sd2 = args[5], rel.tol = rel.tol)$value
       }
     }
-    res <- apply(ARGS, 1, dfun, lower.tail = lower.tail, rel.tol = rel.tol)
+    if(parallel){
+      if(is.null(cl)){
+        ncores <- detectCores()
+        cl <- makeCluster(ncores[1]-1)
+      }
+      clusterExport(cl, list("dgt", "hypergeo"))
+      res <- parRapply(cl = cl, x = ARGS, FUN = dfun, lower.tail = lower.tail, 
+                       rel.tol = rel.tol)
+      stopCluster(cl)
+    }else{
+      res <- apply(ARGS, 1, dfun, lower.tail = lower.tail, rel.tol = rel.tol)
+    }
   }
   if(log.p) res <- log(res)
   res
 }
 
-qgt <- function(p, n1, n2, sd1, sd2, lower.tail = TRUE, log.p = FALSE, tol = .Machine$double.eps^0.5){
+qgt <- function(p, n1, n2, sd1, sd2, lower.tail = TRUE, log.p = FALSE, 
+                tol = .Machine$double.eps^0.5, parallel = FALSE, cl = NULL){
   MIN <- -15
   MAX <- 15
   if(log.p) p <- exp(p)
@@ -68,7 +81,18 @@ qgt <- function(p, n1, n2, sd1, sd2, lower.tail = TRUE, log.p = FALSE, tol = .Ma
               n1 = args[2], n2 = args[3], sd1 = args[4], sd2 = args[5], 
               p = args[1], lower.tail = lower.tail, tol = tol)$root
     }
-    res <- apply(ARGS, 1, qfun, lower.tail = lower.tail, tol = tol, MIN = MIN, MAX = MAX)
+    if(parallel){
+      if(is.null(cl)){
+        ncores <- detectCores()
+        cl <- makeCluster(ncores[1]-1)
+      }
+      clusterExport(cl, list("pgt", "dgt", "hypergeo"))
+      res <- parRapply(cl = cl, x = ARGS, FUN = qfun, lower.tail = lower.tail, 
+                       tol = tol, MIN = MIN, MAX = MAX)
+      stopCluster(cl)
+    }else{
+      res <- apply(ARGS, 1, qfun, lower.tail = lower.tail, tol = tol, MIN = MIN, MAX = MAX)
+    }
   }
   res
 }
