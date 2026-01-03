@@ -67,7 +67,7 @@ perm.t.test(x, \dots)
   
   The function returns permutation p values and confidence intervals
   as well as the results ot the t-test without permutations.
-  If \code{useCombn} in \code{TRUE} in the two-sample case, then all combinations
+  If \code{useCombn} is \code{TRUE} in the two-sample case, then all combinations
   instead of all permutations are used. This option only has an effect for 
   small sample sizes when the number of all combinations/permutations is smaller
   than \code{R}. In principle, the results should be identical in this case.
