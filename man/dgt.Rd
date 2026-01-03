@@ -68,7 +68,7 @@ ggplot(data = data.frame(x = c(-4, 4)), aes(x)) +
                   n = 101, col = "darkblue", lwd = 1) + 
     stat_function(fun = function(x) dt(x, df = 5+10-2), 
                   n = 101, col = "darkgreen", lwd = 1) + ylab("density") +
-    ggtitle("Generalized central (blue) t vs. Student t Distribution (green)")
+    ggtitle("Generalized Central (blue) t vs. Student t Distribution (green)")
                   
 
 ## unequal variances
@@ -88,6 +88,6 @@ ggplot(data = data.frame(x = c(-4, 4)), aes(x)) +
     stat_function(fun = function(x) dt(x, df = nu), 
                   n = 101, col = "darkred", linetype = "dashed", lwd = 1) + 
     ylab("density") +
-    ggtitle("Generalized central t (blue) vs. Welch t Distribution (red)")
+    ggtitle("Generalized Central t (blue) vs. Welch t Distribution (red)")
 }
 \keyword{distribution}
