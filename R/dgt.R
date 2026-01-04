@@ -1,3 +1,14 @@
+## Gauss-Legendre integration if integrate fails
+.GLInt <- function(f, lower, upper, ...){
+  AW <- getFromNamespace(".AW.500", ns = "MKinfer")
+  
+  # transformation to [lower, upper]
+  xl <- (upper - lower)/2
+  W <- xl*AW[,2]
+  A <- xl*AW[,1] + (lower + upper)/2
+  
+  sum(W*c(f(A, ...)))
+}
 ## generalized central t distribution as defined in Section 5.2 in Xiao (2018)
 dgt <- function(x, n1, n2, v1tov2, log = FALSE, MAX = 1e4){
   T1 <- (n2-1)*(1 + n2/n1*v1tov2)
@@ -28,22 +39,43 @@ pgt <- function(q, n1, n2, v1tov2, lower.tail = TRUE, log.p = FALSE,
                 cl = NULL){
   if(max(c(length(q), length(n1), length(n2), length(v1tov2))) == 1){
     if(lower.tail){
-      res <- integrate(f = dgt, lower = -Inf, upper = q, n1 = n1, n2 = n2, 
-                       v1tov2, rel.tol = rel.tol)$value
+      res <- try(integrate(f = dgt, lower = -Inf, upper = q, n1 = n1, n2 = n2, 
+                           v1tov2 = v1tov2, rel.tol = rel.tol)$value,
+                 silent = TRUE)
+      if(inherits(res, "try-error")){
+        res <- .GLInt(f = dgt, lower = q-20, upper = q, n1 = n1, n2 = n2, 
+                      v1tov2 = v1tov2)
+      }
     }else{
-      res <- integrate(f = dgt, lower = q, upper = Inf, n1 = n1, n2 = n2, 
-                       v1tov2, rel.tol = rel.tol)$value
+      res <- try(integrate(f = dgt, lower = q, upper = Inf, n1 = n1, n2 = n2, 
+                           v1tov2, rel.tol = rel.tol)$value,
+                 silent = TRUE)
+      if(inherits(res, "try-error")){
+        res <- .GLInt(f = dgt, lower = q, upper = q+20, n1 = n1, n2 = n2, 
+                      v1tov2 = v1tov2)
+      }
     }
   }else{
     ARGS <- cbind(q, n1, n2, v1tov2)
     dfun <- function(args, lower.tail, rel.tol){
       if(lower.tail){
-        res <- integrate(f = dgt, lower = -Inf, upper = args[1], n1 = args[2], 
-                         n2 = args[3], v1tov2 = args[4], rel.tol = rel.tol)$value
+        res <- try(integrate(f = dgt, lower = -Inf, upper = args[1], n1 = args[2], 
+                             n2 = args[3], v1tov2 = args[4], rel.tol = rel.tol)$value,
+                   silent = TRUE)
+        if(inherits(res, "try-error")){
+          res <- .GLInt(f = dgt, lower = args[1]-20, upper = args[1], n1 = args[2], 
+                        n2 = args[3], v1tov2 = args[4])
+        }
       }else{
-        res <- integrate(f = dgt, lower = args[1], upper = Inf, n1 = args[2], 
-                         n2 = args[3], v1tov2 = args[4], rel.tol = rel.tol)$value
+        res <- try(integrate(f = dgt, lower = args[1], upper = Inf, n1 = args[2], 
+                             n2 = args[3], v1tov2 = args[4], rel.tol = rel.tol)$value,
+                   silent = TRUE)
+        if(inherits(res, "try-error")){
+          res <- .GLInt(f = dgt, lower = args[1], upper = args[1]+20, n1 = args[2], 
+                        n2 = args[3], v1tov2 = args[4])
+        }
       }
+      res
     }
     if(parallel){
       if(is.null(cl)){
@@ -70,6 +102,8 @@ pgt <- function(q, n1, n2, v1tov2, lower.tail = TRUE, log.p = FALSE,
 
 qgt <- function(p, n1, n2, v1tov2, lower.tail = TRUE, log.p = FALSE, 
                 tol = .Machine$double.eps^0.5, parallel = FALSE, cl = NULL){
+  if(any(p <= 0)) stop("p must be positive.")
+  if(any(p >= 1)) stop("p must be smaller than 1.")
   MIN <- -15
   MAX <- 15
   if(log.p) p <- exp(p)
@@ -77,15 +111,24 @@ qgt <- function(p, n1, n2, v1tov2, lower.tail = TRUE, log.p = FALSE,
     pgt(q, n1 = n1, n2 = n2, v1tov2, lower.tail = lower.tail) - p 
   }
   if(max(c(length(p), length(n1), length(n2), length(v1tov2))) == 1){
-    res <- uniroot(f = fun, lower = MIN, upper = MAX, extendInt = "yes", 
-                   n1 = n1, n2 = n2, v1tov2 = v1tov2, p = p, 
-                   lower.tail = lower.tail, tol = tol)$root
+    res <- try(uniroot(f = fun, lower = MIN, upper = MAX, extendInt = "yes", 
+                       n1 = n1, n2 = n2, v1tov2 = v1tov2, p = p, 
+                       lower.tail = lower.tail, tol = tol)$root,
+               silent = TRUE)
+    if(inherits(q, "try-error")){
+      res <- NA
+    }
   }else{
     ARGS <- cbind(p, n1, n2, v1tov2)
     qfun <- function(args, lower.tail, tol, MIN, MAX){
-      uniroot(f = fun, lower = MIN, upper = MAX, extendInt = "yes", 
-              n1 = args[2], n2 = args[3], v1tov2 = args[4], 
-              p = args[1], lower.tail = lower.tail, tol = tol)$root
+      q <- try(uniroot(f = fun, lower = MIN, upper = MAX, extendInt = "yes", 
+                       n1 = args[2], n2 = args[3], v1tov2 = args[4], 
+                       p = args[1], lower.tail = lower.tail, tol = tol)$root,
+               silent = TRUE)
+      if(inherits(q, "try-error")){
+        q <- NA
+      }
+      q
     }
     if(parallel){
       if(is.null(cl)){

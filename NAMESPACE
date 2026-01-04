@@ -1,4 +1,5 @@
 import("stats")
+importFrom("utils", "getFromNamespace")
 importFrom("MKdescr", "CV", "scale_y_neglog10")
 importFrom("rlang", ".data")
 importFrom("hypergeo", "hypergeo")
