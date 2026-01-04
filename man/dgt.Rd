@@ -8,10 +8,10 @@
   central t distribution defined in Section 5.3 of Xiao (2018)).
 }
 \usage{
-dgt(x, n1, n2, sd1, sd2, log = FALSE, MAX = 1e4)
-pgt(q, n1, n2, sd1, sd2, lower.tail = TRUE, log.p = FALSE, 
+dgt(x, n1, n2, v1tov2, log = FALSE, MAX = 1e4)
+pgt(q, n1, n2, v1tov2, lower.tail = TRUE, log.p = FALSE, 
     rel.tol = .Machine$double.eps^0.25, parallel = FALSE, cl = NULL)
-qgt(p, n1, n2, sd1, sd2, lower.tail = TRUE, log.p = FALSE, 
+qgt(p, n1, n2, v1tov2, lower.tail = TRUE, log.p = FALSE, 
     tol = .Machine$double.eps^0.5, parallel = FALSE, cl = NULL)
 }
 \arguments{
@@ -19,8 +19,7 @@ qgt(p, n1, n2, sd1, sd2, lower.tail = TRUE, log.p = FALSE,
   \item{p}{vector of probabilities.}
   \item{n1}{sample size of first group.}
   \item{n2}{sample size of second group.}
-  \item{sd1}{standard deviation of first group.}
-  \item{sd2}{standard deviation of second group.}
+  \item{v1tov2}{ratio of variances (var1/var2).}
   \item{log, log.p}{logical; if TRUE, probabilities p are given as log(p).}
   \item{lower.tail}{logical; if TRUE (default), probabilities are
     \eqn{P[X \le x]}, otherwise, \eqn{P[X > x]}.}
@@ -58,18 +57,18 @@ qgt(p, n1, n2, sd1, sd2, lower.tail = TRUE, log.p = FALSE,
 \seealso{\code{\link{dt}}}
 \examples{
   ## equal variances
-  dgt(0, n1 = 5, n2 = 10, sd1 = 1, sd2 = 1)
+  dgt(0, n1 = 5, n2 = 10, v1tov2 = 1)
   dt(0, df = 5+10-2)
   
-  pgt(2, n1 = 5, n2 = 10, sd1 = 1, sd2 = 1)
+  pgt(2, n1 = 5, n2 = 10, v1tov2 = 1)
   pt(2, df = 5+10-2)
   
-  qgt(0.975, n1 = 5, n2 = 10, sd1 = 1, sd2 = 1)
+  qgt(0.975, n1 = 5, n2 = 10, v1tov2 = 1)
   qt(0.975, df = 5+10-2)
   
   library(ggplot2)
   ggplot(data = data.frame(x = c(-4, 4)), aes(x)) +
-      stat_function(fun = function(x) dgt(x, n1 = 5, n2 = 10, sd1 = 1, sd2 = 1), 
+      stat_function(fun = function(x) dgt(x, n1 = 5, n2 = 10, v1tov2 = 1), 
                     n = 101, col = "darkblue", lwd = 1) + 
       stat_function(fun = function(x) dt(x, df = 5+10-2), 
                     n = 101, col = "darkgreen", lwd = 1) + ylab("density") +
@@ -78,17 +77,17 @@ qgt(p, n1, n2, sd1, sd2, lower.tail = TRUE, log.p = FALSE,
   
   ## unequal variances
   nu <- (1^2/5+5^2/10)^2/(1^4/(5^2*(5-1)) + 5^4/(10^2*(10-1)))
-  dgt(0, n1 = 5, n2 = 10, sd1 = 1, sd2 = 5)
+  dgt(0, n1 = 5, n2 = 10, v1tov2 = 1^2/5^2)
   dt(0, df = nu)
   
-  pgt(2, n1 = 5, n2 = 10, sd1 = 1, sd2 = 1)
+  pgt(2, n1 = 5, n2 = 10, v1tov2 = 1^2/5^2)
   pt(2, df = nu)
   
-  qgt(0.975, n1 = 5, n2 = 10, sd1 = 1, sd2 = 1)
+  qgt(0.975, n1 = 5, n2 = 10, v1tov2 = 1^2/5^2)
   qt(0.975, df = nu)
   
   ggplot(data = data.frame(x = c(-4, 4)), aes(x)) +
-      stat_function(fun = function(x) dgt(x, n1 = 5, n2 = 10, sd1 = 1, sd2 = 5), 
+      stat_function(fun = function(x) dgt(x, n1 = 5, n2 = 10, v1tov2 = 1^2/5^2), 
                     n = 101, col = "darkblue", lwd = 1) + 
       stat_function(fun = function(x) dt(x, df = nu), 
                     n = 101, col = "darkred", linetype = "dashed", lwd = 1) + 
@@ -97,9 +96,9 @@ qgt(p, n1, n2, sd1, sd2, lower.tail = TRUE, log.p = FALSE,
   
   \dontrun{
     ## parallel computing
-    pgt(seq(from = -2, to = 2, length = 30), n1 = 5, n2 = 10, sd1 = 1, sd2 = 5, 
+    pgt(seq(from = -2, to = 2, length = 30), n1 = 5, n2 = 10, v1tov2 = 1^2/5^2, 
         parallel = TRUE)
-    qgt(seq(from = 0.1, to = 0.9, length = 30), n1 = 5, n2 = 10, sd1 = 1, sd2 = 5, 
+    qgt(seq(from = 0.1, to = 0.9, length = 30), n1 = 5, n2 = 10, v1tov2 = 1^2/5^2, 
   +     parallel = TRUE)
   }    
 }

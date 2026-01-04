@@ -95,26 +95,25 @@ h0plot.htest <- function(x, sig.level = 0.05, hist.alpha = 0.2,
   }
   if(names(x$statistic) == "gt"){
     dfun <- function(x){ }
-    body(dfun) <- substitute({ dgt(x, n1, n2, sd1, sd2) },
+    body(dfun) <- substitute({ dgt(x, n1, n2, v1tov2) },
                              list(n1 = x$n[1], n2 = x$n[2], 
-                                  sd1 = x$estimate[3], 
-                                  sd2 = x$estimate[4]))
+                                  v1tov2 = x$estimate[3]^2/x$estimate[4]^2))
     if(x$alternative == "two.sided"){
       cval <- c(qgt(p = sig.level/2, n1 = x$n[1], n2 = x$n[2], 
-                    sd1 = x$estimate[3], sd2 = x$estimate[4]), 
+                    v1tov2 = x$estimate[3]^2/x$estimate[4]^2), 
                 qgt(p = 1-sig.level/2, n1 = x$n[1], n2 = x$n[2], 
-                    sd1 = x$estimate[3], sd2 = x$estimate[4]))
+                    v1tov2 = x$estimate[3]^2/x$estimate[4]^2))
     }else if(x$alternative == "less"){
       cval <- qgt(p = sig.level, n1 = x$n[1], n2 = x$n[2], 
-                  sd1 = x$estimate[3], sd2 = x$estimate[4])
+                  v1tov2 = x$estimate[3]^2/x$estimate[4]^2)
     }else{
       cval <- qgt(p = 1-sig.level, n1 = x$n[1], n2 = x$n[2], 
-                  sd1 = x$estimate[3], sd2 = x$estimate[4])
+                  v1tov2 = x$estimate[3]^2/x$estimate[4]^2)
     }
     MIN <- min(-abs(x$statistic), qgt(qtail, n1 = x$n[1], n2 = x$n[2], 
-                                      sd1 = x$estimate[3], sd2 = x$estimate[4]))
+                                      v1tov2 = x$estimate[3]^2/x$estimate[4]^2))
     MAX <- max(abs(x$statistic), qgt(1-qtail, n1 = x$n[1], n2 = x$n[2], 
-                                     sd1 = x$estimate[3], sd2 = x$estimate[4]))
+                                     v1tov2 = x$estimate[3]^2/x$estimate[4]^2))
     xlim <- c(MIN, MAX)
   }
   if(names(x$statistic) == "F"){

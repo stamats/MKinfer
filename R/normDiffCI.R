@@ -184,7 +184,7 @@ normDiffCI <- function(x, y, conf.level = 0.95, paired = FALSE,
     }
     if(!boot){
       if(method == 4){
-        t.alpha <- qgt(1-alpha/2, n1 = nx, n2 = ny, sd1 = sqrt(vx), sd2 = sqrt(vy))
+        t.alpha <- qgt(1-alpha/2, n1 = nx, n2 = ny, v1tov2 = vx/vy)
       }else{
         t.alpha <- qt(1-alpha/2, df = df)
       }

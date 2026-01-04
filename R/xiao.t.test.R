@@ -37,17 +37,17 @@ xiao.t.test.default <- function (x, y, alternative = c("two.sided", "less", "gre
   tstat <- (mx - my - mu)/se
 
   if(alternative == "less") {
-    pval <- pgt(tstat, n1 = nx, n2 = ny, sd1 = sqrt(vx), sd2 = sqrt(vy))
-    cint <- c(-Inf, tstat + qgt(conf.level, n1 = nx, n2 = ny, sd1 = sqrt(vx), sd2 = sqrt(vy)))
+    pval <- pgt(tstat, n1 = nx, n2 = ny, v1tov2 = vx/vy)
+    cint <- c(-Inf, tstat + qgt(conf.level, n1 = nx, n2 = ny, v1tov2 = vx/vy))
   }
   else if(alternative == "greater") {
-    pval <- pgt(tstat, n1 = nx, n2 = ny, sd1 = sqrt(vx), sd2 = sqrt(vy), lower.tail = FALSE)
-    cint <- c(tstat - qgt(conf.level, n1 = nx, n2 = ny, sd1 = sqrt(vx), sd2 = sqrt(vy)), Inf)
+    pval <- pgt(tstat, n1 = nx, n2 = ny, v1tov2 = vx/vy, lower.tail = FALSE)
+    cint <- c(tstat - qgt(conf.level, n1 = nx, n2 = ny, v1tov2 = vx/vy), Inf)
   }
   else{
-    pval <- 2 * pgt(-abs(tstat), n1 = nx, n2 = ny, sd1 = sqrt(vx), sd2 = sqrt(vy))
+    pval <- 2 * pgt(-abs(tstat), n1 = nx, n2 = ny, v1tov2 = vx/vy)
     alpha <- 1 - conf.level
-    cint <- qgt(1 - alpha/2, n1 = nx, n2 = ny, sd1 = sqrt(vx), sd2 = sqrt(vy))
+    cint <- qgt(1 - alpha/2, n1 = nx, n2 = ny, v1tov2 = vx/vy)
     cint <- tstat + c(-cint, cint)
   }
   cint <- mu + cint * se
