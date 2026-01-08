@@ -19,16 +19,7 @@ sample.perm <- function(x, k, nx = NULL, R, replace = FALSE, useCombn = FALSE){
       res <- permutations(x, k = k, replace = replace)
     }
   }else{
-    res <- NULL
-    iter <- R
-    repeat{
-      res <- rbind(res, 
-                   t(replicate(iter, sample(x, size = k, 
-                                            replace = replace))))
-      if(all(!duplicated(res))) break
-      iter <- R - sum(!duplicated(res))
-      res <- res[!duplicated(res),]
-    }
+    res <- permutations(x, k = k, replace = replace, nsample = R)
   }
   res
 }

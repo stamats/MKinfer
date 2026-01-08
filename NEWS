@@ -12,6 +12,7 @@
   solution to a generalized Behrens-Fisher problem
 - added Xiao method to normDiffCI
 - added xiao.t.test to pairwise.ext.t.test
+- changed selection of random permutations leading to a 3 to 4 fold speed-up
 
 
 ###########################################################

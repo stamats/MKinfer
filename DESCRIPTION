@@ -1,6 +1,6 @@
 Package: MKinfer
 Version: 1.4
-Date: 2026-01-04
+Date: 2026-01-08
 Title: Inferential Statistics
 Authors@R: person("Matthias", "Kohl", role = c("aut", "cre"),
                   email = "Matthias.Kohl@stamats.de", 
