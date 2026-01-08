@@ -27,7 +27,6 @@ hsu.t.test.default <- function (x, y, alternative = c("two.sided", "less", "grea
   names(estimate) <- c("mean of x", "mean of y", "SD of x", "SD of y")
   if(nx < 6 || ny < 6)
     warning("For Hsu t-test the sample size per group should be > 5.")
-  s <- sqrt(vx + vy)
   se <- sqrt(vx/nx + vy/ny)
   df <- min(nx, ny) - 1
   if(se < 10 * .Machine$double.eps * max(abs(mx), abs(my)))

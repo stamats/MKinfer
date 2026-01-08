@@ -8,7 +8,7 @@ Authors@R: person("Matthias", "Kohl", role = c("aut", "cre"),
 Author: Matthias Kohl [aut, cre] (0000-0001-9514-8910)
 Maintainer: Matthias Kohl <Matthias.Kohl@stamats.de>
 Depends: R(>= 4.0.0)
-Imports: stats, utils, rlang, MKdescr, boot, arrangements, nlme, ggplot2, exactRankTests, miceadds, hypergeo, parallel
+Imports: stats, utils, rlang, MKdescr, boot, arrangements, nlme, ggplot2, exactRankTests, miceadds, hypergeo, parallel, robrmx
 Suggests: knitr, rmarkdown, Amelia, mice, mvtnorm
 LazyData: yes
 VignetteBuilder: knitr

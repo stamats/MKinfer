@@ -213,18 +213,18 @@ hsu.t.test(1:10, y = c(7:20))
 hsu.t.test(1:10, y = c(7:20, 200))
 
 ## Traditional interface
-with(sleep, t.test(extra[group == 1], extra[group == 2]))
-with(sleep, hsu.t.test(extra[group == 1], extra[group == 2]))
+with(mtcars, t.test(mpg[am == 0], mpg[am == 1]))
+with(mtcars, hsu.t.test(mpg[am == 0], mpg[am == 1]))
 ## Formula interface
-t.test(extra ~ group, data = sleep)
-hsu.t.test(extra ~ group, data = sleep)
+t.test(mpg ~ am, data = mtcars)
+hsu.t.test(mpg ~ am, data = mtcars)
 ```
 
 We compare the result of the Welch t-test and Hsu t-test using function h0plot.
 
 ```{r, fig.width=7, fig.height=7}
-h0plot(t.test(extra ~ group, data = sleep))
-h0plot(hsu.t.test(extra ~ group, data = sleep))
+h0plot(t.test(mpg ~ am, data = mtcars))
+h0plot(hsu.t.test(mpg ~ am, data = mtcars))
 ```
 
 
@@ -282,11 +282,11 @@ xiao.t.test(1:10, y = c(7:20))
 xiao.t.test(1:10, y = c(7:20, 200))
 
 ## Traditional interface
-with(sleep, t.test(extra[group == 1], extra[group == 2]))
-with(sleep, xiao.t.test(extra[group == 1], extra[group == 2]))
+with(mtcars, t.test(mpg[am == 0], mpg[am == 1]))
+with(mtcars, xiao.t.test(mpg[am == 0], mpg[am == 1]))
 ## Formula interface
-t.test(extra ~ group, data = sleep)
-xiao.t.test(extra ~ group, data = sleep)
+t.test(mpg ~ am, data = mtcars)
+xiao.t.test(mpg ~ am, data = mtcars)
 
 ## Example 6.1 in Xiao (2018)
 x <- c(134, 146, 104, 119, 124, 161, 107, 83, 113, 129, 97, 123)
@@ -299,8 +299,47 @@ t.test(x, y, alternative = "greater")
 We compare the result of the Welch t-test and Xiao t-test using function h0plot.
 
 ```{r, fig.width=7, fig.height=7}
-h0plot(t.test(extra ~ group, data = sleep))
-h0plot(xiao.t.test(extra ~ group, data = sleep))
+h0plot(t.test(mpg ~ am, data = mtcars))
+h0plot(xiao.t.test(mpg ~ am, data = mtcars))
+```
+
+
+## RMX t-Test
+The RMX t-tests are t-tests that use the optimally robust RMX estimators to 
+estimate mean and variance required for the t-test. Function rmx.t.test can be
+used to compute one-sample, paired and two-sample t-tests. In the case of 
+two-sample tests there exists variants that robustify Student, Welch, Hsu and Xiao 
+t-tests.
+
+```{r}
+## Two-sample t-test
+t.test(1:10, y = c(7:20))      # P = .00001855
+t.test(1:10, y = c(7:20, 200)) # P = .1245    -- NOT significant anymore
+## Welch df
+rmx.t.test(1:10, y = c(7:20))      # P = .003322
+rmx.t.test(1:10, y = c(7:20, 200)) # P = .003838  -- STILL significant
+## Hsu df
+rmx.t.test(1:10, y = c(7:20), method = "hsu")      # P = .00006961
+rmx.t.test(1:10, y = c(7:20, 200), method = "hsu") # P = .0009753  -- STILL significant
+## Xiao generalized t
+rmx.t.test(1:10, y = c(7:20), method = "xiao")      # P = .00004425
+rmx.t.test(1:10, y = c(7:20, 200), method = "xiao") # P = .00007251  -- STILL significant
+
+## Traditional interface
+with(mtcars, t.test(mpg[am == 0], mpg[am == 1]))
+with(mtcars, rmx.t.test(mpg[am == 0], mpg[am == 1]))
+
+## Formula interface
+t.test(mpg ~ am, data = mtcars)
+rmx.t.test(mpg ~ am, data = mtcars)
+```
+
+We compare the result of the Welch t-test and the RMX Welch t-test using function 
+h0plot.
+
+```{r, fig.width=7, fig.height=7}
+h0plot(t.test(mpg ~ am, data = mtcars))
+h0plot(rmx.t.test(mpg ~ am, data = mtcars))
 ```
 
 
@@ -313,16 +352,16 @@ boot.t.test(1:10, y = c(7:20)) # without bootstrap: P = .00001855
 boot.t.test(1:10, y = c(7:20, 200)) # without bootstrap: P = .1245
 
 ## Traditional interface
-with(sleep, boot.t.test(extra[group == 1], extra[group == 2]))
+with(mtcars, boot.t.test(mpg[am == 0], mpg[am == 1]))
 ## Formula interface
-boot.t.test(extra ~ group, data = sleep)
+boot.t.test(mpg ~ am, data = mtcars)
 ```
 
 Using function h0plot the distribution of the bootstrap results of the test
 statistic can be plotted.
 
 ```{r, fig.width=7, fig.height=7}
-h0plot(boot.t.test(extra ~ group, data = sleep, bootStat = TRUE))
+h0plot(boot.t.test(mpg ~ am, data = mtcars, bootStat = TRUE))
 ```
 
 Janssen and Pauls (2003) state in Example 5 (c) about Bootstrap two-sample tests:
@@ -340,17 +379,16 @@ perm.t.test(1:10, y = c(7:20)) # without permutation: P = .00001855
 perm.t.test(1:10, y = c(7:20, 200)) # without permutation: P = .1245
 
 ## Traditional interface
-with(sleep, perm.t.test(extra[group == 1], extra[group == 2]))
+with(mtcars, perm.t.test(mpg[am == 0], mpg[am == 1]))
 ## Formula interface
-res <- perm.t.test(extra ~ group, data = sleep)
-res
+perm.t.test(mpg ~ am, data = mtcars)
 ```
 
 Using function h0plot the distribution of the permutation results of the test
 statistic can be plotted.
 
 ```{r, fig.width=7, fig.height=7}
-h0plot(perm.t.test(extra ~ group, data = sleep, permStat = TRUE))
+h0plot(perm.t.test(mpg ~ am, data = mtcars, permStat = TRUE))
 ```
 
 It is also possible to use all combinations instead of all permutations. 

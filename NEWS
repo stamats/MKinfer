@@ -13,6 +13,8 @@
 - added Xiao method to normDiffCI
 - added xiao.t.test to pairwise.ext.t.test
 - changed selection of random permutations leading to a 3 to 4 fold speed-up
+- added function rmx.t.test to compute t-tests based on optimally robust 
+  RMX estimators
 
 
 ###########################################################

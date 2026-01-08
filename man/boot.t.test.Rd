@@ -132,13 +132,11 @@ t.test(1:10, y = c(7:20, 200)) # P = .1245    -- NOT significant anymore
 boot.t.test(1:10, y = c(7:20, 200))
 
 
-## Classical example: Student's sleep data
-plot(extra ~ group, data = sleep)
 ## Traditional interface
-with(sleep, t.test(extra[group == 1], extra[group == 2]))
-with(sleep, boot.t.test(extra[group == 1], extra[group == 2]))
+with(mtcars, t.test(mpg[am == 0], mpg[am == 1]))
+with(mtcars, boot.t.test(mpg[am == 0], mpg[am == 1]))
 ## Formula interface
-t.test(extra ~ group, data = sleep)
-boot.t.test(extra ~ group, data = sleep)
+t.test(mpg ~ am, data = mtcars)
+boot.t.test(mpg ~ am, data = mtcars)
 }
 \keyword{htest}

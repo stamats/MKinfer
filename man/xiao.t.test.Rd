@@ -84,11 +84,11 @@ xiao.t.test(1:10, y = c(7:20))
 xiao.t.test(1:10, y = c(7:20, 200))
 
 ## Traditional interface
-with(sleep, t.test(extra[group == 1], extra[group == 2]))
-with(sleep, xiao.t.test(extra[group == 1], extra[group == 2]))
+with(mtcars, t.test(mpg[am == 0], mpg[am == 1]))
+with(mtcars, xiao.t.test(mpg[am == 0], mpg[am == 1]))
 ## Formula interface
-t.test(extra ~ group, data = sleep)
-xiao.t.test(extra ~ group, data = sleep)
+t.test(mpg ~ am, data = mtcars)
+xiao.t.test(mpg ~ am, data = mtcars)
 
 ## Example 6.1 in Xiao (2018)
 x <- c(134, 146, 104, 119, 124, 161, 107, 83, 113, 129, 97, 123)

@@ -97,10 +97,10 @@ hsu.t.test(1:10, y = c(7:20))
 hsu.t.test(1:10, y = c(7:20, 200))
 
 ## Traditional interface
-with(sleep, t.test(extra[group == 1], extra[group == 2]))
-with(sleep, hsu.t.test(extra[group == 1], extra[group == 2]))
+with(mtcars, t.test(mpg[am == 0], mpg[am == 1]))
+with(mtcars, hsu.t.test(mpg[am == 0], mpg[am == 1]))
 ## Formula interface
-t.test(extra ~ group, data = sleep)
-hsu.t.test(extra ~ group, data = sleep)
+t.test(mpg ~ am, data = mtcars)
+hsu.t.test(mpg ~ am, data = mtcars)
 }
 \keyword{htest}

@@ -1,4 +1,5 @@
 import("stats")
+import("robrmx")
 importFrom("utils", "getFromNamespace")
 importFrom("MKdescr", "CV", "scale_y_neglog10")
 importFrom("rlang", ".data")
@@ -21,6 +22,7 @@ export(binomCI,
        cvCI,
        hsu.t.test,
        xiao.t.test,
+       rmx.t.test,
        imputeSD,
        madCI,
        medianCI,
@@ -54,6 +56,8 @@ S3method(hsu.t.test, default)
 S3method(hsu.t.test, formula)
 S3method(xiao.t.test, default)
 S3method(xiao.t.test, formula)
+S3method(rmx.t.test, default)
+S3method(rmx.t.test, formula)
 S3method(boot.t.test, default)
 S3method(boot.t.test, formula)
 S3method(mi.t.test, default)

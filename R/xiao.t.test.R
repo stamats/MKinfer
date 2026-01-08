@@ -25,7 +25,6 @@ xiao.t.test.default <- function (x, y, alternative = c("two.sided", "less", "gre
   vy <- var(y)
   estimate <- c(mx, my, sqrt(vx), sqrt(vy))
   names(estimate) <- c("mean of x", "mean of y", "SD of x", "SD of y")
-  s <- sqrt(vx + vy)
   se <- sqrt(vx/nx + vy/ny)
   if(nx*(nx-1)/vx <= ny*(ny-1)/vy){
     df <- (ny-1)*(1 + ny/nx*vx/vy)
