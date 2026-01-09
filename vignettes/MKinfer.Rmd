@@ -304,45 +304,6 @@ h0plot(xiao.t.test(mpg ~ am, data = mtcars))
 ```
 
 
-## RMX t-Test
-The RMX t-tests are t-tests that use the optimally robust RMX estimators to 
-estimate mean and variance required for the t-test. Function rmx.t.test can be
-used to compute one-sample, paired and two-sample t-tests. In the case of 
-two-sample tests there exists variants that robustify Student, Welch, Hsu and Xiao 
-t-tests.
-
-```{r}
-## Two-sample t-test
-t.test(1:10, y = c(7:20))      # P = .00001855
-t.test(1:10, y = c(7:20, 200)) # P = .1245    -- NOT significant anymore
-## Welch df
-rmx.t.test(1:10, y = c(7:20))      # P = .003322
-rmx.t.test(1:10, y = c(7:20, 200)) # P = .003838  -- STILL significant
-## Hsu df
-rmx.t.test(1:10, y = c(7:20), method = "hsu")      # P = .00006961
-rmx.t.test(1:10, y = c(7:20, 200), method = "hsu") # P = .0009753  -- STILL significant
-## Xiao generalized t
-rmx.t.test(1:10, y = c(7:20), method = "xiao")      # P = .00004425
-rmx.t.test(1:10, y = c(7:20, 200), method = "xiao") # P = .00007251  -- STILL significant
-
-## Traditional interface
-with(mtcars, t.test(mpg[am == 0], mpg[am == 1]))
-with(mtcars, rmx.t.test(mpg[am == 0], mpg[am == 1]))
-
-## Formula interface
-t.test(mpg ~ am, data = mtcars)
-rmx.t.test(mpg ~ am, data = mtcars)
-```
-
-We compare the result of the Welch t-test and the RMX Welch t-test using function 
-h0plot.
-
-```{r, fig.width=7, fig.height=7}
-h0plot(t.test(mpg ~ am, data = mtcars))
-h0plot(rmx.t.test(mpg ~ am, data = mtcars))
-```
-
-
 ## Bootstrap t-Test
 One and two sample bootstrap t-tests with equal or unequal variances in the
 two sample case [@Efron1993].

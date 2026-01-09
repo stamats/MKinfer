@@ -1,6 +1,6 @@
 Package: MKinfer
 Version: 1.4
-Date: 2026-01-08
+Date: 2026-01-09
 Title: Inferential Statistics
 Authors@R: person("Matthias", "Kohl", role = c("aut", "cre"),
                   email = "Matthias.Kohl@stamats.de", 
@@ -8,7 +8,7 @@ Authors@R: person("Matthias", "Kohl", role = c("aut", "cre"),
 Author: Matthias Kohl [aut, cre] (0000-0001-9514-8910)
 Maintainer: Matthias Kohl <Matthias.Kohl@stamats.de>
 Depends: R(>= 4.0.0)
-Imports: stats, utils, rlang, MKdescr, boot, arrangements, nlme, ggplot2, exactRankTests, miceadds, hypergeo, parallel, robrmx
+Imports: stats, utils, rlang, MKdescr, boot, arrangements, nlme, ggplot2, exactRankTests, miceadds, hypergeo, parallel
 Suggests: knitr, rmarkdown, Amelia, mice, mvtnorm
 LazyData: yes
 VignetteBuilder: knitr
