@@ -34,10 +34,8 @@ mi.wilcox.test(miData, \dots)
     hypothesis, must be one of \code{"two.sided"} (default),
     \code{"greater"} or \code{"less"}.  You can specify just the initial
     letter.}
-  \item{mu}{a number indicating the true value of the mean (or
-    difference in means if you are performing a two sample test).}
-  \item{paired}{a logical indicating whether you want a paired
-    t-test.}
+  \item{mu}{a number specifying an optional location parameter.}
+  \item{paired}{a logical indicating whether you want a paired test.}
   \item{exact}{a logical indicating whether an exact p-value should be computed.}
   \item{conf.int}{a logical indicating whether a confidence interval should be computed.}
   \item{conf.level}{confidence level of the interval.}
